@@ -288,7 +288,7 @@ body {
 .texture-image {
     height: 150px;
     width: 150px;
-    object-fit: cover; 
+    object-fit: contain; 
     border: solid #E0E0E0 1px;
     margin: 5px;
     border-radius: 10px;
