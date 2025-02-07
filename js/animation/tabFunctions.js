@@ -133,7 +133,16 @@ function showImages(category, tabId) {
             const img = document.createElement('img');
             img.src = imagePath;
             img.alt = `${category} image`;
-            img.className = 'texture-image';
+
+            let className;
+
+            if(tabId == 'BoardParametrsTab' || tabId == 'CeilingParametrsTab') {
+                className = 'special-texture-image'
+            } else {
+                className = 'texture-image';
+            }
+
+            img.className = className;
             container.appendChild(img);
         });
     }

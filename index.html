@@ -119,7 +119,20 @@
                                 <label class="form_form-label" for="central_telescopic">Центрально-телескопическое</label>
                             </div>
                         </form>
-                    </div>      
+                    </div>  
+                    
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Выбор дизайн-проекта:</h3>
+                        <form class="form-container__form form">
+                            <button class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
+                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
+                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">MODERN</button>
+                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">CLASSIC</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
 
@@ -415,11 +428,11 @@
 
             <div class="menu-container__additional-buttons">
                 <form class="configurator-container__additional-button-container">
-                    <button class="form__form-element--with-image" onclick="">
+                    <button class="form__form-element--with-image additional-button" onclick="">
                         <img class="form__button-image" src="./images/share.png">
                         <p><pre>  Поделиться</pre></p>
                     </button>
-                    <button class="form__form-element--with-image" onclick="">
+                    <button class="form__form-element--with-image additional-button" onclick="">
                         <img class="form__button-image" src="./images/download.png">
                         <p><pre>  Сохранить</pre></p>
                     </button>
