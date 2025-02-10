@@ -114,6 +114,7 @@ body {
 
 .menu-container {
     flex-basis: 0;
+    gap: 10px;
     display: flex;
     flex-direction: column;
     background-color: #E0E0E0;
@@ -161,14 +162,14 @@ body {
 
 .navigation__tab {
     font-weight: normal;
-    font-size: 12pt;
+    font-size: 20px;
     text-align: center;
     cursor: pointer;
 }
 
 @media(max-width: 1200px) {
     .navigation__tab {
-        font-size: 11pt;
+        font-size: 16px;
     }
 }
 
@@ -177,27 +178,34 @@ body {
 }
 
 .menu-container__options-menu-container {
+    box-sizing: content-box;
     flex-grow: 4;
     position: relative;
     background-color: #00406C;
     border-radius: 40px;
-    width: 90%;
+    width: 720px;
     overflow: hidden; 
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-/*@media(max-width: 1200px) {
+@media(max-width: 1300px) {
     .menu-container__options-menu-container {
-        width: 70%;
+        width: 90%;
     }
-}*/
+}
+
+@media(max-width: 1150px) {
+    .menu-container__options-menu-container {
+        width: 500px;
+    }
+}
 
 .menu-container__options-menu-title {
     margin: 15px;
     font-weight: bold;
-    font-size: 22pt;
+    font-size: 30px;
     color: white;
     margin-left: 30px;
 }
@@ -227,7 +235,7 @@ body {
     margin: 0;
     margin-bottom: 15px;
     font-weight: normal;
-    font-size: 20pt;
+    font-size: 25px;
 }
 
 .form {
@@ -242,14 +250,14 @@ body {
     border-radius: 8px;
     background-color: white;
     padding: 9px;
-    font-size: 12pt;
+    font-size: 20px;
     margin-right: 10px;
 }
 
 .form__form-element.active, 
 .form__form-element--with-image,
 .form__form-element--transparent.active {
-    font-size: 12pt;
+    font-size: 20px;
     background-color: #00406C;
     color:white;
     border: solid #303030 1px;
@@ -281,7 +289,7 @@ body {
 }
 
 .form_form-label{
-    font-size: 12pt;
+    font-size: 20px;
     margin-right: 10px;
 }
 
@@ -314,6 +322,7 @@ body {
 }
 
 .textures-container {
+    gap: 10px;
     display: flex;
     flex-wrap: wrap;
 }
@@ -336,7 +345,6 @@ body {
     width: 31%;
     object-fit: contain; 
     border: solid #E0E0E0 1px;
-    margin: 5px;
     border-radius: 10px;
 }
 
@@ -346,13 +354,12 @@ body {
         width: 120px;
         object-fit: contain; 
         border: solid #E0E0E0 1px;
-        margin: 5px;
         border-radius: 10px;
     }
 }
 
 .additional-button {
-    font-size: 11pt;
+    font-size: 18px;
 }
 
 
