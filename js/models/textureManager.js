@@ -49,6 +49,8 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
                         color: 0xffffff,
                         map: texture,
                         alphaMap: alphaMap,
+                        // bumpMap: texture,
+                        // bumpScale: 0.5,
                         transparent: alphaMap ? true : false,
                         metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
                         roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
@@ -117,7 +119,7 @@ console.log(tabId)
             elementNames = ['Lamp'];
             break;
         case 'FloorParametrsTab':
-            elementNames = ['Floor'];
+            elementNames = ['Floor','Threshold','Threshold1'];
             break;
         case 'BoardParametrsTab':
             elementNames = ['ControlPanel'];
@@ -137,21 +139,141 @@ console.log(tabId)
         console.error("Модель еще не загружена");
         return;
     }
-    defaultVisibility();
-    // Применяем текстуру с дополнительными опциями (при необходимости)
+
     applyTextureToElement(model, elementNames, textureURL, alphaURL, { metalness: 0.5, roughness: 0.8 });
 }
 
-export function defaultMaterial(){
+export function applyDefaultElevatorTextures() {
+    if (!model) {
+        console.error("Модель еще не загружена");
+        return;
+    }
 
-    /*applyTextureToElement(model,
-        ['FrontWall', 'BackWall', 'LeftWall', 'RightWall'],
-        './Стены/DL89E_diffuse.jpg',
-        "",
-        { metalness: 0, roughness: 0.8 });
+    const defaultTexturesMapping = [
+        {
+            elementNames: ['FrontWall'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['BackWall'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['LeftWall'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['RightWall'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Floor'],
+            texture: './Пол/nero marquina.jpg',
+            alpha: null,
+            options: { metalness: 0.2, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Threshold'],
+            texture: './Пол/nero marquina.jpg',
+            alpha: null,
+            options: { metalness: 0.2, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Threshold1'],
+            texture: './Пол/nero marquina.jpg',
+            alpha: null,
+            options: { metalness: 0.2, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Ceiling'],
+            texture: './Потолок/RAL-7035-Svetlo-serii.png',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Lamp'],
+            texture: './Потолок/DL16CE_gray.jpg',
+            alpha: './Потолок/Безымянный-2.png',
+            options: { metalness: 0,
+                roughness: 0.8,
+                emissive: new THREE.Color(0xffffee),
+                emissiveIntensity: 1 }
+        },
+        {
+            elementNames: ['Door'],
+            texture: './Двери/RAL-7035-Svetlo-serii.png',
+            alpha: null,
+            options: { metalness: 0.8, roughness: 0.8 }
+        },
+        {
+            elementNames: ['ControlPanel'],
+            texture: './Двери/RAL-7035-Svetlo-serii.png',
+            alpha: null,
+            options: { metalness: 0.3, roughness: 0.7 }
+        },
+        {
+            elementNames: ['DisplayVertical'],
+            texture: './Табло/TL-D70.png',
+            alpha: null,
+            options: { metalness: 0.3, roughness: 0.7 }
+        },
+        {
+            elementNames: ['buttons(ControlPanel)'],
+            texture: './Стены/шлифованная нержавейка.jpg',
+            alpha: null,
+            options: { metalness: 0.3, roughness: 0.7 }
+        },
+        {
+            elementNames: ['RightHandrail'],
+            texture: './Стены/шлифованная нержавейка.jpg',
+            alpha: null,
+            options: { metalness: 1, roughness: 0.7 }
+        },
+        {
+            elementNames: ['BackHandrail'],
+            texture: './Стены/шлифованная нержавейка.jpg',
+            alpha: null,
+            options: { metalness: 1, roughness: 0.7 }
+        }
+    ];
 
-    defaultVisibility();*/
+    // Для каждого набора настроек применяем текстуру к соответствующим объектам
+    defaultTexturesMapping.forEach(mapping => {
+        applyTextureToElement(model, mapping.elementNames, mapping.texture, mapping.alpha, mapping.options);
+    });
 
+    defaultVisibility();
+}
+
+function CreateMirror()
+{
+    const mirrorMesh = model.getObjectByName('Mirror');
+    if (mirrorMesh) {
+
+        const reflector = new Reflector(mirrorMesh.geometry, {
+            clipBias: 0.003,
+            textureWidth: window.innerWidth * window.devicePixelRatio,
+            textureHeight: window.innerHeight * window.devicePixelRatio,
+            color: 0x889999
+        });
+
+        reflector.position.copy(mirrorMesh.position);
+        reflector.rotation.copy(mirrorMesh.rotation);
+        reflector.scale.copy(mirrorMesh.scale);
+
+        mirrorMesh.parent.add(reflector);
+        mirrorMesh.visible = false;
+    } else {
+        console.error('Элемент "Mirror" не найден в модели');
+    }
 }
 
 function defaultVisibility() {
