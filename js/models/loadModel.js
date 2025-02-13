@@ -22,7 +22,7 @@ function init() {
     scene.background = new THREE.Color(0xeeeeee);
 
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
-    camera.position.set(0, 1, 100);
+    camera.position.set(144, 84, 33);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     scene.add(ambientLight);
@@ -37,7 +37,10 @@ function init() {
     controls.enableZoom = true;
     controls.target.set(0, 50, 0);
 
+    controls.maxDistance = 160;
+
     function animate() {
+        console.log(camera.position);
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
@@ -46,6 +49,7 @@ function init() {
     gltfLoader.load(
         './liftModels/model.fbx',
         (gltf) => {
+            object.position.set(0, 0, 0);
             scene.add(gltf.scene);
             model = gltf.scene;
             window.model = model;
@@ -60,6 +64,7 @@ function init() {
             fbxLoader.load(
                 './liftModels/model.fbx',
                 (object) => {
+                    object.position.set(0, 0, 0);
                     scene.add(object);
                     model = object;
                     window.model = model;
