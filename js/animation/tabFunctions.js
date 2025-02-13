@@ -1,3 +1,5 @@
+import {handleTextureClick} from "../models/textureManager";
+
 const tabImageMap = new Map([
     ['MainParametersTab', 'main_parameters_icon'],
     ['WallsParametersTab', 'wall_icon'],
@@ -143,7 +145,9 @@ function showImages(category, tabId) {
             }
 
             img.className = className;
+            img.addEventListener('click', handleTextureClick);
             container.appendChild(img);
         });
     }
 }
+window.showTab = showTab;

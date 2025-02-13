@@ -19,7 +19,7 @@
         <div class="configurator-container__elevator-container elevator-container"> 
             <header class="elevator-container__header">
                 <div class="elevator-container__logo logo">
-                    <img class="logo__image" src="./images/logo.png" alt="Movel">
+                    <img class="logo__image" src="./images/Logo.svg" alt="Movel">
                 </div>
             </header>  
 
@@ -55,7 +55,7 @@
                     <img id="other_icon" class="navigation--with-animation__animation-picture" src="./images/other_icon.png">
 
                     <div class="navigation__tab active" onclick="showTab('MainParametersTab')">Основные параметры</div>
-                    <div class="navigation__tab" onclick="showTab('WallsParametersTab')">Стены</div>
+                    <div id="WallTab" class="navigation__tab" onclick="showTab('WallsParametersTab')">Стены</div>
                     <div class="navigation__tab" onclick="showTab('DoorParametrsTab')">Двери</div>
                     <div class="navigation__tab" onclick="showTab('CeilingParametrsTab')">Потолок</div>
                     <div class="navigation__tab" onclick="showTab('FloorParametrsTab')">Пол</div>
@@ -345,15 +345,15 @@
                     <div class="menu-container__form form-container--radio">
                         <h3 class="form-container--radio__title">Наличие:</h3>
                         <form class="form-container--radio__form form">
-        <div class="form__radio-with-label">
-            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="yes" id="yes">
-            <label class="form_form-label" for="yes">Да</label>
-        </div>
-        <div class="form__radio-with-label">
-            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="no" id="no" checked>
-            <label class="form_form-label" for="no">Нет</label>
-        </div>
-    </form>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="yes" id="yes">
+                            <label class="form_form-label" for="yes">Да</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="no" id="no" checked>
+                            <label class="form_form-label" for="no">Нет</label>
+                        </div>
+                    </form>
                     </div>
 
                     <hr class="menu-container_hr">
@@ -440,7 +440,10 @@
     </div>
     
     <script src="./js/animation/buttonFunctions.js"></script>
-    <script src="./js/animation/tabFunctions.js"></script>
+    <script type="module" src="./js/animation/tabFunctions.js"></script>
+
+    <script type="module" src="./js/models/loadModel.js"></script>
+    <script type="module" src="./js/models/textureManager.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
