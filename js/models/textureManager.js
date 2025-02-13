@@ -87,7 +87,31 @@ console.log(tabId)
 
     switch (tabId) {
         case 'WallsParametersTab':
-            elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall'];
+            let activeButton = tabContainer.querySelector('.form__form-element.active');
+            if (activeButton) {
+                const target = activeButton.getAttribute('data-target');
+                switch (target) {
+                    case 'all':
+                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall'];
+                        break;
+                    case 'front':
+                        elementNames = ['FrontWall'];
+                        break;
+                    case 'back':
+                        elementNames = ['BackWall'];
+                        break;
+                    case 'left':
+                        elementNames = ['LeftWall'];
+                        break;
+                    case 'right':
+                        elementNames = ['RightWall'];
+                        break;
+                    default:
+                        console.error('Неизвестное значение data-target:', target);
+                }
+            } else {
+                console.error('Не найдена активная кнопка выбора стены.');
+            }
             break;
         case 'CeilingParametrsTab':
             elementNames = ['Lamp'];
@@ -127,13 +151,7 @@ export function defaultMaterial(){
         { metalness: 0, roughness: 0.8 });
 
     defaultVisibility();*/
-    console.log("ятут" +
-        "")
-    if (!model) {
-        console.error("Модель еще не загружена");
-        return;
-    }
-    console.log(model)
+
 }
 
 function defaultVisibility() {
