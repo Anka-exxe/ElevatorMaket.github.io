@@ -1,4 +1,4 @@
-import {handleTextureClick} from "../models/textureManager";
+import {handleTextureClick} from "../models/textureManager.js";
 
 const tabImageMap = new Map([
     ['MainParametersTab', 'main_parameters_icon'],
@@ -136,6 +136,8 @@ function showImages(category, tabId) {
             img.src = imagePath;
             img.alt = `${category} image`;
 
+            img.setAttribute('data-texture-url', imagePath);
+            img.setAttribute('data-alpha-url',  "");
             let className;
 
             if(tabId == 'BoardParametrsTab' || tabId == 'CeilingParametrsTab') {

@@ -2,7 +2,7 @@
 import { GLTFLoader } from 'jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-
+import {defaultMaterial} from './textureManager.js'
 
 let model;
 let scene, camera, renderer, controls;
@@ -16,6 +16,7 @@ function init() {
 
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+    renderer.outputEncoding = THREE.sRGBEncoding;
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xeeeeee);
@@ -43,9 +44,10 @@ function init() {
 
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(
-        './liftModels/newModel.fbx',
+        './liftModels/model.fbx',
         (gltf) => {
             scene.add(gltf.scene);
+            model = gltf.scene;
             window.model = model;
             animate();
         },
@@ -55,9 +57,10 @@ function init() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/newModel.fbx',
+                './liftModels/model.fbx',
                 (object) => {
                     scene.add(object);
+                    model = object;
                     window.model = model;
                     animate();
                 },
@@ -77,6 +80,32 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     });
+
+    defaultMaterial();
+    defaultVisibility()
 }
 
 document.addEventListener('DOMContentLoaded', init);
+function defaultVisibility() {
+    model.getObjectByName('LeftDoor1').visible = false;
+    model.getObjectByName('RightDoor1').visible = false;
+    model.getObjectByName('BackWall11').visible = false;
+    model.getObjectByName('BackWall12').visible = false;
+    model.getObjectByName('BackWall13').visible = false;
+    model.getObjectByName('BackWall14').visible = false;
+    model.getObjectByName('RightMirror1').visible = false;
+    model.getObjectByName('RightMirror2').visible = false;
+    model.getObjectByName('Threshold1').visible = false;
+    model.getObjectByName('RightHandrail11').visible = false;
+    model.getObjectByName('RightHandrail12').visible = false;
+    model.getObjectByName('RightHandrail13').visible = false;
+    model.getObjectByName('RightHandrail14').visible = false;
+    model.getObjectByName('RightHandrail15').visible = false;
+    model.getObjectByName('RightHandrail16').visible = false;
+    model.getObjectByName('RightHandrail17').visible = false;
+    model.getObjectByName('RightHandrail18').visible = false;
+    model.getObjectByName('BackHandrail11').visible = false;
+    model.getObjectByName('BackHandrail12').visible = false;
+    model.getObjectByName('BackHandrail13').visible = false;
+    model.getObjectByName('BackWall1').visible = false;
+}
