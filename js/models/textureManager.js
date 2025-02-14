@@ -54,6 +54,8 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
                         transparent: alphaMap ? true : false,
                         metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
                         roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
+                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffee),
+                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? materialOptions.emissiveIntensity : 0
                     });
                     newMaterial.needsUpdate = true;
                     child.material = newMaterial;
@@ -201,11 +203,13 @@ export function applyDefaultElevatorTextures() {
         {
             elementNames: ['Lamp'],
             texture: './Потолок/DL16CE_gray.jpg',
-            alpha: './Потолок/Безымянный-2.png',
-            options: { metalness: 0,
+            alpha: './Потолок/P05.png',
+            options: {
+                metalness: 0,
                 roughness: 0.8,
                 emissive: new THREE.Color(0xffffee),
-                emissiveIntensity: 1 }
+                emissiveIntensity: 1
+            }
         },
         {
             elementNames: ['Door'],

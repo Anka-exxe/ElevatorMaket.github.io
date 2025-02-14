@@ -138,6 +138,7 @@ function showImages(category, tabId) {
 
             img.setAttribute('data-texture-url', imagePath);
             img.setAttribute('data-alpha-url',  "");
+            img.setAttribute('data-bump-url',  "");
             let className;
 
             if(tabId == 'BoardParametrsTab' || tabId == 'CeilingParametrsTab') {
