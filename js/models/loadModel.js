@@ -19,7 +19,7 @@ function init() {
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xeeeeee);
+    scene.background = new THREE.Color(0xe0e0e0); 
 
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
