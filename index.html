@@ -87,7 +87,7 @@
                         <h3 class="form-container--radio__title">Тип кабины:</h3>
                         <form class="form-container--radio__form form">                   
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="cabin_type" class="form__form-element" value="not_walk_through_cabin" id="not_walk_through_cabin">
+                                <input class="form__radio" type="radio" name="cabin_type" class="form__form-element" value="not_walk_through_cabin" id="not_walk_through_cabin" checked>
                                 <label class="form_form-label" for="not_walk_through_cabin">Непроходная</label>
                             </div>
                             <div class="form__radio-with-label">
@@ -103,20 +103,20 @@
                         <h3 class="form-container--radio__title">Тип открывания:</h3>
                         <form class="form-container--radio__form form">
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="central" id="central">
-                                <label class="form_form-label" for="central">Центральное</label>
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="central" id="centralOpenType">
+                                <label class="form_form-label" for="centralOpenType">Центральное</label>
                             </div>
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="left" id="left">
-                                <label class="form_form-label" for="left">Телескопическое (левое)</label>
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="left" id="leftOpenType" checked>
+                                <label class="form_form-label" for="leftOpenType">Телескопическое (левое)</label>
                             </div>
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="right" id="right">
-                                <label class="form_form-label" for="right">Телескопическое (правое)</label>
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="right" id="rightOpenType">
+                                <label class="form_form-label" for="rightOpenType">Телескопическое (правое)</label>
                             </div>
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="central_telescopic" id="central_telescopic">
-                                <label class="form_form-label" for="central_telescopic">Центрально-телескопическое</label>
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="central_telescopic" id="centralTelescopicOpenType">
+                                <label class="form_form-label" for="centralTelescopicOpenType">Центрально-телескопическое</label>
                             </div>
                         </form>
                     </div>  
@@ -201,7 +201,7 @@
                         <h3 class="form-container--radio__title">Ориентация рисунка светильника:</h3>
                         <form class="form-container--radio__form form">                   
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="light_orientation_type" class="form__form-element" value="horizontal" id="horizontal">
+                                <input class="form__radio" type="radio" name="light_orientation_type" class="form__form-element" value="horizontal" id="horizontal" checked>
                                 <label class="form_form-label" for="horizontal">Горизонтальная</label>
                             </div>
                             <div class="form__radio-with-label">
@@ -346,12 +346,12 @@
                         <h3 class="form-container--radio__title">Наличие:</h3>
                         <form class="form-container--radio__form form">
                         <div class="form__radio-with-label">
-                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="yes" id="yes">
-                            <label class="form_form-label" for="yes">Да</label>
+                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="yes" id="haveHand" checked>
+                            <label class="form_form-label" for="haveHand">Да</label>
                         </div>
                         <div class="form__radio-with-label">
-                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="no" id="no" checked>
-                            <label class="form_form-label" for="no">Нет</label>
+                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="no" id="noHand" >
+                            <label class="form_form-label" for="noHand">Нет</label>
                         </div>
                     </form>
                     </div>
@@ -444,6 +444,7 @@
 
     <script type="module" src="./js/models/loadModel.js"></script>
     <script type="module" src="./js/models/textureManager.js"></script>
+    <script type="module" src="./js/models/unusiallElements.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

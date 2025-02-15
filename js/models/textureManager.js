@@ -96,13 +96,13 @@ console.log(tabId)
                 const target = activeButton.getAttribute('data-target');
                 switch (target) {
                     case 'all':
-                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall'];
+                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1'];
                         break;
                     case 'front':
                         elementNames = ['FrontWall'];
                         break;
                     case 'back':
-                        elementNames = ['BackWall'];
+                        elementNames = ['BackWall','BackWall1'];
                         break;
                     case 'left':
                         elementNames = ['LeftWall'];
@@ -124,7 +124,7 @@ console.log(tabId)
             elementNames = ['Floor','Threshold','Threshold1'];
             break;
         case 'BoardParametrsTab':
-            elementNames = ['ControlPanel'];
+            elementNames = ['DisplayHorisontal', "DisplayVertical"];
             break;
         case 'DoorParametrsTab':
             elementNames = ['Door'];
@@ -143,6 +143,20 @@ console.log(tabId)
     }
 
     applyTextureToElement(model, elementNames, textureURL, alphaURL, { metalness: 0.5, roughness: 0.8 });
+
+    if (tabId =='CeilingParametrsTab'){
+        applyTextureToElement(
+            model,
+            elementNames,
+            textureURL,
+            alphaURL,
+            {
+                metalness: 0,
+                roughness: 0.8,
+                emissive: new THREE.Color(0xffffee),
+                emissiveIntensity: 1
+            });
+    }
 }
 
 export function applyDefaultElevatorTextures() {
@@ -160,6 +174,12 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['BackWall'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['BackWall1'],
             texture: './Стены/DL89E_diffuse.jpg',
             alpha: null,
             options: { metalness: 0, roughness: 0.8 }
@@ -202,8 +222,8 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['Lamp'],
-            texture: './Потолок/DL16CE_gray.jpg',
-            alpha: './Потолок/P05.png',
+            texture: './Потолок/RAL-7035-Svetlo-serii.png',
+            alpha: './Потолок_Текстуры/Р17.png',
             options: {
                 metalness: 0,
                 roughness: 0.8,
@@ -213,6 +233,12 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['Door'],
+            texture: './Двери/RAL-7035-Svetlo-serii.png',
+            alpha: null,
+            options: { metalness: 0.8, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Door1'],
             texture: './Двери/RAL-7035-Svetlo-serii.png',
             alpha: null,
             options: { metalness: 0.8, roughness: 0.8 }
@@ -246,7 +272,19 @@ export function applyDefaultElevatorTextures() {
             texture: './Стены/шлифованная нержавейка.jpg',
             alpha: null,
             options: { metalness: 1, roughness: 0.7 }
-        }
+        },
+        {
+            elementNames: ['RightHandrail1'],
+            texture: './Стены/шлифованная нержавейка.jpg',
+            alpha: null,
+            options: { metalness: 1, roughness: 0.7 }
+        },
+        {
+            elementNames: ['BackHandrail1'],
+            texture: './Стены/шлифованная нержавейка.jpg',
+            alpha: null,
+            options: { metalness: 1, roughness: 0.7 }
+        },
     ];
 
     // Для каждого набора настроек применяем текстуру к соответствующим объектам
@@ -281,16 +319,16 @@ function CreateMirror()
 }
 
 function defaultVisibility() {
-    model.getObjectByName('LeftDoor1').visible = false;
-    model.getObjectByName('RightDoor1').visible = false;
-    model.getObjectByName('BackWall11').visible = false;
-    model.getObjectByName('BackWall12').visible = false;
-    model.getObjectByName('BackWall13').visible = false;
-    model.getObjectByName('BackWall14').visible = false;
+    //model.getObjectByName('LeftDoor1').visible = false;
+    //model.getObjectByName('RightDoor1').visible = false;
+    //model.getObjectByName('BackWall11').visible = false;
+    //model.getObjectByName('BackWall12').visible = false;
+    //model.getObjectByName('BackWall13').visible = false;
+    //model.getObjectByName('BackWall14').visible = false;
     model.getObjectByName('RightMirror1').visible = false;
     model.getObjectByName('RightMirror2').visible = false;
-    model.getObjectByName('Threshold1').visible = false;
-    model.getObjectByName('RightHandrail11').visible = false;
+    //model.getObjectByName('Threshold1').visible = false;
+    /*model.getObjectByName('RightHandrail11').visible = false;
     model.getObjectByName('RightHandrail12').visible = false;
     model.getObjectByName('RightHandrail13').visible = false;
     model.getObjectByName('RightHandrail14').visible = false;
@@ -300,8 +338,8 @@ function defaultVisibility() {
     model.getObjectByName('RightHandrail18').visible = false;
     model.getObjectByName('BackHandrail11').visible = false;
     model.getObjectByName('BackHandrail12').visible = false;
-    model.getObjectByName('BackHandrail13').visible = false;
-    model.getObjectByName('BackWall1').visible = false;
+    model.getObjectByName('BackHandrail13').visible = false;*/
+    model.getObjectByName('DisplayHorisontal').visible = false;
 }
 
 

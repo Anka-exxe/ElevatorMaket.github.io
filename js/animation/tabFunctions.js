@@ -70,59 +70,67 @@ function showTab(tabId) {
 
 const images = {
     walls: [
-        './Стены/5024.jpg', 
-        './Стены/DL16CE_diffuse.jpg',
-        './Стены/DL16CE_gray.jpg',
-        './Стены/DL16CE_normal.jpg',
-        './Стены/DL16CE_roughness.jpg',
-        './Стены/DL89E_diffuse.jpg',
-        './Стены/DL89E_glossiness.jpg',
-        './Стены/DL89E_gray.jpg',
-        './Стены/DL89E_normal.jpg',
-        './Стены/HL Ti-Gold.jpg',
-        './Стены/HY-003 TI-GOLD.jpg',
-        './Стены/HY-004 TI-GOLD.jpg',
-        './Стены/RAL-7035-Svetlo-serii.png',
-        './Стены/шлифованная нержавейка.jpg',
+        { icon: './Стены/5024.jpg', texture: './Стены/5024.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL16CE_diffuse.jpg', texture: './Стены/DL16CE_diffuse.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL16CE_gray.jpg', texture: './Стены/DL16CE_gray.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL16CE_normal.jpg', texture: './Стены/DL16CE_normal.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL16CE_roughness.jpg', texture: './Стены/DL16CE_roughness.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL89E_diffuse.jpg', texture: './Стены_Текстуры/DL89E.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL89E_glossiness.jpg', texture: './Стены/DL89E_glossiness.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL89E_gray.jpg', texture: './Стены/DL89E_gray.jpg', alpha: '', bump: '' },
+        { icon: './Стены/DL89E_normal.jpg', texture: './Стены/DL89E_normal.jpg', alpha: '', bump: '' },
+        { icon: './Стены/HL Ti-Gold.jpg', texture: './Стены/HL Ti-Gold.jpg', alpha: '', bump: '' },
+        { icon: './Стены/HY-003 TI-GOLD.jpg', texture: './Стены/HY-003 TI-GOLD.jpg', alpha: '', bump: '' },
+        { icon: './Стены/HY-004 TI-GOLD.jpg', texture: './Стены/HY-004 TI-GOLD.jpg', alpha: '', bump: '' },
+        { icon: './Стены/RAL-7035-Svetlo-serii.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: '', bump: '' },
+        { icon: './Стены/шлифованная нержавейка.jpg', texture: './Стены/шлифованная нержавейка.jpg', alpha: '', bump: '' }
     ],
     ceiling: [
-        './Потолок/00.png', 
-        './Потолок/01.jpg', 
-        './Потолок/1.jpg', 
-        './Потолок/2.jpg',
-        './Потолок/6.png',
-        './Потолок/07.jpg',
-        './Потолок/7.png',
-        './Потолок/8.png',
-        './Потолок/9.png',
-        './Потолок/11.png',
-        './Потолок/21.jpg',
-        './Потолок/P23.jpg',
-        './Потолок/Безымянный-2.png',
-        './Потолок/Р04.jpg',
+        { icon: './Потолок_Иконки/Р00.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р00.png', bump: '' },
+        { icon: './Потолок_Иконки/P01.jpg', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/P01.jpg', bump: '' },
+        { icon: './Потолок_Иконки/P03.jpg', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/P03.jpg', bump: '' },
+        { icon: './Потолок_Иконки/P07.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/P07.png', bump: '' },
+        { icon: './Потолок_Иконки/P08.jpg', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/P08.jpg', bump: '' },
+        { icon: './Потолок_Иконки/P21.jpg', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/P21.jpg', bump: '' },
+        { icon: './Потолок_Иконки/P23.jpg', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/P23.jpg', bump: '' },
+        { icon: './Потолок_Иконки/Р02.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р02.png', bump: '' },
+        { icon: './Потолок_Иконки/Р04.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р04.png', bump: '' },
+        { icon: './Потолок_Иконки/Р06.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р06.png', bump: '' },
+        { icon: './Потолок_Иконки/Р14.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р14.png', bump: '' },
+        { icon: './Потолок_Иконки/Р16.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р16.png', bump: '' },
+        { icon: './Потолок_Иконки/Р17.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р17.png', bump: '' },
+        { icon: './Потолок_Иконки/Р20.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р20.png', bump: '' },
+        { icon: './Потолок_Иконки/Р22.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р22.png', bump: '' },
+        { icon: './Потолок_Иконки/Р24.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р24.png', bump: '' }
+    ],
+    ceilingMaterial: [
+        { icon: './Потолок/00.png', texture: './Потолок/00.png', alpha: '', bump: '' },
+        { icon: './Потолок/01.jpg', texture: './Потолок/01.jpg', alpha: '', bump: '' }
     ],
     floor: [
-        './Пол/nero marquina.jpg', 
-        './Пол/WoodFlooring042_COL_4K.jpg',  
-        './Пол/basalt-grey.jpg',  
-        './Пол/antik2.png', 
-        './Пол/WoodFlooring042_DISP_4K.jpg',
+        { icon: './Пол/nero marquina.jpg', texture: './Пол/nero marquina.jpg', alpha: '', bump: '' },
+        { icon: './Пол/WoodFlooring042_COL_4K.jpg', texture: './Пол/WoodFlooring042_COL_4K.jpg', alpha: '', bump: '' },
+        { icon: './Пол/basalt-grey.jpg', texture: './Пол/basalt-grey.jpg', alpha: '', bump: '' },
+        { icon: './Пол/antik2.png', texture: './Пол/antik2.png', alpha: '', bump: '' },
+        { icon: './Пол/WoodFlooring042_DISP_4K.jpg', texture: './Пол/WoodFlooring042_DISP_4K.jpg', alpha: '', bump: '' }
     ],
     board: [
-        './Табло/TL-D70.png', 
-        './Табло/BUTSAN TABLO.jpg',
-        './Табло/BUTSAN1-01.jpg', 
-        './Табло/BUTSAN1-01111.jpg',        
+        { icon: './Табло/TL-D70.png', texture: './Табло/TL-D70.png', alpha: '', bump: '' },
+        { icon: './Табло/BUTSAN TABLO.jpg', texture: './Табло/BUTSAN TABLO.jpg', alpha: '', bump: '' },
+        { icon: './Табло/BUTSAN1-01.jpg', texture: './Табло/BUTSAN1-01.jpg', alpha: '', bump: '' },
+        { icon: './Табло/BUTSAN1-01111.jpg', texture: './Табло/BUTSAN1-01111.jpg', alpha: '', bump: '' }
     ],
     door: [
-        './Двери/HL Ti-Gold.jpg',
-        './Двери/HY-003 TI-GOLD.jpg', 
-        './Двери/HY-004 TI-GOLD.jpg',
-        './Двери/RAL-7035-Svetlo-serii.png',
-        './Двери/ral9016.jpg',
-        './Двери/шлифованная нержавейка.jpg',
+        { icon: './Двери/HL Ti-Gold.jpg', texture: './Двери/HL Ti-Gold.jpg', alpha: '', bump: '' },
+        { icon: './Двери/HY-003 TI-GOLD.jpg', texture: './Двери/HY-003 TI-GOLD.jpg', alpha: '', bump: '' },
+        { icon: './Двери/HY-004 TI-GOLD.jpg', texture: './Двери/HY-004 TI-GOLD.jpg', alpha: '', bump: '' },
+        { icon: './Двери/RAL-7035-Svetlo-serii.png', texture: './Двери/RAL-7035-Svetlo-serii.png', alpha: '', bump: '' },
+        { icon: './Двери/ral9016.jpg', texture: './Двери/ral9016.jpg', alpha: '', bump: '' },
+        { icon: './Двери/шлифованная нержавейка.jpg', texture: './Двери/шлифованная нержавейка.jpg', alpha: '', bump: '' }
     ]
 };
+
+
 
 function showImages(category, tabId) {
     const parentElement = document.getElementById(tabId);
@@ -131,23 +139,18 @@ function showImages(category, tabId) {
     container.innerHTML = '';
 
     if (images[category]) {
-        images[category].forEach(imagePath => {
+        images[category].forEach(item => {
             const img = document.createElement('img');
-            img.src = imagePath;
+            img.src = item.icon || item.texture;
             img.alt = `${category} image`;
 
-            img.setAttribute('data-texture-url', imagePath);
-            img.setAttribute('data-alpha-url',  "");
-            img.setAttribute('data-bump-url',  "");
-            let className;
+            img.setAttribute('data-texture-url', item.texture);
+            img.setAttribute('data-alpha-url',  item.alpha || "");
+            img.setAttribute('data-bump-url',  item.bump || "");
 
-            if(tabId == 'BoardParametrsTab' || tabId == 'CeilingParametrsTab') {
-                className = 'special-texture-image'
-            } else {
-                className = 'texture-image';
-            }
-
+            let className = (tabId === 'BoardParametrsTab') ? 'special-texture-image' : 'texture-image';
             img.className = className;
+
             img.addEventListener('click', handleTextureClick);
             container.appendChild(img);
         });

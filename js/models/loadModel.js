@@ -3,6 +3,7 @@ import { GLTFLoader } from 'jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 import {applyDefaultElevatorTextures} from './textureManager.js'
+import {DefaultSettings} from "./unusiallElements.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -40,7 +41,6 @@ function init() {
     controls.maxDistance = 160;
 
     function animate() {
-        console.log(camera.position);
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
@@ -69,6 +69,7 @@ function init() {
                     model = object;
                     window.model = model;
                     applyDefaultElevatorTextures();
+                    DefaultSettings()
                     animate();
                 },
                 undefined,
@@ -76,7 +77,6 @@ function init() {
                     console.error('Ошибка загрузки FBX модели:', error);
                 }
             );
-
         }
     );
 
