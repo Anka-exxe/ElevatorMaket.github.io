@@ -379,15 +379,15 @@ function updateMirrorPlacement() {
         }
         if (mirrorRight) {
             mirrorRight.visible = false;
-            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+            const mirrorWall = window.model.getObjectByName("RightWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
             mirrorWall.visible = true;
             mirrorWall1.visible = true;
         }
         if (mirrorLeft) {
             mirrorLeft.visible = false;
-            const mirrorWall = window.model.getObjectByName("RightWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
             mirrorWall.visible = true;
             mirrorWall1.visible = true;
         }
@@ -398,26 +398,49 @@ function updateMirrorPlacement() {
     const rightButton = document.getElementById("rightMirror");
     const leftButton = document.getElementById("leftMirror");
 
-    if (mirrorBack) {
-        const mirrorWall = window.model.getObjectByName("BackWallMirror");
-        mirrorWall.visible = false;
+    if (mirrorBack ) {
         mirrorBack.visible = backButton.classList.contains('active');
+
+        if (backButton.classList.contains('active')) {
+            const mirrorWall = window.model.getObjectByName("BackWallMirror");
+            mirrorWall.visible = false;
+        }
+        else {
+            const mirrorWall = window.model.getObjectByName("BackWallMirror");
+            mirrorWall.visible = true;
+        }
     }
-    if (mirrorRight && rightButton.classList.contains('active')) {
-        const mirrorWall = window.model.getObjectByName("LeftWallMirror");
-        const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
-        mirrorWall.visible = false;
-        mirrorWall1.visible = false;
+    if (mirrorRight ) {
         mirrorRight.traverse(child => { child.visible = rightButton.classList.contains('active'); });
-        console.log(mirrorRight);
+
+        if (rightButton.classList.contains('active')) {
+            const mirrorWall = window.model.getObjectByName("RightWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+            mirrorWall.visible = false;
+            mirrorWall1.visible = false;
+        }
+        else {
+            const mirrorWall = window.model.getObjectByName("RightWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+            mirrorWall.visible = true;
+            mirrorWall1.visible = true;
+        }
     }
-    if (mirrorLeft && leftButton.classList.contains('active')) {
-        const mirrorWall = window.model.getObjectByName("RightWallMirror");
-        const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
-        mirrorWall.visible = false;
-        mirrorWall1.visible = false;
-        mirrorLeft.traverse(child => { child.visible = rightButton.classList.contains('active'); });
-        console.log(mirrorLeft);
+    if (mirrorLeft) {
+        mirrorLeft.traverse(child => { child.visible = leftButton.classList.contains('active'); });
+
+        if (leftButton.classList.contains('active')) {
+            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+            mirrorWall.visible = false;
+            mirrorWall1.visible = false;
+        }
+        else {
+            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+            mirrorWall.visible = true;
+            mirrorWall1.visible = true;
+        }
     }
 
     console.log("Mirror placement updated:",
