@@ -198,19 +198,19 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['Floor'],
-            texture: './Пол/nero marquina.jpg',
+            texture: './Пол_Текстура/nero marquina.jpg',
             alpha: null,
             options: { metalness: 0.2, roughness: 0.8 }
         },
         {
             elementNames: ['Threshold'],
-            texture: './Пол/nero marquina.jpg',
+            texture: './Пол_Текстура/nero marquina.jpg',
             alpha: null,
             options: { metalness: 0.2, roughness: 0.8 }
         },
         {
             elementNames: ['Threshold1'],
-            texture: './Пол/nero marquina.jpg',
+            texture: './Пол_Текстура/nero marquina.jpg',
             alpha: null,
             options: { metalness: 0.2, roughness: 0.8 }
         },
@@ -307,8 +307,8 @@ function defaultVisibility() {
     //model.getObjectByName('BackWall12').visible = false;
     //model.getObjectByName('BackWall13').visible = false;
     //model.getObjectByName('BackWall14').visible = false;
-    model.getObjectByName('RightMirror1').visible = false;
-    model.getObjectByName('RightMirror2').visible = false;
+    //model.getObjectByName('RightMirror1').visible = false;
+    //model.getObjectByName('RightMirror2').visible = false;
     //model.getObjectByName('Threshold1').visible = false;
     /*model.getObjectByName('RightHandrail11').visible = false;
     model.getObjectByName('RightHandrail12').visible = false;

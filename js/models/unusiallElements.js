@@ -61,6 +61,21 @@
     panelLocationRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
     });
+
+    const mirrorAvailabilityRadios = document.querySelectorAll('input[name="mirror_availability"]');
+    mirrorAvailabilityRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            updateMirrorPlacement();
+        });
+    });
+
+    const mirrorButtons = document.querySelectorAll('.mirror-location-button');
+    mirrorButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            button.classList.toggle('active');
+            updateMirrorPlacement();
+        });
+    });
 });
 
 
@@ -93,6 +108,8 @@ export function DefaultSettings(){
     }
 
     updateControlPanelPlacement();
+
+    updateMirrorPlacement();
 }
 
 
@@ -334,6 +351,80 @@ function updateControlPanelPlacement() {
             console.warn(`Группа ${targetGroupName} не найдена`);
         }
     }
+    window.model.traverse(child => {
+        if (child.name === 'DisplayHorisontal') {
+            child.visible = false;
+        }
+    });
+}
+
+function updateMirrorPlacement() {
+    if (!window.model) {
+        console.error("Модель еще не загружена");
+        return;
+    }
+
+    const availabilityRadio = document.querySelector('input[name="mirror_availability"]:checked');
+    const isMirrorEnabled = (availabilityRadio && availabilityRadio.value === "yes");
+
+    const mirrorBack = window.model.getObjectByName("MirrorBack");
+    const mirrorRight = window.model.getObjectByName("MirrorRight");
+    const mirrorLeft = window.model.getObjectByName("MirrorLeft");
+
+    if (!isMirrorEnabled) {
+        if (mirrorBack) {
+            mirrorBack.visible = false;
+            const mirrorWall = window.model.getObjectByName("BackWallMirror");
+            mirrorWall.visible = true;
+        }
+        if (mirrorRight) {
+            mirrorRight.visible = false;
+            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+            mirrorWall.visible = true;
+            mirrorWall1.visible = true;
+        }
+        if (mirrorLeft) {
+            mirrorLeft.visible = false;
+            const mirrorWall = window.model.getObjectByName("RightWallMirror");
+            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+            mirrorWall.visible = true;
+            mirrorWall1.visible = true;
+        }
+        return;
+    }
+
+    const backButton = document.getElementById("backMirror");
+    const rightButton = document.getElementById("rightMirror");
+    const leftButton = document.getElementById("leftMirror");
+
+    if (mirrorBack) {
+        const mirrorWall = window.model.getObjectByName("BackWallMirror");
+        mirrorWall.visible = false;
+        mirrorBack.visible = backButton.classList.contains('active');
+    }
+    if (mirrorRight && rightButton.classList.contains('active')) {
+        const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+        const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+        mirrorWall.visible = false;
+        mirrorWall1.visible = false;
+        mirrorRight.traverse(child => { child.visible = rightButton.classList.contains('active'); });
+        console.log(mirrorRight);
+    }
+    if (mirrorLeft && leftButton.classList.contains('active')) {
+        const mirrorWall = window.model.getObjectByName("RightWallMirror");
+        const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+        mirrorWall.visible = false;
+        mirrorWall1.visible = false;
+        mirrorLeft.traverse(child => { child.visible = rightButton.classList.contains('active'); });
+        console.log(mirrorLeft);
+    }
+
+    console.log("Mirror placement updated:",
+        "Back:", mirrorBack ? mirrorBack.visible : "not found",
+        "Right:", mirrorRight ? mirrorRight.visible : "not found",
+        "Left:", mirrorLeft ? mirrorLeft.visible : "not found"
+    );
 }
 
 

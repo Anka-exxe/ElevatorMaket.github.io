@@ -294,12 +294,12 @@
                         <h3 class="form-container--radio__title">Наличие:</h3>
                         <form class="form-container--radio__form form">
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="mirror_availability" class="form__form-element" value="yes" id="yes">
-                                <label class="form_form-label" for="yes">Да</label>
+                                <input class="form__radio" type="radio" name="mirror_availability" class="form__form-element" value="yes" id="haveMirror">
+                                <label class="form_form-label" for="haveMirror">Да</label>
                             </div>
                             <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="mirror_availability" class="form__form-element" value="no" id="no" checked>
-                                <label class="form_form-label" for="no">Нет</label>
+                                <input class="form__radio" type="radio" name="mirror_availability" class="form__form-element" value="no" id="noMirror" checked>
+                                <label class="form_form-label" for="noMirror">Нет</label>
                             </div>
                         </form>
                     </div>
@@ -325,18 +325,9 @@
                     <div class="menu-container__form form-container--radio">
                         <h3 class="form-container--radio__title">Расположение:</h3>
                         <form class="form-container--radio__form form">
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="mirror_location" class="form__form-element" value="back" id="back" checked>
-                                <label class="form_form-label" for="back">Сзади</label>
-                            </div>
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="mirror_location" class="form__form-element" value="right" id="right">
-                                <label class="form_form-label" for="right">Справа</label>
-                            </div>
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="mirror_location" class="form__form-element" value="left" id="left">
-                                <label class="form_form-label" for="left">Слева</label>
-                            </div>
+                            <button class="form__form-element mirror-location-button active" type="button" data-location="back" id="backMirror" >Сзади</button>
+                            <button class="form__form-element mirror-location-button" type="button" data-location="right" id="rightMirror">Справа</button>
+                            <button class="form__form-element mirror-location-button" type="button" data-location="left" id="leftMirror">Слева</button>
                         </form>
                     </div>
                 </div>

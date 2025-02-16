@@ -108,10 +108,10 @@ const images = {
         { icon: './Потолок/01.jpg', texture: './Потолок/01.jpg', alpha: '', bump: '' }
     ],
     floor: [
-        { icon: './Пол/nero marquina.jpg', texture: './Пол/nero marquina.jpg', alpha: '', bump: '' },
-        { icon: './Пол/WoodFlooring042_COL_4K.jpg', texture: './Пол/WoodFlooring042_COL_4K.jpg', alpha: '', bump: '' },
-        { icon: './Пол/basalt-grey.jpg', texture: './Пол/basalt-grey.jpg', alpha: '', bump: '' },
-        { icon: './Пол/antik2.png', texture: './Пол/antik2.png', alpha: '', bump: '' },
+        { icon: './Пол/nero marquina.jpg', texture: './Пол_Текстура/nero marquina.jpg', alpha: '', bump: '' },
+        { icon: './Пол/WoodFlooring042_COL_4K.jpg', texture: './Пол_Текстура/WoodFlooring042_COL_4K.jpg', alpha: '', bump: '' },
+        { icon: './Пол/basalt-grey.jpg', texture: './Пол_Текстура/basalt-grey.jpg', alpha: '', bump: '' },
+        { icon: './Пол/ARABISCATO ( calakata).jpeg', texture: './Пол_Текстура/ARABISCATO.jpeg', alpha: '', bump: '' },
         { icon: './Пол/WoodFlooring042_DISP_4K.jpg', texture: './Пол/WoodFlooring042_DISP_4K.jpg', alpha: '', bump: '' }
     ],
     board: [
