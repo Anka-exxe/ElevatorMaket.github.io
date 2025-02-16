@@ -262,25 +262,7 @@ export function applyDefaultElevatorTextures() {
             options: { metalness: 0.3, roughness: 0.7 }
         },
         {
-            elementNames: ['RightHandrail'],
-            texture: './Стены/шлифованная нержавейка.jpg',
-            alpha: null,
-            options: { metalness: 1, roughness: 0.7 }
-        },
-        {
-            elementNames: ['BackHandrail'],
-            texture: './Стены/шлифованная нержавейка.jpg',
-            alpha: null,
-            options: { metalness: 1, roughness: 0.7 }
-        },
-        {
-            elementNames: ['RightHandrail1'],
-            texture: './Стены/шлифованная нержавейка.jpg',
-            alpha: null,
-            options: { metalness: 1, roughness: 0.7 }
-        },
-        {
-            elementNames: ['BackHandrail1'],
+            elementNames: ['HandrailsGroup'],
             texture: './Стены/шлифованная нержавейка.jpg',
             alpha: null,
             options: { metalness: 1, roughness: 0.7 }

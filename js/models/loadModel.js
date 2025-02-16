@@ -47,7 +47,7 @@ function init() {
 
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(
-        './liftModels/model.fbx',
+        './liftModels/LiftModel.fbx',
         (gltf) => {
             object.position.set(0, 0, 0);
             scene.add(gltf.scene);
@@ -62,7 +62,7 @@ function init() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/model.fbx',
+                './liftModels/LiftModel.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);

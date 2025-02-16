@@ -245,31 +245,40 @@
 
                     <div class="menu-container__form form-container--radio">
                         <h3 class="form-container--radio__title">Расположение панели:</h3>
-                        <form class="form-container--radio__form form">
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="panel_location" class="form__form-element" value="left" id="left" checked>
-                                <label class="form_form-label" for="left">Левое</label>
-                            </div>
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="panel_location" class="form__form-element" value="right" id="right">
-                                <label class="form_form-label" for="right">Правое</label>
-                            </div>
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="panel_location" class="form__form-element" value="center" id="center">
-                                <label class="form_form-label" for="center">По центру</label>
-                            </div>
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="panel_location" class="form__form-element" value="closer_to_door" id="closer_to_door">
-                                <label class="form_form-label" for="closer_to_door">Ближе к двери</label>
-                            </div>
-                            <div class="form__radio-with-label">
-                                <input class="form__radio" type="radio" name="panel_location" class="form__form-element" value="both_sides" id="both_sides">
-                                <label class="form_form-label" for="both_sides">С двух сторон</label>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="menu-container__form form-container--radio">
+                            <h3 class="form-container--radio__title">Сторона панели:</h3>
+                            <form class="form-container--radio__form form">
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_side" value="left" id="leftPanelSide" checked>
+                                    <label class="form_form-label" for="leftPanelSide">Левое</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_side" value="right" id="rightPanelSide">
+                                    <label class="form_form-label" for="rightPanelSide">Правое</label>
+                                </div>
+                            </form>
+                        </div>
 
-                    <div class="textures-container">
+                        <div class="menu-container__form form-container--radio">
+                            <h3 class="form-container--radio__title">Расположение панели:</h3>
+                            <form class="form-container--radio__form form">
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_location" value="closer_to_door" id="closerToDoorPanelPosition" checked>
+                                    <label class="form_form-label" for="closerToDoorPanelPosition">Ближе к двери</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_location" value="center" id="centerPanelPosition" disabled>
+                                    <label class="form_form-label" for="centerPanelPosition">По центру</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_location" value="both_sides" id="bothSidesPanelPosition">
+                                    <label class="form_form-label" for="bothSidesPanelPosition">С двух сторон</label>
+                                </div>
+                            </form>
+                        </div>
+
+
+                        <div class="textures-container">
 
                     </div>
 
@@ -377,9 +386,9 @@
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Расположение поручня:</h3>
                         <form class="form-container__form form">
-                            <button class="form__form-element active" type="button" onclick="selectManyParameterButton(this)">Сзади</button>
-                            <button class="form__form-element" type="button" onclick="selectManyParameterButton(this)">Справа</button>
-                            <button class="form__form-element" type="button" onclick="selectManyParameterButton(this)">Слева</button>
+                            <button class="form__form-element active" name="railing_position" type="button" id="backHandrailButton">Сзади</button>
+                            <button class="form__form-element" type="button" name="railing_position" id="rightHandrailButton">Справа</button>
+                            <button class="form__form-element" type="button" name="railing_position" id="leftHandrailButton">Слева</button>
                         </form>
                     </div>
 
