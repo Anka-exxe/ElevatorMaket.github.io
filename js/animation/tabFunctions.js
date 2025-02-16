@@ -59,13 +59,26 @@ function showTab(tabId) {
         case 'DoorParametrsTab':
             category = 'door';
             break;
+        case 'HandrailParametrsTab':
+            category = 'handrail';
+            break;
         case 'OtherParametrsTab':
-            category = 'floor'; // Добавьте нужную категорию
+            category = 'floor'; 
             break;
     }
 
-    // Показываем изображения для выбранной категории
-    showImages(category, tabId);
+
+    const parentElement = document.getElementById(tabId);
+    const image_container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container');
+
+
+    const images = image_container.querySelectorAll('img');
+
+    if (images.length > 0) {
+    
+    } else {
+      showImages(category, tabId);
+    }    
 }
 
 const images = {
@@ -103,9 +116,18 @@ const images = {
         { icon: './Потолок_Иконки/Р22.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р22.png', bump: '' },
         { icon: './Потолок_Иконки/Р24.png', texture: './Стены/RAL-7035-Svetlo-serii.png', alpha: './Потолок_Текстуры/Р24.png', bump: '' }
     ],
+    ceilingPlafon: [
+        { icon: './Потолок_Материал/ral9016.jpg', texture: './Потолок_Материал/ral9016.jpg', alpha: '', bump: '' },
+        { icon: './Потолок_Материал/нержавеющая_сталь_текстура.jpg', texture: './Потолок_Материал/нержавеющая_сталь_текстура.jpg', alpha: '', bump: '' },
+        { icon: './Потолок_Материал/шлифованная нержавейка.jpg', texture: './Потолок_Материал/шлифованная нержавейка.jpg', alpha: '', bump: '' },
+    ]
+    ,
     ceilingMaterial: [
         { icon: './Потолок/00.png', texture: './Потолок/00.png', alpha: '', bump: '' },
         { icon: './Потолок/01.jpg', texture: './Потолок/01.jpg', alpha: '', bump: '' }
+    ],
+    handrail: [
+        { icon: './Поручень_Материал/хромированная_сталь.jpg', texture: './Поручень_Материал/хромированная_сталь.jpg', alpha: '', bump: '' },
     ],
     floor: [
         { icon: './Пол/nero marquina.jpg', texture: './Пол_Текстура/nero marquina.jpg', alpha: '', bump: '' },
@@ -120,6 +142,14 @@ const images = {
         { icon: './Табло/BUTSAN1-01.jpg', texture: './Табло/BUTSAN1-01.jpg', alpha: '', bump: '' },
         { icon: './Табло/BUTSAN1-01111.jpg', texture: './Табло/BUTSAN1-01111.jpg', alpha: '', bump: '' }
     ],
+    board_color: [
+        { icon: './Табло_цвет/RAL-7035-Svetlo-serii.png', texture: './Табло_цвет/RAL-7035-Svetlo-serii.png', alpha: '', bump: '' },
+        { icon: './Табло_цвет/ral9016.jpg', texture: './Табло_цвет/ral9016.jpg', alpha: '', bump: '' },
+        { icon: './Табло_цвет/зеркало_сталь.jpg', texture: './Табло_цвет/зеркало_сталь.jpg', alpha: '', bump: '' },
+        { icon: './Табло_цвет/нержавеющая_сталь_текстура.jpg', texture: './Табло_цвет/нержавеющая_сталь_текстура.jpg', alpha: '', bump: '' },
+        { icon: './Табло_цвет/черная_нержавеющая_сталь.jpg', texture: './Табло_цвет/черная_нержавеющая_сталь.jpg', alpha: '', bump: '' },
+        {  icon: './Табло_цвет/шлифованная_нержавейка.jpg', texture: './Табло_цвет/шлифованная_нержавейка.jpg', alpha: '', bump: ''  }
+    ],
     door: [
         { icon: './Двери/HL Ti-Gold.jpg', texture: './Двери/HL Ti-Gold.jpg', alpha: '', bump: '' },
         { icon: './Двери/HY-003 TI-GOLD.jpg', texture: './Двери/HY-003 TI-GOLD.jpg', alpha: '', bump: '' },
@@ -130,30 +160,56 @@ const images = {
     ]
 };
 
-
-
 function showImages(category, tabId) {
+
+    let addEventListenerToImages = function(container, category) {
+        if (images[category]) {
+            images[category].forEach(item => {
+                const img = document.createElement('img');
+                img.src = item.icon || item.texture;
+                img.alt = `${category} image`;
+    
+                img.setAttribute('data-texture-url', item.texture);
+                img.setAttribute('data-alpha-url',  item.alpha || "");
+                img.setAttribute('data-bump-url',  item.bump || "");
+    
+                let className = (tabId === 'BoardParametrsTab' && category == 'board') ? 'special-texture-image' : 'texture-image';
+                img.className = className;
+    
+                img.addEventListener('click', handleTextureClick);
+                container.appendChild(img);
+            });
+        }
+    } 
+
     const parentElement = document.getElementById(tabId);
-    const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container'); 
- 
-    //container.innerHTML = '';
 
-    if (images[category]) {
-        images[category].forEach(item => {
-            const img = document.createElement('img');
-            img.src = item.icon || item.texture;
-            img.alt = `${category} image`;
+    if (category == 'ceiling') {
+       const ceiling_pattern_container = parentElement.querySelector('.menu-container__options-menu-container-main .ceiling-pattern');
 
-            img.setAttribute('data-texture-url', item.texture);
-            img.setAttribute('data-alpha-url',  item.alpha || "");
-            img.setAttribute('data-bump-url',  item.bump || "");
+       addEventListenerToImages(ceiling_pattern_container, category);
 
-            let className = (tabId === 'BoardParametrsTab') ? 'special-texture-image' : 'texture-image';
-            img.className = className;
+       category = 'ceilingPlafon';
 
-            img.addEventListener('click', handleTextureClick);
-            container.appendChild(img);
-        });
+       const ceiling_material_container = parentElement.querySelector('.menu-container__options-menu-container-main .ceiling-material');
+       
+       addEventListenerToImages(ceiling_material_container, category);
+
+    } else if (category == 'board') {
+      const ceiling_pattern_container = parentElement.querySelector('.menu-container__options-menu-container-main .post-orders');
+
+       addEventListenerToImages(ceiling_pattern_container, category);
+
+       category = 'board_color';
+
+       const ceiling_material_container = parentElement.querySelector('.menu-container__options-menu-container-main .panel-color');
+       
+       addEventListenerToImages(ceiling_material_container, category);
+    } else {
+            const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container'); 
+
+            addEventListenerToImages(container, category);
     }
+    
 }
 window.showTab = showTab;

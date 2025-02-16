@@ -246,6 +246,7 @@ body {
 }
 
 .form__form-element, .form__form-element--transparent {
+    cursor: pointer;
     border: solid #E0E0E0 2px;
     border-radius: 8px;
     background-color: white;
@@ -297,6 +298,7 @@ body {
     transform: scale(1.2);
     accent-color: black;
     margin-right: 10px;
+    cursor: pointer;
 }
 
 .form__button-image {
@@ -307,10 +309,6 @@ body {
     display: grid;
     grid-template-columns: auto auto;
     gap: 5px;
-}
-
-.form__form-element--transparent {
-    background: none;
 }
 
 .menu-container__content {
@@ -341,6 +339,7 @@ body {
 }
 
 .texture-image {
+    cursor: pointer;
     height: auto;
     width: 31%;
     object-fit: contain; 
@@ -359,11 +358,12 @@ body {
 }
 
 .additional-button {
+    cursor: pointer;
     font-size: 18px;
 }
 
-
 .special-texture-image {
+    cursor: pointer;
     height: 150px;
     margin: 5px;
     width: auto;
