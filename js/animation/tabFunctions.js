@@ -136,7 +136,7 @@ function showImages(category, tabId) {
     const parentElement = document.getElementById(tabId);
     const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container'); 
  
-    container.innerHTML = '';
+    //container.innerHTML = '';
 
     if (images[category]) {
         images[category].forEach(item => {
