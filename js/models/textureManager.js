@@ -84,6 +84,7 @@ export function handleTextureClick(event) {
 
     const texturesContainer = img.closest('.textures-container');
     const tabContainer = texturesContainer.closest('.menu-container__content');
+    const textureType = texturesContainer ? texturesContainer.getAttribute('data-texture-type') : null;
     const tabId = tabContainer ? tabContainer.id : null;
     let elementNames = [];
 
@@ -118,13 +119,33 @@ console.log(tabId)
             }
             break;
         case 'CeilingParametrsTab':
-            elementNames = ['Lamp'];
+            if (textureType === "pattern") {
+                elementNames = ['Lamp'];
+                applyTextureToElement(
+                    model,
+                    elementNames,
+                    textureURL,
+                    alphaURL,
+                    {
+                        metalness: 0,
+                        roughness: 0.8,
+                        emissive: new THREE.Color(0xffffee),
+                        emissiveIntensity: 1
+                    });
+                return;
+            } else if (textureType === "material") {
+                elementNames = ['Ceiling'];
+            }
             break;
         case 'FloorParametrsTab':
             elementNames = ['Floor','Threshold','Threshold1'];
             break;
         case 'BoardParametrsTab':
-            elementNames = ['DisplayHorisontal', "DisplayVertical"];
+            if (textureType === "panel") {
+                elementNames = ['DisplayHorisontal', 'DisplayVertical'];
+            } else if (textureType === "panelColor") {
+                elementNames = ['ControlPanel'];
+            }
             break;
         case 'DoorParametrsTab':
             elementNames = ['Door'];
@@ -143,20 +164,6 @@ console.log(tabId)
     }
 
     applyTextureToElement(model, elementNames, textureURL, alphaURL, { metalness: 0.5, roughness: 0.8 });
-
-    if (tabId =='CeilingParametrsTab'){
-        applyTextureToElement(
-            model,
-            elementNames,
-            textureURL,
-            alphaURL,
-            {
-                metalness: 0,
-                roughness: 0.8,
-                emissive: new THREE.Color(0xffffee),
-                emissiveIntensity: 1
-            });
-    }
 }
 
 export function applyDefaultElevatorTextures() {

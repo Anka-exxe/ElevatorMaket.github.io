@@ -118,13 +118,13 @@ const images = {
     ],
     ceilingPlafon: [
         { icon: './Потолок_Материал/ral9016.jpg', texture: './Потолок_Материал/ral9016.jpg', alpha: '', bump: '' },
-        { icon: './Потолок_Материал/нержавеющая_сталь_текстура.jpg', texture: './Потолок_Материал/нержавеющая_сталь_текстура.jpg', alpha: '', bump: '' },
-        { icon: './Потолок_Материал/шлифованная нержавейка.jpg', texture: './Потолок_Материал/шлифованная нержавейка.jpg', alpha: '', bump: '' },
+        { icon: './Потолок_Материал/нержавеющая_сталь_текстура.jpg', texture: '', alpha: './Потолок_Материал/нержавеющая_сталь_текстура.jpg', bump: '' },
+        { icon: './Потолок_Материал/шлифованная нержавейка.jpg', texture: '', alpha: './Потолок_Материал/шлифованная нержавейка.jpg', bump: '' },
     ]
     ,
     ceilingMaterial: [
-        { icon: './Потолок/00.png', texture: './Потолок/00.png', alpha: '', bump: '' },
-        { icon: './Потолок/01.jpg', texture: './Потолок/01.jpg', alpha: '', bump: '' }
+        { icon: './Потолок/00.png', texture: './Потолок/00.png', alpha: './Потолок/00.png', bump: '' },
+        { icon: './Потолок/01.jpg', texture: './Потолок/01.jpg', alpha: './Потолок/01.jpg', bump: '' }
     ],
     handrail: [
         { icon: './Поручень_Материал/хромированная_сталь.jpg', texture: './Поручень_Материал/хромированная_сталь.jpg', alpha: '', bump: '' },
@@ -206,9 +206,9 @@ function showImages(category, tabId) {
        
        addEventListenerToImages(ceiling_material_container, category);
     } else {
-            const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container'); 
+        const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container');
 
-            addEventListenerToImages(container, category);
+        addEventListenerToImages(container, category);
     }
     
 }
