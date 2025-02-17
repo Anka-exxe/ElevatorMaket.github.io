@@ -4,6 +4,7 @@ import { FBXLoader } from 'jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 import {applyDefaultElevatorTextures} from './textureManager.js'
 import {DefaultSettings} from "./unusiallElements.js";
+import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -40,8 +41,10 @@ function init() {
     controls.target.set(0, 50, 0);
 
     controls.maxDistance = 160;
+    controls.update(); 
 
     function animate() {
+        console.log(camera.position);
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
@@ -72,6 +75,17 @@ function init() {
                     applyDefaultElevatorTextures();
                     DefaultSettings()
                     animate();
+
+                    getObjectNames(object);
+
+                    function getObjectNames(obj) {
+                        const names = [];
+                        obj.traverse((child) => {
+                            if (child.isMesh) {
+                                console.log(child.name);
+                            }
+                        });}
+
                 },
                 undefined,
                 (error) => {
@@ -92,3 +106,52 @@ function init() {
 
 document.addEventListener('DOMContentLoaded', init);
 
+let animateButton = function selectParameterButton(button) {
+    const container = button.parentNode; 
+    const buttons = container.querySelectorAll('button'); 
+    buttons.forEach(btn => {
+        btn.classList.remove('active'); 
+    });
+    button.classList.add('active'); 
+}
+
+
+// Логика для разных ракурсов для кнопок
+const buttonView3D = document.getElementById('view3d');
+const buttonViewFront = document.getElementById('viewFront');
+const buttonViewUp = document.getElementById('viewUp');
+const buttonViewInside = document.getElementById('viewInside');
+
+buttonView3D.onclick = function() {
+    animateButton(buttonView3D);
+    camera.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() + 110); 
+    controls.enableZoom = true;
+    controls.target.set(0, 50, 0);
+    controls.maxDistance = 160;
+    controls.update(); 
+};
+
+buttonViewUp.onclick = function() {
+    animateButton(buttonViewUp);
+    camera.position.set(0, GetExtremeYPoint() - 5, 0); 
+    controls.enableZoom = false;
+    controls.target.set(0, GetExtremeYPoint() - 10, 0);
+    controls.update();  
+};
+
+buttonViewFront.onclick = function() {
+    animateButton(buttonViewFront);
+    camera.position.set(0, (GetExtremeYPoint() / 2), GetExtremeZPoint()); 
+    controls.enableZoom = false;
+    controls.target.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() - 5);
+    controls.update(); 
+};
+
+buttonViewInside.onclick = function() {
+    animateButton(buttonViewInside);
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1); 
+    controls.enableZoom = true;
+    controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
+    controls.maxDistance = GetExtremeZPoint() / 2 - 10;
+    controls.update(); 
+};

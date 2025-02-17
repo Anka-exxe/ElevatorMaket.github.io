@@ -32,10 +32,10 @@
                 
                 <div class="elevator-container__options-menu">
                     <form class="elevator-container__form-container--transparent form-container--transparent">
-                        <button class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Вид 3D</button>
-                        <button class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Спереди</button>
-                        <button class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Сверху</button>
-                        <button class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Внутри</button>
+                        <button id="view3d" class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Вид 3D</button>
+                        <button id="viewFront"  class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Спереди</button>
+                        <button id="viewUp" class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Сверху</button>
+                        <button id="viewInside" class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Внутри</button>
                     </form>
                 </div>
             </footer>
@@ -450,6 +450,7 @@
     <script type="module" src="./js/models/loadModel.js"></script>
     <script type="module" src="./js/models/textureManager.js"></script>
     <script type="module" src="./js/models/unusiallElements.js"></script>
+    <script type="module" src="./js/models/positionManager.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
