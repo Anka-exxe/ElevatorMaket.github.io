@@ -8,9 +8,10 @@
         });
     });
 
-    const handrailButtons = document.querySelectorAll('input[name="railing_position"]');
+    const handrailButtons = document.querySelectorAll('button[name="railing_position"]');
     handrailButtons.forEach(button => {
         button.addEventListener('click', () => {
+            console.log("Выбранный  поручня:");
             button.classList.toggle('active');
             updateHandrailPosition();
         });
@@ -19,9 +20,7 @@
     const handrailRadios = document.querySelectorAll('input[name="handrail_availability"]');
     handrailRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
-            const selectedValue = event.target.value; // "yes" или "no"
-            console.log("Выбранное значение наличия поручня:", selectedValue);
-
+            const selectedValue = event.target.value;
             updateHandrailVisibility(selectedValue === "yes");
         });
     });
@@ -251,7 +250,7 @@ export function updateHandrailPosition() {
 
     for (const [russianText, englishSuffix] of Object.entries(mapping)) {
 
-        const button = Array.from(document.querySelectorAll('.menu-container__form button'))
+        const button = Array.from(document.querySelectorAll('button[name="railing_position"]'))
             .find(btn => btn.textContent.trim().toLowerCase() === russianText);
         const isActive = button ? button.classList.contains('active') : false;
 
