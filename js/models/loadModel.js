@@ -62,7 +62,7 @@ function init() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/LiftModel.fbx',
+                './liftModels/newTestLiftModel.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);

@@ -170,13 +170,11 @@ function updateCabinView(cabinType) {
 
 function updateOpenType(openingType) {
     const doorGroup = model.getObjectByName("Door");
-    const doorGroup1 = model.getObjectByName("Door1");
     if (!doorGroup) {
         console.error("Группа Door не найдена");
         return;
     }
     doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;
-    doorGroup1.rotation.y = (openingType === "right") ? Math.PI : 0;
 }
 
 function updateLampRotation(orientation) {
