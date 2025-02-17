@@ -33,9 +33,10 @@ function init() {
     scene.add(directionalLight);
 
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZoom = true;
+
+     controls.enableDamping = true;
+     controls.dampingFactor = 0.25;
+     controls.enableZoom = true;
     controls.target.set(0, 50, 0);
 
     controls.maxDistance = 160;
