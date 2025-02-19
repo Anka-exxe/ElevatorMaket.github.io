@@ -358,6 +358,7 @@ body {
 }
 
 .additional-button {
+    height: 45px;
     cursor: pointer;
     font-size: 18px;
 }

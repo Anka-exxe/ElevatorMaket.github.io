@@ -41,10 +41,9 @@ function init() {
     controls.target.set(0, 50, 0);
 
     controls.maxDistance = 160;
-    controls.update(); 
+    //controls.update(); 
 
     function animate() {
-        console.log(camera.position);
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
