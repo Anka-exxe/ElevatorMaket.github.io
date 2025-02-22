@@ -5,9 +5,11 @@ import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 import {applyDefaultElevatorTextures} from './textureManager.js'
 import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
+import * as Visibility from "./setVisibilityManager.js";
 
 let model;
 let scene, camera, renderer, controls;
+const maxDistance = 160;
 
 function init() {
     const canvas = document.querySelector('.elevator-container__elevator-observer');
@@ -40,7 +42,7 @@ function init() {
      controls.enableZoom = true;
     controls.target.set(0, 50, 0);
 
-    controls.maxDistance = 160;
+    controls.maxDistance = maxDistance;
     //controls.update(); 
 
     function animate() {
@@ -114,6 +116,18 @@ let animateButton = function selectParameterButton(button) {
     button.classList.add('active'); 
 }
 
+function checkCeilingVisibilityAndSet() {
+    if (!Visibility.isCeilingVisible()) {
+        Visibility.setCeilingVisibility(true);
+    }
+}
+
+function checkFrontVisibilityAndSet() {
+    if (!Visibility.isFrontVisible()) {
+        Visibility.setFrontVisible(true);
+    }
+}
+
 
 // Логика для разных ракурсов для кнопок
 const buttonView3D = document.getElementById('view3d');
@@ -125,32 +139,47 @@ buttonView3D.onclick = function() {
     animateButton(buttonView3D);
     camera.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() + 110); 
     controls.enableZoom = true;
+    controls.enableRotate = true;
     controls.target.set(0, 50, 0);
     controls.maxDistance = 160;
     controls.update(); 
+    checkCeilingVisibilityAndSet();
+    checkFrontVisibilityAndSet();
 };
 
 buttonViewUp.onclick = function() {
     animateButton(buttonViewUp);
-    camera.position.set(0, GetExtremeYPoint() - 5, 0); 
+    controls.maxDistance = maxDistance;
+    camera.position.set(0, maxDistance, 0); 
     controls.enableZoom = false;
+    controls.enableRotate = false;
     controls.target.set(0, GetExtremeYPoint() - 10, 0);
     controls.update();  
-};
+    Visibility.setCeilingVisibility(false);
+    checkFrontVisibilityAndSet();
+}
 
 buttonViewFront.onclick = function() {
     animateButton(buttonViewFront);
-    camera.position.set(0, (GetExtremeYPoint() / 2), GetExtremeZPoint()); 
+    controls.maxDistance = maxDistance;
+    camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance); 
     controls.enableZoom = false;
-    controls.target.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() - 5);
+    controls.target.set(0, GetExtremeYPoint() / 2, 0);
+    controls.enableRotate = false;
     controls.update(); 
+    Visibility.setFrontVisible(false);
+    checkCeilingVisibilityAndSet();
 };
 
 buttonViewInside.onclick = function() {
     animateButton(buttonViewInside);
     camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1); 
     controls.enableZoom = true;
+    controls.enableRotate = true;
     controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
     controls.maxDistance = GetExtremeZPoint() / 2 - 10;
     controls.update(); 
+    checkCeilingVisibilityAndSet();
+    checkFrontVisibilityAndSet();
 };
+
