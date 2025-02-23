@@ -6,6 +6,7 @@ import {applyDefaultElevatorTextures} from './textureManager.js'
 import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
+import * as Element from "./elementNames.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -28,10 +29,10 @@ function init() {
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
     directionalLight.position.set(1, 75, 1);
     scene.add(directionalLight);
 
@@ -45,9 +46,43 @@ function init() {
     controls.maxDistance = maxDistance;
     //controls.update(); 
 
+    function GetDistanceToWall(groupWallName) {
+        const group = window.model.getObjectByName(groupWallName);
+        const box = new THREE.Box3().setFromObject(group);
+        const center = box.getCenter(new THREE.Vector3());
+
+        return camera.position.distanceTo(center);
+    }
+
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
+
+       for (let element of Element.groupNames) {
+            let distance = GetDistanceToWall(element);
+
+            let  group = window.model.getObjectByName(element);
+            let unvisibleDistance =  camera.position.distanceTo(controls.target) - 2;
+
+            if(distance < unvisibleDistance) {
+                if (element === Element.ceilingGroup) {
+                    Visibility.setCeilingVisibility(false);
+                } else if (element === Element.floorGroup) {
+                    group.visible = false;
+                } else {
+                    Visibility.setWallVisibleByGroupName(element, false);
+                }
+
+            } else {
+                if (element === Element.ceilingGroup) {
+                    Visibility.setCeilingVisibility(true);
+                } else if (element === Element.floorGroup) {
+                    group.visible = true;
+                } else {
+                    Visibility.setWallVisibleByGroupName(element, true);
+                }
+            }
+        }  
     }
 
     const gltfLoader = new GLTFLoader();
@@ -67,21 +102,29 @@ function init() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/newTestLiftModel.fbx',
+                './liftModels/AnkaLift4.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
                     model = object;
                     window.model = model;
+                    getObjectNames(object);
                     applyDefaultElevatorTextures();
                     DefaultSettings()
                     animate();
 
-                    getObjectNames(object);
+
 
                     function getObjectNames(obj) {
                         const names = [];
                         obj.traverse((child) => {
+
+                            child.material = new THREE.MeshStandardMaterial({
+                                color: 0xffffff, // Задайте нужный цвет
+                                roughness: 0.5,  // Настройте шероховатость
+                                metalness: 0.5   // Настройте металлическость
+                            });
+
                             if (child.isMesh) {
                                 console.log(child.name);
                             }

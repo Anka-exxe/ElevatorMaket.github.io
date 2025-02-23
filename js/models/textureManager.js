@@ -52,9 +52,9 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
                         // bumpMap: texture,
                         // bumpScale: 0.5,
                         transparent: alphaMap ? true : false,
-                        metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
-                        roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
-                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffee),
+                        metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0,
+                        roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0,
+                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffff),
                         emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? materialOptions.emissiveIntensity : 0
                     });
                     newMaterial.needsUpdate = true;
