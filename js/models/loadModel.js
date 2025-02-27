@@ -29,10 +29,10 @@ function init() {
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(1, 75, 1);
     scene.add(directionalLight);
 
@@ -44,7 +44,6 @@ function init() {
     controls.target.set(0, 50, 0);
 
     controls.maxDistance = maxDistance;
-    //controls.update(); 
 
     function GetDistanceToWall(groupWallName) {
         const group = window.model.getObjectByName(groupWallName);
