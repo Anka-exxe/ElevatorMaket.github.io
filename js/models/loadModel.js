@@ -21,7 +21,10 @@ function init() {
 
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+   renderer.gammaOutput = true;
+    //renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
+//renderer.toneMappingExposure = 1.2; // Настройте этот параметр для управления яркостью
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe0e0e0); 
@@ -29,12 +32,16 @@ function init() {
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.9);
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.9);
     directionalLight.position.set(1, 75, 1);
     scene.add(directionalLight);
+
+    const pointLight = new THREE.PointLight(0xffffff, 0.9);
+    pointLight.position.set(1, 75, 1);
+    scene.add(pointLight);
 
     controls = new OrbitControls(camera, renderer.domElement);
 
@@ -110,6 +117,7 @@ function init() {
                     window.model = model;
                     getObjectNames(object);
                     applyDefaultElevatorTextures();
+                   //applyTextures();
                     DefaultSettings()
                     animate();
 

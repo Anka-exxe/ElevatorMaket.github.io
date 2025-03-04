@@ -27,6 +27,7 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
             if (texture) {
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
+                texture.colorSpace = THREE.SRGBColorSpace
                 if (materialOptions.repeat) {
                     texture.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -36,6 +37,7 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
             if (alphaMap) {
                 alphaMap.wrapS = THREE.RepeatWrapping;
                 alphaMap.wrapT = THREE.RepeatWrapping;
+                texture.colorSpace = THREE.SRGBColorSpace
                 if (materialOptions.repeatAlpha) {
                     alphaMap.repeat.set(materialOptions.repeatAlpha.x, materialOptions.repeatAlpha.y);
                 } else {
@@ -44,7 +46,7 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
             }
             model.traverse((child) => {
                 if (child.isMesh && (elementNamesArr.includes(child.name) || hasAncestorWithName(child, elementNamesArr))) {
-
+               
                     const newMaterial = new THREE.MeshStandardMaterial({
                         color: 0xffffff,
                         map: texture,
@@ -52,9 +54,9 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
                         // bumpMap: texture,
                         // bumpScale: 0.5,
                         transparent: alphaMap ? true : false,
-                        metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0,
-                        roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0,
-                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffff),
+                        metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
+                        roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
+                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffee),
                         emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? materialOptions.emissiveIntensity : 0
                     });
                     newMaterial.needsUpdate = true;
