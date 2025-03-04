@@ -353,6 +353,39 @@ function updateControlPanelPlacement() {
             child.visible = false;
         }
     });
+
+    if (!cabinRadio) {
+        console.warn("Не удалось определить тип кабины");
+        return;
+    }
+
+    const handrailButtons = document.querySelectorAll('button[name="railing_position"]');
+
+    handrailButtons.forEach(button => {
+        if (button.id === "backHandrailButton" && cabinType === "walk_through_cabin") {
+            return;
+        }
+
+        button.disabled = false;
+        button.classList.remove('disabled');
+    });
+
+    let targetButtonText = "";
+    if (side === "left") {
+        targetButtonText = "слева";
+    } else if (side === "right") {
+        targetButtonText = "справа";
+    }
+
+    if (targetButtonText) {
+        const buttonToDisable = Array.from(handrailButtons).find(btn => btn.textContent.trim().toLowerCase() === targetButtonText);
+        if (buttonToDisable) {
+            buttonToDisable.disabled = true;
+            buttonToDisable.classList.remove('active');
+            buttonToDisable.classList.add('disabled');
+            updateHandrailPosition();
+        }
+    }
 }
 
 function updateMirrorPlacement() {
