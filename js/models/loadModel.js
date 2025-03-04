@@ -32,11 +32,8 @@ function init() {
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-<<<<<<< HEAD
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.9);
-=======
     const ambientLight = new THREE.AmbientLight(0xffffff, 2);
->>>>>>> 66bb49c7d43806dafedf423488b4cc8bae63252f
+
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
