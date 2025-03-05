@@ -99,13 +99,13 @@ console.log(tabId)
                 const target = activeButton.getAttribute('data-target');
                 switch (target) {
                     case 'all':
-                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1'];
+                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1','FrontWallСentral','BackWall1Central'];
                         break;
                     case 'front':
-                        elementNames = ['FrontWall'];
+                        elementNames = ['FrontWall','FrontWallСentral'];
                         break;
                     case 'back':
-                        elementNames = ['BackWall','BackWall1'];
+                        elementNames = ['BackWall','BackWall1', 'BackWall1Central'];
                         break;
                     case 'left':
                         elementNames = ['LeftWall'];
@@ -140,7 +140,7 @@ console.log(tabId)
             }
             break;
         case 'FloorParametrsTab':
-            elementNames = ['Floor','Threshold','Threshold1'];
+            elementNames = ['Floor','BackThreshold','FrontThreshold'];
             break;
         case 'BoardParametrsTab':
             if (textureType === "panel") {
@@ -150,7 +150,7 @@ console.log(tabId)
             }
             break;
         case 'DoorParametrsTab':
-            elementNames = ['Door'];
+            elementNames = ['Door','DoorCentral','Door1','Door1Central'];
             break;
         case 'OtherParametrsTab':
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
@@ -182,6 +182,12 @@ export function applyDefaultElevatorTextures() {
             options: { metalness: 0, roughness: 0.8 }
         },
         {
+            elementNames: ['FrontWallСentral'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
             elementNames: ['BackWall'],
             texture: './Стены/DL89E_diffuse.jpg',
             alpha: null,
@@ -189,6 +195,12 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['BackWall1'],
+            texture: './Стены/DL89E_diffuse.jpg',
+            alpha: null,
+            options: { metalness: 0, roughness: 0.8 }
+        },
+        {
+            elementNames: ['BackWall1Central'],
             texture: './Стены/DL89E_diffuse.jpg',
             alpha: null,
             options: { metalness: 0, roughness: 0.8 }
@@ -218,7 +230,19 @@ export function applyDefaultElevatorTextures() {
             options: { metalness: 0.2, roughness: 0.8 }
         },
         {
+            elementNames: ['ThresholdCentral'],
+            texture: './Пол_Текстура/nero marquina.jpg',
+            alpha: null,
+            options: { metalness: 0.2, roughness: 0.8 }
+        },
+        {
             elementNames: ['Threshold1'],
+            texture: './Пол_Текстура/nero marquina.jpg',
+            alpha: null,
+            options: { metalness: 0.2, roughness: 0.8 }
+        },
+        {
+            elementNames: ['Threshold1Central'],
             texture: './Пол_Текстура/nero marquina.jpg',
             alpha: null,
             options: { metalness: 0.2, roughness: 0.8 }

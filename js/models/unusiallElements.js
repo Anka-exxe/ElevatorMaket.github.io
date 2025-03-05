@@ -165,16 +165,82 @@ function updateCabinView(cabinType) {
         }
     }
 
-    updateControlPanelPlacement()
+    updateControlPanelPlacement();
+    updateOpenType();
 }
 
 function updateOpenType(openingType) {
-    const doorGroup = model.getObjectByName("Door");
-    if (!doorGroup) {
-        console.error("Группа Door не найдена");
+    if (!window.model) {
+        console.error("Модель еще не загружена");
         return;
     }
-    doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;
+
+    const model = window.model;
+
+    const setVisibility = (name, visible) => {
+        const obj = model.getObjectByName(name);
+        if (obj) obj.visible = visible;
+    };
+
+    const cabinRadio = document.querySelector('input[name="cabin_type"]:checked');
+    const isWalkThrough = (cabinRadio && cabinRadio.value === "walk_through_cabin");
+
+    if (openingType === "central" || openingType === "Центральное") {
+
+        setVisibility("FrontWall", false);
+        setVisibility("Door", false);
+        setVisibility("Threshold", false);
+
+        setVisibility("FrontWallCentral", true);
+        setVisibility("DoorCentral", true);
+        setVisibility("ThresholdCentral", true);
+
+        if (isWalkThrough) {
+            setVisibility("BackWall1", false);
+            setVisibility("Threshold1", false);
+            setVisibility("Door1", false);
+
+            setVisibility("BackWall1Central", true);
+            setVisibility("Threshold1Central", true);
+            setVisibility("Door1Central", true);
+        } else {
+            setVisibility("BackWall1", true);
+            setVisibility("Threshold1", true);
+            setVisibility("Door1", true);
+            setVisibility("BackWall1Central", false);
+            setVisibility("Threshold1Central", false);
+            setVisibility("Door1Central", false);
+        }
+
+        const doorGroup = model.getObjectByName("Door");
+        if (doorGroup) doorGroup.rotation.y = 0;
+    } else {
+        setVisibility("FrontWall", true);
+        setVisibility("Door", true);
+        setVisibility("Threshold", true);
+
+        setVisibility("FrontWallCentral", false);
+        setVisibility("DoorCentral", false);
+        setVisibility("ThresholdCentral", false);
+        if (isWalkThrough) {
+            setVisibility("BackWall1", true);
+            setVisibility("Threshold1", true);
+            setVisibility("Door1", true);
+
+            setVisibility("BackWall1Central", false);
+            setVisibility("Threshold1Central", false);
+            setVisibility("Door1Central", false);
+        }
+
+        const doorGroup = model.getObjectByName("Door");
+        if (doorGroup) {
+            doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;
+        }
+        const door1Group = model.getObjectByName("Door1");
+        if (doorGroup) {
+            door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
+        }
+    }
 }
 
 function updateLampRotation(orientation) {
