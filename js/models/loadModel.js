@@ -122,7 +122,7 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/AnkaLift4.fbx',
+                './liftModels/Model1Final.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
