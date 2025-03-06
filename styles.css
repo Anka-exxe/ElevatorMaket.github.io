@@ -347,6 +347,10 @@ body {
     border-radius: 10px;
 }
 
+.texture-image.active {
+    border: solid #00406C 3px;
+}
+
 @media(max-width: 1250px) {
     .texture-image {
         height: 120px;
@@ -369,4 +373,8 @@ body {
     margin: 5px;
     width: auto;
     border: solid #E0E0E0 1px;
+}
+
+.special-texture-image.active {
+    border: solid #00406C 3px;
 }

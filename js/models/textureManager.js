@@ -27,7 +27,7 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
             if (texture) {
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
-                texture.colorSpace = THREE.SRGBColorSpace
+                texture.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     texture.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -89,6 +89,16 @@ export function handleTextureClick(event) {
     const textureType = texturesContainer ? texturesContainer.getAttribute('data-texture-type') : null;
     const tabId = tabContainer ? tabContainer.id : null;
     let elementNames = [];
+
+
+    // Remove 'active' class from all images in the same container
+    const allImages = texturesContainer.querySelectorAll('img');
+    allImages.forEach(image => {
+        image.classList.remove('active');
+    });
+
+    // Add 'active' class to the clicked image
+    img.classList.add('active');
 
 console.log(tabId)
 
