@@ -75,6 +75,11 @@
             updateMirrorPlacement();
         });
     });
+
+    const mirrorTypeRadios = document.querySelectorAll('input[name="mirror_type"]');
+    mirrorTypeRadios.forEach(radio => {
+        radio.addEventListener('change', updateMirrorPlacement);
+    });
 });
 
 
@@ -460,82 +465,85 @@ function updateMirrorPlacement() {
         return;
     }
 
+    // 1. Скрываем все зеркала сразу (как полные, так и "half" варианты)
+    const allMirrorNames = [
+        "MirrorBack", "MirrorRight", "MirrorLeft",
+        "MirrorBackHalf", "MirrorRightHalf", "MirrorLeftHalf"
+    ];
+    allMirrorNames.forEach(name => {
+        const mirror = window.model.getObjectByName(name);
+        if (mirror) {
+            mirror.visible = false;
+        }
+    });
+
+    // 2. Показываем зеркала на стенах по умолчанию
+    const mirrorWallNames = [
+        "BackWallMirror", "RightWallMirror", "RightWallMirror1",
+        "LeftWallMirror", "LeftWallMirror1"
+    ];
+    mirrorWallNames.forEach(name => {
+        const wall = window.model.getObjectByName(name);
+        if (wall) wall.visible = true;
+    });
+
+    // 3. Проверяем, включены ли зеркала
     const availabilityRadio = document.querySelector('input[name="mirror_availability"]:checked');
     const isMirrorEnabled = (availabilityRadio && availabilityRadio.value === "yes");
+    if (!isMirrorEnabled) return;
 
-    const mirrorBack = window.model.getObjectByName("MirrorBack");
-    const mirrorRight = window.model.getObjectByName("MirrorRight");
-    const mirrorLeft = window.model.getObjectByName("MirrorLeft");
+    // 4. Определяем выбранный тип зеркал
+    const mirrorTypeRadio = document.querySelector('input[name="mirror_type"]:checked');
+    const mirrorType = mirrorTypeRadio ? mirrorTypeRadio.value : null;
 
-    if (!isMirrorEnabled) {
-        if (mirrorBack) {
-            mirrorBack.visible = false;
-            const mirrorWall = window.model.getObjectByName("BackWallMirror");
-            mirrorWall.visible = true;
-        }
-        if (mirrorRight) {
-            mirrorRight.visible = false;
-            const mirrorWall = window.model.getObjectByName("RightWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
-            mirrorWall.visible = true;
-            mirrorWall1.visible = true;
-        }
-        if (mirrorLeft) {
-            mirrorLeft.visible = false;
-            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
-            mirrorWall.visible = true;
-            mirrorWall1.visible = true;
-        }
-        return;
+    // 5. Выбираем объекты зеркал в зависимости от выбранного типа
+    let mirrorBack, mirrorRight, mirrorLeft;
+    if (mirrorType === "to_rail") {
+        mirrorBack = window.model.getObjectByName("MirrorBackHalf");
+        mirrorRight = window.model.getObjectByName("MirrorRightHalf");
+        mirrorLeft = window.model.getObjectByName("MirrorLeftHalf");
+    } else {
+        mirrorBack = window.model.getObjectByName("MirrorBack");
+        mirrorRight = window.model.getObjectByName("MirrorRight");
+        mirrorLeft = window.model.getObjectByName("MirrorLeft");
     }
 
+    // 6. Получаем кнопки, управляющие зеркалами
     const backButton = document.getElementById("backMirror");
     const rightButton = document.getElementById("rightMirror");
     const leftButton = document.getElementById("leftMirror");
 
-    if (mirrorBack ) {
-        mirrorBack.visible = backButton.classList.contains('active');
-
+    // 7. Обновляем состояние зеркал
+    if (mirrorBack) {
         if (backButton.classList.contains('active')) {
-            const mirrorWall = window.model.getObjectByName("BackWallMirror");
-            mirrorWall.visible = false;
-        }
-        else {
-            const mirrorWall = window.model.getObjectByName("BackWallMirror");
-            mirrorWall.visible = true;
+            mirrorBack.visible = true;
+            // Для типов, отличных от "до поручня", скрываем стеновое зеркало
+            if (mirrorType !== "to_rail") {
+                const mirrorWall = window.model.getObjectByName("BackWallMirror");
+                if (mirrorWall) mirrorWall.visible = false;
+            }
         }
     }
-    if (mirrorRight ) {
-        mirrorRight.traverse(child => { child.visible = rightButton.classList.contains('active'); });
-
+    if (mirrorRight) {
         if (rightButton.classList.contains('active')) {
-            const mirrorWall = window.model.getObjectByName("RightWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
-            mirrorWall.visible = false;
-            mirrorWall1.visible = false;
-        }
-        else {
-            const mirrorWall = window.model.getObjectByName("RightWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
-            mirrorWall.visible = true;
-            mirrorWall1.visible = true;
+            mirrorRight.visible = true;
+            if (mirrorType !== "to_rail") {
+                const mirrorWall = window.model.getObjectByName("RightWallMirror");
+                const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+                if (mirrorWall) mirrorWall.visible = false;
+                if (mirrorWall1) mirrorWall1.visible = false;
+            }
         }
     }
     if (mirrorLeft) {
-        mirrorLeft.traverse(child => { child.visible = leftButton.classList.contains('active'); });
-
         if (leftButton.classList.contains('active')) {
-            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
-            mirrorWall.visible = false;
-            mirrorWall1.visible = false;
-        }
-        else {
-            const mirrorWall = window.model.getObjectByName("LeftWallMirror");
-            const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
-            mirrorWall.visible = true;
-            mirrorWall1.visible = true;
+            mirrorLeft.visible = true;
+            if (mirrorType !== "to_rail") {
+                const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+                const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+                if (mirrorWall) mirrorWall.visible = false;
+                if (mirrorWall1) mirrorWall1.visible = false;
+            }
         }
     }
 
@@ -545,8 +553,3 @@ function updateMirrorPlacement() {
         "Left:", mirrorLeft ? mirrorLeft.visible : "not found"
     );
 }
-
-
-
-
-
