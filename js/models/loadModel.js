@@ -23,32 +23,45 @@ function init() {
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
    renderer.gammaOutput = true;
-    //renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
-//renderer.toneMappingExposure = 1.2; // Настройте этот параметр для управления яркостью
+    renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
+renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
+
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe0e0e0); 
+    scene.environment = null
 
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 2);
-
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(1, 75, 1);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
+    directionalLight.position.set(0, 100, 0);
+    directionalLight.castShadow = true;
     scene.add(directionalLight);
 
-    const pointLight = new THREE.PointLight(0xffffff, 0.9);
-    pointLight.position.set(1, 75, 1);
+
+    const skyColor = 0xB1E1FF;  // светло-синий
+    const groundColor = 0xB97A20;  // коричневато-оранжевый
+    const intensity = 1;
+    const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
+    scene.add(light);
+
+    /*let pointLight = new THREE.PointLight(0xffffff, 50, 80);
+    pointLight.position.set(1, 70, 1);
     scene.add(pointLight);
+    
+    pointLight = new THREE.PointLight(0xffffff, 100, 80);
+    pointLight.position.set(1, 10, 1);
+    scene.add(pointLight);*/
 
     controls = new OrbitControls(camera, renderer.domElement);
 
-     controls.enableDamping = true;
-     controls.dampingFactor = 0.25;
-     controls.enableZoom = true;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
     controls.target.set(0, 50, 0);
 
     controls.maxDistance = maxDistance;
@@ -117,10 +130,17 @@ function init() {
                     window.model = model;
                     getObjectNames(object);
                     applyDefaultElevatorTextures();
-                   //applyTextures();
+                  // applyTextures();
                     DefaultSettings()
                     animate();
 
+                    let pointLight = new THREE.PointLight(0xffffff, 50, 80);
+                    pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
+                    scene.add(pointLight);
+                    
+                    pointLight = new THREE.PointLight(0xffffff, 100, 80);
+                    pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
+                    scene.add(pointLight);
 
 
                     function getObjectNames(obj) {
@@ -154,6 +174,49 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     });
+
+    function applyTextures() {
+        const textureLoader = new THREE.TextureLoader();
+
+        // Загрузка текстур
+        const albedoTexture = textureLoader.load('./wood/TCom_Wood_OakVeneer2_512_albedo.png', (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 1); // Настройте повторение по необходимости
+        });
+        
+        const normalTexture = textureLoader.load('./wood/TCom_Wood_OakVeneer2_512_normal.png', (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+        });
+        
+        const roughnessTexture = textureLoader.load('./wood/TCom_Wood_OakVeneer2_512_roughness.png', (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+        });
+        
+        // Создание материала с использованием загруженных текстур
+        const material = new THREE.MeshStandardMaterial({
+            map: albedoTexture,
+            normalMap: normalTexture,
+            roughnessMap: roughnessTexture,
+            roughness: 0.9, // Настройте по желанию
+        });
+    
+        model.traverse((child) => {
+            if (child.isMesh) {
+                child.material = material; // Примените созданный материал
+            }
+        });
+    }
+
+
+
+
+
 }
 
 document.addEventListener('DOMContentLoaded', init);
