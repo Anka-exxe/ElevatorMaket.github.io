@@ -68,9 +68,13 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
 
     function GetDistanceToWall(groupWallName) {
         const group = window.model.getObjectByName(groupWallName);
+        if (!group) {
+            console.warn(`Group "${groupWallName}" not found.`);
+            return Infinity; // or some default value
+        }
         const box = new THREE.Box3().setFromObject(group);
         const center = box.getCenter(new THREE.Vector3());
-
+    
         return camera.position.distanceTo(center);
     }
 
@@ -122,7 +126,7 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/Model1Final.fbx',
+                './liftModels/Model1FinalAnka.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);

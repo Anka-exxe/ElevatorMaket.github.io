@@ -1,4 +1,5 @@
 ﻿import * as THREE from 'three';
+import * as WallTextureChoice from '../shareConfiguration/wallTexturesChoice.js';
 
 export function applyTextureToElement(model, elementNames, textureInput, alphaMapInput = null, materialOptions = {}) {
     const elementNamesArr = Array.isArray(elementNames) ? elementNames : [elementNames];
@@ -83,6 +84,7 @@ export function handleTextureClick(event) {
     const img = event.currentTarget;
     const textureURL = img.getAttribute('data-texture-url');
     const alphaURL = img.getAttribute('data-alpha-url') || null;
+    const textureId = img.getAttribute('data-texture-id');
 
     const texturesContainer = img.closest('.textures-container');
     const tabContainer = texturesContainer.closest('.menu-container__content');
@@ -110,18 +112,23 @@ console.log(tabId)
                 switch (target) {
                     case 'all':
                         elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1','FrontWallСentral','BackWall1Central'];
+                        WallTextureChoice.setAllTextures(textureId);
                         break;
                     case 'front':
                         elementNames = ['FrontWall','FrontWallСentral'];
+                        WallTextureChoice.setFrontTexture(textureId);
                         break;
                     case 'back':
                         elementNames = ['BackWall','BackWall1', 'BackWall1Central'];
+                        WallTextureChoice.setBackTexture(textureId);
                         break;
                     case 'left':
                         elementNames = ['LeftWall'];
+                        WallTextureChoice.setLeftTexture(textureId);
                         break;
                     case 'right':
                         elementNames = ['RightWall'];
+                        WallTextureChoice.setRightTexture(textureId);
                         break;
                     default:
                         console.error('Неизвестное значение data-target:', target);

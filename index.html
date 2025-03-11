@@ -76,9 +76,9 @@
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Размер кабины:</h3>
                         <form class="form-container__form form">
-                            <button class="form__form-element active" type="button" onclick="selectParameterButton(this)">Широкая</button>
-                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
-                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">Глубокая</button>
+                            <button id="wideSize" class="form__form-element active" type="button" onclick="selectParameterButton(this)">Широкая</button>
+                            <button id="squereSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
+                            <button id="deepSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Глубокая</button>
                         </form>
                     </div>
 
@@ -121,11 +121,11 @@
 
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Выбор дизайн-проекта:</h3>
-                        <form class="form-container__form form">
-                            <button class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
-                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
-                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">MODERN</button>
-                            <button class="form__form-element" type="button" onclick="selectParameterButton(this)">CLASSIC</button>
+                        <form class="form-container__form form" name="designForm">
+                            <button id="nature" class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
+                            <button id="elite" class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
+                            <button id="modern" class="form__form-element" type="button" onclick="selectParameterButton(this)">MODERN</button>
+                            <button id="classic" class="form__form-element" type="button" onclick="selectParameterButton(this)">CLASSIC</button>
                         </form>
                     </div>
 
@@ -140,7 +140,7 @@
                 <div class="menu-container__options-menu-container-main">
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Стена:</h3>
-                        <form class="form-container__form form">
+                        <form class="form-container__form form" name="wallSideWalls">
                             <button class="form__form-element active" data-target="all" type="button" onclick="selectWall(this)">Все</button>
                             <button class="form__form-element" data-target="front" type="button" onclick="selectWall(this)">Передняя</button>
                             <button class="form__form-element" data-target="back" type="button" onclick="selectWall(this)">Задняя</button>
@@ -151,7 +151,7 @@
 
                     <hr class="menu-container_hr">
 
-                    <div class="textures-container">
+                    <div class="textures-container" name="wallTextures">
 
                     </div>
                 </div>
@@ -426,13 +426,13 @@
 
             <div class="menu-container__additional-buttons">
                 <form class="configurator-container__additional-button-container">
-                    <button class="form__form-element--with-image additional-button" onclick="">
+                    <button id="shareButton" type="button" class="form__form-element--with-image additional-button" onclick="getMainSelectedParameters()">
                         <img class="form__button-image" src="./images/share.png">
                         <p><pre>  Поделиться</pre></p>
                     </button>
-                    <button class="form__form-element--with-image additional-button" onclick="">
+                    <button id="saveButton" type="button" class="form__form-element--with-image additional-button" onclick="getAllWallTextures()">
                         <img class="form__button-image" src="./images/download.png">
-                        <p><pre>  Сохранить</pre></p>
+                        <p><pre>  Загрузить</pre></p>
                     </button>
                 </form>
             </div>
@@ -443,10 +443,13 @@
     <script src="./js/animation/buttonFunctions.js"></script>
     <script type="module" src="./js/animation/tabFunctions.js"></script>
 
-    <script type="module" src="./js/models/loadModel.js"></script>
+ <script type="module" src="./js/models/loadModel.js"></script>
     <script type="module" src="./js/models/textureManager.js"></script>
     <script type="module" src="./js/models/unusiallElements.js"></script>
     <script type="module" src="./js/models/positionManager.js"></script>
+    <script src="./js/shareConfiguration/getMainParams.js"></script>
+    <script src="./js/shareConfiguration/setActiveMainParams.js"></script>
+    <script type="module" src="./js/shareConfiguration/wallTexturesChoice.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
