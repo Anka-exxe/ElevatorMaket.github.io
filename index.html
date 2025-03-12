@@ -277,6 +277,17 @@
                                     <label class="form_form-label" for="bothSidesPanelPosition">С двух сторон</label>
                                 </div>
                             </form>
+                            <h3 class="form-container--radio__title">Расположение относительно стен:</h3>
+                            <form class="form-container--radio__form form">
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_wall_position" value="front" id="frontWallPosition" checked>
+                                    <label class="form_form-label" for="frontWallPosition">Ближе к передней стене</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_wall_position" value="back" id="backWallPosition">
+                                    <label class="form_form-label" for="backWallPosition">Ближе к задней стене</label>
+                                </div>
+                            </form>
                         </div>
 
                         <div class="textures-container">
@@ -404,7 +415,6 @@
                         <h3 class="form-container__title">Стена:</h3>
                         <form class="form-container__form form" name="wallSideBumpers">
                             <button class="form__form-element wall-parameter-button active" data-target="all" type="button" onclick="selectWall(this)">Все</button>
-                            <button class="form__form-element wall-parameter-button" data-target="front" type="button" onclick="selectWall(this)">Передняя</button>
                             <button class="form__form-element wall-parameter-button" data-target="back" type="button" onclick="selectWall(this)">Задняя</button>
                             <button class="form__form-element wall-parameter-button" data-target="left" type="button" onclick="selectWall(this)">Левая</button>
                             <button class="form__form-element wall-parameter-button" data-target="right" type="button" onclick="selectWall(this)">Правая</button>

@@ -158,7 +158,6 @@ function init() {
                             });
 
                             if (child.isMesh) {
-                                console.log(child.name);
                             }
                         });}
 
