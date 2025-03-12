@@ -22,9 +22,9 @@ function init() {
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
-   renderer.gammaOutput = true;
+    renderer.gammaOutput = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
-renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
+    renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
 
 
     scene = new THREE.Scene();
@@ -126,7 +126,7 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/Model1FinalAnka.fbx',
+                './liftModels/Model1Final.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);

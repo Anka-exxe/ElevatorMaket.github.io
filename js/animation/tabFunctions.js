@@ -12,7 +12,7 @@ const tabImageMap = new Map([
     ['OtherParametrsTab', 'other_icon']
 ]);
 
-function showTab(tabId) {
+export function showTab(tabId) {
     const tabs = document.querySelectorAll('.menu-container__content');
     const navigationTabs = document.querySelectorAll('.navigation__tab');
     const icons = document.querySelectorAll('.navigation--with-animation__animation-picture');

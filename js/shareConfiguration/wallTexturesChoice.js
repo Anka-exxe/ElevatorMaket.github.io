@@ -1,3 +1,5 @@
+import { setActiveTextureWithAllWalls } from './findElementsHelper.js';
+
 const WallTextureState = {
     left: null,
     right: null,
@@ -45,6 +47,25 @@ export function getBackTexture() {
 }
 
 export function getAllWallTextures() {
-    console.log(WallTextureState);
+    //console.log(WallTextureState);
     return WallTextureState;
 }
+
+export function setActiveWallParameters(wallParameters) {
+    setActiveTextureWithAllWalls('WallsParametersTab', 'wallSideWalls', "wallTextures", wallParameters);
+}
+
+/*document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.getElementById('saveButton');
+    saveButton.addEventListener('click', () => {
+
+        const wallParameters = {
+            left: "e73d78fc-410e-4a8a-9e70-8711cbc9c578",
+            right: "f73d48fc-410e-4a8a-9e70-8711cbc9c578",
+            front: "e73d67fc-410e-4a8a-9e70-8711cbc9c578",
+            back: "e73d48fc-410e-4a8a-9e70-8711cbc9c578"
+        }
+
+        setActiveWallParameters(wallParameters);
+    });
+});*/
