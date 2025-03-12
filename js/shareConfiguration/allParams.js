@@ -56,7 +56,17 @@ export function setAllParameters(parameters) {
         setHandrailParamsActive(parameters.handrailParameters);
         setActiveBumperParameters(parameters.otherParameters);
 
-        showTab('MainParametersTab');
+        //showTab('MainParametersTab');
+
+        const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
+
+// Проверка на существование элемента
+if (mainTabMenuTitle) {
+    // Имитируем клик
+    mainTabMenuTitle.click();
+} else {
+    console.error('Элемент с ID "MainTabMenuTitle" не найден.');
+}
         
         console.log('Параметры установлены:', allParameters);
     } else {
@@ -111,7 +121,6 @@ floorParameters : {texture: "e73d48fc-410e-4a8a-9e70-8711cbc9c608"}
         }
 
         setAllParameters(params);
-
 
         getAllParameters();
     });

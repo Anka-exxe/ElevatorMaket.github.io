@@ -25,7 +25,9 @@ export function setActiveRadioByInputName(inputName, radioId) {
     const radios = document.querySelectorAll(`input[name="${inputName}"]`);
     radios.forEach(radio => {
         if (radio.id === radioId) {
+            radio.click(); 
             radio.checked = true;
+            
         }
     });
 }
@@ -46,7 +48,13 @@ export function setActiveTextureWithAllWalls(tabName, formName, textureContainer
         return; 
     }
 
-    const wallSides = ['left', 'right', 'front', 'back'];
+    let wallSides;
+
+    if (tabName === 'OtherParametrsTab') {
+        wallSides = ['left', 'right', 'back'];
+    } else {
+        wallSides = ['left', 'right', 'front', 'back'];
+    }
 
     wallSides.forEach(side => {
         const button = form.querySelector(`button[data-target="${side}"]`);
@@ -70,7 +78,7 @@ export function setActiveTextureWithAllWalls(tabName, formName, textureContainer
         }
 
         if (textureId) {
-            const texture = findImageByTextureId(textureId);
+            const texture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
             texture.click();
         }
 
@@ -88,7 +96,7 @@ export function setActiveTextureByContainerName(tabName, textureContainerName, t
     }
 
     if (textureId) {
-        const texture = findImageByTextureId(textureId);
+        const texture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
         texture.click();
     }
 }
