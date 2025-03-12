@@ -3,7 +3,6 @@
     railingRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             const selectedType = event.target.value;
-            console.log("Выбранный тип поручня:", selectedType);
             updateHandrailType(selectedType);
         });
     });
@@ -11,7 +10,6 @@
     const handrailButtons = document.querySelectorAll('button[name="railing_position"]');
     handrailButtons.forEach(button => {
         button.addEventListener('click', () => {
-            console.log("Выбранный  поручня:");
             button.classList.toggle('active');
             updateHandrailPosition();
         });
@@ -52,12 +50,17 @@
 
     const panelSideRadios = document.querySelectorAll('input[name="panel_side"]');
     const panelLocationRadios = document.querySelectorAll('input[name="panel_location"]');
+    const panelWallPositionsRadios = document.querySelectorAll('input[name="panel_wall_position"]');
 
     panelSideRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
     });
 
     panelLocationRadios.forEach(radio => {
+        radio.addEventListener('change', updateControlPanelPlacement);
+    });
+
+    panelWallPositionsRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
     });
 
@@ -170,7 +173,7 @@ function updateCabinView(cabinType) {
         }
     }
 
-    updateControlPanelPlacement();
+    updateControlPanelPlacement
     updateOpenType();
 }
 
@@ -246,6 +249,8 @@ function updateOpenType(openingType) {
             door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
         }
     }
+    window.model.getObjectByName("DisplayHorisontal").visible = false;
+    updateControlPanelPlacement();
 }
 
 function updateLampRotation(orientation) {
@@ -340,95 +345,169 @@ function updateControlPanelPlacement() {
         return;
     }
 
+    // Получаем выбранные значения из интерфейса
     const sideRadio = document.querySelector('input[name="panel_side"]:checked');
     const locationRadio = document.querySelector('input[name="panel_location"]:checked');
     const cabinRadio = document.querySelector('input[name="cabin_type"]:checked');
+    const openingRadio = document.querySelector('input[name="opening_type"]:checked');
+    // Радио для выбора положения панели относительно стен (передней или задней)
+    const wallPositionRadios = Array.from(document.querySelectorAll('input[name="panel_wall_position"]'));
 
-    if (!sideRadio || !locationRadio || !cabinRadio) {
-        console.warn("Не удалось определить значения для panel_side, panel_location или cabin_type");
+
+    if (!sideRadio || !locationRadio || !cabinRadio || !openingRadio) {
+        console.warn("Не удалось определить значения для panel_side, panel_location, cabin_type или opening_type");
         return;
     }
 
-    const side = sideRadio.value;
-    let location = locationRadio.value;
-    const cabinType = cabinRadio.value;
+    // Исходные значения
+    let selectedSide = sideRadio.value;          // "left" или "right" (из UI)
+    let panelLocation = locationRadio.value;       // "closer_to_door", "center", "both_sides"
+    const cabinType = cabinRadio.value;            // "walk_through_cabin" или "not_walk_through_cabin"
+    const openingType = openingRadio.value;        // "central", "left", "right"
 
+    let wallPosition = "front"; // значение по умолчанию – ближе к передней стене
+    if (panelLocation === "closer_to_door" && cabinType === "walk_through_cabin") {
+        // Разрешаем выбор положения относительно стен
+        wallPositionRadios.forEach(radio => radio.disabled = false);
+        const wallPositionRadio = document.querySelector('input[name="panel_wall_position"]:checked');
+        wallPosition = wallPositionRadio ? wallPositionRadio.value : "front";
+    } else {
+        // Если выбор недоступен – отключаем радио для panel_wall_position и устанавливаем значение по умолчанию
+        wallPositionRadios.forEach(radio => {
+            radio.disabled = true;
+        });
+        wallPosition = "front";
+    }
+
+    // --- Определение стороны панели в зависимости от типа кабины и открывания ---
     if (cabinType !== "walk_through_cabin") {
-        location = "closer_to_door";
-
-        const panelLocationRadios = document.querySelectorAll('input[name="panel_location"]');
-        panelLocationRadios.forEach(radio => {
-            if (radio.value !== "closer_to_door") {
+        // Для непроходной кабины выбор стороны панели определяется автоматически:
+        selectedSide = (openingType === "left") ? "left" : "right";
+        // Отключаем радио-кнопки, чтобы пользователь не мог изменить выбор
+        document.getElementById("leftPanelSide").disabled = true;
+        document.getElementById("rightPanelSide").disabled = true;
+        // Также для непроходной кабины вариант "С двух сторон" недоступен
+        document.querySelectorAll('input[name="panel_location"]').forEach(radio => {
+            if (radio.value === "both_sides") {
                 radio.disabled = true;
             } else {
                 radio.disabled = false;
-                radio.checked = true;
             }
         });
+        // По умолчанию для непроходной кабины выбираем "closer_to_door"
+        if (panelLocation !== "center") {
+            panelLocation = "closer_to_door";
+        }
+        // Для непроходной кабины всегда считаем, что панель располагается ближе к передней стене
+        wallPosition = "front";
     } else {
-        const panelLocationRadios = document.querySelectorAll('input[name="panel_location"]');
-        panelLocationRadios.forEach(radio => {
+        // Для проходной кабины пользователь может выбирать сторону панели.
+        // Однако, если тип открывания не соответствует выбранной стороне, то недопустимый вариант отключается.
+        if (openingType === "left") {
+            // Если открывание телескопическое (левое), то разрешаем только левую сторону
+            document.getElementById("leftPanelSide").disabled = false;
+            document.getElementById("rightPanelSide").disabled = true;
+            selectedSide = "left";
+            document.getElementById("leftPanelSide").checked = true;
+        } else if (openingType === "right" || openingType === "central") {
+            // Если открывание телескопическое (правое) или центральное – разрешаем только правую сторону
+            document.getElementById("rightPanelSide").disabled = false;
+            document.getElementById("leftPanelSide").disabled = true;
+            selectedSide = "right";
+            document.getElementById("rightPanelSide").checked = true;
+        } else {
+            // Если по каким-то причинам не задано – оставляем оба варианта активными
+            document.getElementById("leftPanelSide").disabled = false;
+            document.getElementById("rightPanelSide").disabled = false;
+            selectedSide = sideRadio.value;
+        }
+        // Для проходной кабины вариант "С двух сторон" доступен – никаких ограничений для panel_location здесь нет
+        document.querySelectorAll('input[name="panel_location"]').forEach(radio => {
             radio.disabled = false;
         });
     }
 
-
-    let sideGroupName, panelGroupName, centerGroupName;
-    if (side === "left") {
-        sideGroupName = "LeftControls";
-        panelGroupName = "LeftControlPanelGroup1";
-        centerGroupName = "LeftControlPanelCenter";
-    } else if (side === "right") {
-        sideGroupName = "RightControls";
-        panelGroupName = "RightControlPanelGroup1";
-        centerGroupName = "RightControlPanelCenter";
-    }
-
-
-    const leftGroup = window.model.getObjectByName("LeftControls");
-    const rightGroup = window.model.getObjectByName("RightControls");
-    if (leftGroup) leftGroup.visible = false;
-    if (rightGroup) rightGroup.visible = false;
-
-    if (location === "both_sides") {
-        const sideGroup = window.model.getObjectByName(sideGroupName);
-        if (sideGroup) {
-            sideGroup.visible = true;
-            sideGroup.traverse(child => { child.visible = true; });
-        } else {
-            console.warn(`Группа ${sideGroupName} не найдена`);
-        }
-    } else {
-        let targetGroupName;
-        if (location === "closer_to_door") {
-            const sideGroup = window.model.getObjectByName(sideGroupName);
-            targetGroupName = panelGroupName;
-            sideGroup.visible = true;
-        } else if (location === "center") {
-            targetGroupName = centerGroupName;
-        } else {
-            console.warn("Неизвестное расположение:", location);
-            return;
-        }
-
-        const targetGroup = window.model.getObjectByName(targetGroupName);
-        if (targetGroup) {
-            targetGroup.visible = false;
-            console.log(`Группа ${targetGroupName} отображается`);
-        } else {
-            console.warn(`Группа ${targetGroupName} не найдена`);
-        }
-    }
-    window.model.traverse(child => {
-        if (child.name === 'DisplayHorisontal') {
-            child.visible = false;
-        }
+    // --- Сброс видимости всех групп панели управления ---
+    const allPanelGroups = [
+        "LeftControlPanelGroup", "RightControlPanelGroup",
+        "LeftControlPanelGroup1", "RightControlPanelGroup1",
+        "LeftControlPanelGroupSmall", "RightControlPanelGroupSmall"
+    ];
+    allPanelGroups.forEach(name => {
+        const obj = window.model.getObjectByName(name);
+        if (obj) obj.visible = false;
     });
 
-    if (!cabinRadio) {
-        console.warn("Не удалось определить тип кабины");
+    // --- Обработка варианта "С двух сторон" ---
+    if (panelLocation === "both_sides") {
+        if (cabinType === "walk_through_cabin") {
+            const leftPanel = window.model.getObjectByName("LeftControlPanelGroup");
+            const leftPanel1 = window.model.getObjectByName("LeftControlPanelGroup1");
+            const rightPanel = window.model.getObjectByName("RightControlPanelGroup");
+            const rightPanel1 = window.model.getObjectByName("RightControlPanelGroup1");
+            if (leftPanel && selectedSide === "left") {
+                leftPanel.visible = true;
+                leftPanel1.visible = true;
+            }
+            if (rightPanel && selectedSide === "right") {
+                rightPanel.visible = true;
+                rightPanel1.visible = true;
+            }
+            console.log("Отображаются панели с обеих сторон");
+        } else {
+            console.warn("Вариант 'С двух сторон' недоступен для непроходной кабины");
+        }
         return;
     }
+
+    // --- Определяем имя группы панели для отображения ---
+    let groupName = "";
+    if (panelLocation === "center") {
+        // Центральное расположение – используем малую панель
+        groupName = (selectedSide === "left") ? "LeftControlPanelGroupSmall" : "RightControlPanelGroupSmall";
+    } else if (panelLocation === "closer_to_door") {
+        // "Ближе к двери" – учитываем положение относительно стен:
+        if (wallPosition === "front") {
+            groupName = (selectedSide === "left") ? "LeftControlPanelGroup" : "RightControlPanelGroup";
+        } else if (wallPosition === "back") {
+            groupName = (selectedSide === "left") ? "LeftControlPanelGroup1" : "RightControlPanelGroup1";
+        } else {
+            console.warn("Неизвестное значение panel_wall_position:", wallPosition);
+            return;
+        }
+    } else {
+        console.warn("Неизвестное расположение панели:", panelLocation);
+        return;
+    }
+
+    // --- Дополнительная проверка типа открывания дверей ---
+    // Левая сторона допустима только при телескопическом левом открытии,
+    // Правая сторона – при телескопическом правом или центральном открытии.
+    if (openingType === "left" && selectedSide !== "left") {
+        selectedSide = "left";
+        if (panelLocation === "center") {
+            groupName = "LeftControlPanelGroupSmall";
+        } else if (panelLocation === "closer_to_door") {
+            groupName = (wallPosition === "back") ? "LeftControlPanelGroup1" : "LeftControlPanelGroup";
+        }
+    } else if ((openingType === "right" || openingType === "central") && selectedSide !== "right") {
+        selectedSide = "right";
+        if (panelLocation === "center") {
+            groupName = "RightControlPanelGroupSmall";
+        } else if (panelLocation === "closer_to_door") {
+            groupName = (wallPosition === "back") ? "RightControlPanelGroup1" : "RightControlPanelGroup";
+        }
+    }
+
+    // --- Отображаем выбранную группу панели ---
+    const panelGroup = window.model.getObjectByName(groupName);
+    if (panelGroup) {
+        panelGroup.visible = true;
+        console.log(`Отображается группа панели: ${groupName}`);
+    } else {
+        console.warn(`Группа панели ${groupName} не найдена`);
+    }
+    window.model.getObjectByName("DisplayHorisontal").visible = false;
 
     const handrailButtons = document.querySelectorAll('button[name="railing_position"]');
 
@@ -442,9 +521,9 @@ function updateControlPanelPlacement() {
     });
 
     let targetButtonText = "";
-    if (side === "left") {
+    if (selectedSide === "left") {
         targetButtonText = "слева";
-    } else if (side === "right") {
+    } else if (selectedSide === "right") {
         targetButtonText = "справа";
     }
 

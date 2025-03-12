@@ -82,7 +82,7 @@ function showTab(tabId) {
 }
 
 const images = {
-    "walls": [
+    walls: [
         { "id": "e73d78fc-410e-4a8a-9e70-8711cbc9c578", "icon": "./Стены/5024.jpg", "texture": "./Стены/5024.jpg", "alpha": "", "bump": "" },
         { "id": "f73d48fc-410e-4a8a-9e70-8711cbc9c578", "icon": "./Стены/DL16CE_diffuse.jpg", "texture": "./Стены/DL16CE_diffuse.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-415e-4a8a-9e70-8711cbc9c578", "icon": "./Стены/DL16CE_gray.jpg", "texture": "./Стены/DL16CE_gray.jpg", "alpha": "", "bump": "" },

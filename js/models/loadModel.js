@@ -126,7 +126,7 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/Model1FinalAnka.fbx',
+                './liftModels/Model1Final.fbx',
                 (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
@@ -158,7 +158,6 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
                             });
 
                             if (child.isMesh) {
-                                console.log(child.name);
                             }
                         });}
 

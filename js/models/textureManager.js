@@ -170,8 +170,31 @@ console.log(tabId)
             elementNames = ['Door','DoorCentral','Door1','Door1Central'];
             break;
         case 'OtherParametrsTab':
+            var active = tabContainer.querySelector('.form__form-element.active');
+            const target = active.getAttribute('data-target');
+            switch (target) {
+                case 'all':
+                    elementNames = ['RightBumper','LeftBumper','BackBumper'];
+                    WallTextureChoice.setAllTextures(textureId);
+                    break;
+                case 'back':
+                    elementNames = ['BackBumper'];
+                    WallTextureChoice.setBackTexture(textureId);
+                    break;
+                case 'left':
+                    elementNames = ['LeftBumper'];
+                    WallTextureChoice.setLeftTexture(textureId);
+                    break;
+                case 'right':
+                    elementNames = ['RightBumper'];
+                    WallTextureChoice.setRightTexture(textureId);
+                    break;
+                default:
+                    console.error('Неизвестное значение data-target:', target);
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
-            break;
+                    return;
+                    }
+                    break;
         default:
             console.error("Неизвестная вкладка:", tabId);
             return;
@@ -307,12 +330,18 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['buttons(ControlPanel)'],
-            texture: './Стены/шлифованная нержавейка.jpg',
+            texture: './Стены_Текстуры/DL89E_glossiness.jpg',
             alpha: null,
             options: { metalness: 0.3, roughness: 0.7 }
         },
         {
             elementNames: ['HandrailsGroup'],
+            texture: './Стены/шлифованная нержавейка.jpg',
+            alpha: null,
+            options: { metalness: 1, roughness: 0.7 }
+        },
+        {
+            elementNames: ['BumperGroup'],
             texture: './Стены/шлифованная нержавейка.jpg',
             alpha: null,
             options: { metalness: 1, roughness: 0.7 }
