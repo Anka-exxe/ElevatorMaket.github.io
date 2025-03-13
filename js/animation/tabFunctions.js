@@ -96,7 +96,7 @@ const images = {
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c580", "icon": "./Стены/HY-003 TI-GOLD.jpg", "texture": "./Стены/HY-003 TI-GOLD.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c581", "icon": "./Стены/HY-004 TI-GOLD.jpg", "texture": "./Стены/HY-004 TI-GOLD.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c582", "icon": "./Стены/RAL-7035-Svetlo-serii.png", "texture": "./Стены/RAL-7035-Svetlo-serii.png", "alpha": "", "bump": "" },
-        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c583", "icon": "./Стены/шлифованная нержавейка.jpg", "texture": "./Стены/шлифованная нержавейка.jpg", "alpha": "", "bump": "" }
+        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c583", "icon": "./Стены/шлифованная нержавейка.jpg", "texture": "./Стены/шлифованная нержавейка.jpg", "alpha": "", "bump": "" },
     
     
        /* { icon: './te/RAL1001.jpg', texture: './te/RAL1001.jpg', alpha: '', bump: '' },
@@ -135,7 +135,7 @@ const images = {
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c596", "icon": "./Потолок_Иконки/Р17.png", "texture": "./Стены/RAL-7035-Svetlo-серии.png", "alpha": "./Потолок_Текстуры/Р17.png", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c597", "icon": "./Потолок_Иконки/Р20.png", "texture": "./Стены/RAL-7035-Svetlo-серии.png", "alpha": "./Потолок_Текстуры/Р20.png", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c598", "icon": "./Потолок_Иконки/Р22.png", "texture": "./Стены/RAL-7035-Svetlo-серии.png", "alpha": "./Потолок_Текстуры/Р22.png", "bump": "" },
-        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c599", "icon": "./Потолок_Иконки/Р24.png", "texture": "./Стены/RAL-7035-Svetlo-серии.png", "alpha": "./Потолок_Текстуры/Р24.png", "bump": "" }
+        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c599", "icon": "./Потолок_Иконки/Р24.png", "texture": "./Стены/RAL-7035-Svetlo-серии.png", "alpha": "./Потолок_Текстуры/Р24.png", "bump": "" },
     ],
     ceilingPlafon: [
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c600", "icon": "./Потолок_Материал/ral9016.jpg", "texture": "./Потолок_Материал/ral9016.jpg", "alpha": "", "bump": "" },
@@ -154,13 +154,14 @@ const images = {
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c607", "icon": "./Пол/WoodFlooring042_COL_4K.jpg", "texture": "./Пол_Текстура/WoodFlooring042_COL_4K.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c608", "icon": "./Пол/basalt-grey.jpg", "texture": "./Пол_Текстура/basalt-grey.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c609", "icon": "./Пол/ARABISCATO ( calakata).jpeg", "texture": "./Пол_Текстура/ARABISCATO.jpeg", "alpha": "", "bump": "" },
-        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c610", "icon": "./Пол/WoodFlooring042_DISP_4K.jpg", "texture": "./Пол/WoodFlooring042_DISP_4K.jpg", "alpha": "", "bump": "" }
+        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c610", "icon": "./Пол/WoodFlooring042_DISP_4K.jpg", "texture": "./Пол/WoodFlooring042_DISP_4K.jpg", "alpha": "", "bump": "" },
     ],
     board: [
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c611", "icon": "./Табло/TL-D70.png", "texture": "./Табло/TL-D70.png", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c612", "icon": "./Табло/BUTSAN TABLO.jpg", "texture": "./Табло/BUTSAN TABLO.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c613", "icon": "./Табло/BUTSAN1-01.jpg", "texture": "./Табло/BUTSAN1-01.jpg", "alpha": "", "bump": "" },
-        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c614", "icon": "./Табло/BUTSAN1-01111.jpg", "texture": "./Табло/BUTSAN1-01111.jpg", "alpha": "", "bump": "" }
+        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c614", "icon": "./Табло/BUTSAN1-01111.jpg", "texture": "./Табло/BUTSAN1-01111.jpg", "alpha": "", "bump": "" },
+
     ],
     board_color: [
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c615", "icon": "./Табло_цвет/RAL-7035-Svetlo-serii.png", "texture": "./Табло_цвет/RAL-7035-Svetlo-серии.png", "alpha": "", "bump": "" },
@@ -176,7 +177,8 @@ const images = {
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c623", "icon": "./Двери/HY-004 TI-GOLD.jpg", "texture": "./Двери/HY-004 TI-GOLD.jpg", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c624", "icon": "./Двери/RAL-7035-Svetlo-serii.png", "texture": "./Двери/RAL-7035-Svetlo-серии.png", "alpha": "", "bump": "" },
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c625", "icon": "./Двери/ral9016.jpg", "texture": "./Двери/ral9016.jpg", "alpha": "", "bump": "" },
-        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c626", "icon": "./Двери/шлифованная нержавейка.jpg", "texture": "./Двери/шлифованная нержавейка.jpg", "alpha": "", "bump": "" }
+        { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c626", "icon": "./Двери/шлифованная нержавейка.jpg", "texture": "./Двери/шлифованная нержавейка.jpg", "alpha": "", "bump": "" },
+
     ]
 };
 
