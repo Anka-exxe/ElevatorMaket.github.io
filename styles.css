@@ -378,3 +378,19 @@ body {
 .special-texture-image.active {
     border: solid #00406C 3px;
 }
+
+.form__text-input {
+    width: 100%; /* Занимает всю ширину родительского контейнера */
+    padding: 15px; /* Внутренние отступы для удобства ввода */
+    font-size: 18px; /* Размер шрифта */
+    border: 2px solid #ccc; /* Цвет и толщина рамки */
+    border-radius: 5px; /* Закругленные углы рамки */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Небольшая тень для визуального эффекта */
+    transition: border 0.3s ease; /* Плавный переход для изменения цвета рамки */
+}
+
+.form__text-input:focus {
+    border-color: #00406C; 
+    outline: none; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}

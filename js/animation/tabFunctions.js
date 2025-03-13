@@ -81,6 +81,27 @@ export function showTab(tabId) {
     }    
 }
 
+
+/*async function fetchIcons() {
+    const url = 'http://localhost:8090/api/v1/icons/WALL?page=0&size=10';
+
+    try {
+        const response = await fetch(url); // Выполняем запрос к API
+        if (!response.ok) {
+            throw new Error(`HTTP error! статус: ${response.status}`); // Обработка ошибок
+        }
+        const data = await response.json(); // Преобразуем ответ в формат JSON
+        console.log(data); // Выводим данные в консоль
+
+        // Здесь можно обработать полученные данные (например, отобразить их на странице)
+        displayIcons(data.content);
+    } catch (error) {
+        console.error('Ошибка при получении данных:', error); // Обработка ошибок
+    }
+}*/
+
+
+
 const images = {
     walls: [
         { "id": "e73d78fc-410e-4a8a-9e70-8711cbc9c578", "icon": "./Стены/5024.jpg", "texture": "./Стены/5024.jpg", "alpha": "", "bump": "" },

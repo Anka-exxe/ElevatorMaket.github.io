@@ -7,11 +7,13 @@ const PanelState = {
     material: null,
     panelSide: null,
     panelLocation: null,
+    panelLocationToWall: null
 };
 
 export function getPanelState() {
     PanelState.panelSide = getPanelSide(); 
     PanelState.panelLocation = getPanelLocation();
+    PanelState.panelLocationToWall = getPanelLocationToWall();
     return PanelState;
 }
 
@@ -21,6 +23,10 @@ export function getPanelSide() {
 
 export function getPanelLocation() {
     return getRadioParamByInputName("panel_location");
+}
+
+export function getPanelLocationToWall() {
+    return getRadioParamByInputName("panel_wall_position");
 }
 
 export function setBoard(textureId) {
@@ -47,11 +53,16 @@ export function setBoardActive(textureId) {
     setActiveTextureByContainerName('BoardParametrsTab', "boardTextureContainer", textureId);
 }
 
+export function setPanelToWallLocationActive(radioId) {
+    setActiveRadioByInputName("panel_wall_position", radioId);
+}
+
 export function setPanelParamsActive(parameters) {
     setBoardActive(parameters.board);
     setPanelMaterialActive(parameters.material);
     setPanelSideActive(parameters.panelSide);
     setPanelLocationActive(parameters.panelLocation);
+    setPanelToWallLocationActive(parameters.panelLocationToWall);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {

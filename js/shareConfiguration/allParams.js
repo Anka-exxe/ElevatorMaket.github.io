@@ -41,7 +41,22 @@ export function getAllParameters() {
     allParameters.mirrorParameters = getMirrorParams();
     allParameters.handrailParameters = getHandrailParams();
     allParameters.otherParameters = getAllBumperTextures();
-    console.log(allParameters);
+    //console.log(allParameters);
+}
+
+export function saveParametersToFile() {
+    getAllParameters();
+    const jsonContent = JSON.stringify(allParameters, null, 2); // Преобразуем объект в JSON строчку
+    const blob = new Blob([jsonContent], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'parameters.json'; // Имя файла для сохранения
+    document.body.appendChild(a);
+    a.click(); // Симулируем клик для начала загрузки
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url); // Освобождаем память, удаляя объект URL
 }
 
 export function setAllParameters(parameters) {
@@ -74,54 +89,45 @@ if (mainTabMenuTitle) {
     }
 }
 
+export function loadParametersFromFile() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json'; // Ограничиваем выбор только JSON-файла
+
+    input.onchange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parameters = JSON.parse(e.target.result); // Преобразуем содержимое файла в объект
+                    setAllParameters(parameters); // Вызываем метод с загруженными параметрами
+                } catch (error) {
+                    console.error("Ошибка при загрузке параметров:", error);
+                }
+            };
+            reader.readAsText(file); // Читаем файл как текст
+        }
+    };
+
+    input.click(); // Автоматически открываем диалог выбора файла
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('shareButton');
     saveButton.addEventListener('click', () => {
+        if (confirm("Будет скачан файл конфигурации. Файлом можно поделиться с другими пользователями. Скачать файл?")) 
+        {
+            saveParametersToFile();
+        } else {
+            alert("Скачивание файла отменено");
+        }        
+    });
+});
 
-        const params = {
-            ceilingParameters: {ceilingPlafon: 'e73d48fc-410e-4a8a-9e70-8711cbc9c584', ceilingMaterial: 'e73d48fc-410e-4a8a-9e70-8711cbc9c600', orientation: 'vertical'},
-doorParameters
-: 
-{texture: 'e73d48fc-410e-4a8a-9e70-8711cbc9c622'},
-handrailParameters: 
-{back
-    : 
-    false,
-    existence
-    : 
-    "noHand",
-    handrailType
-    : 
-    "unified",
-    left
-    : 
-    false,
-    material
-    : 
-    "e73d48fc-410e-4a8a-9e70-8711cbc9c605",
-    right
-    : 
-    true},
-mainParameters
-: 
-{cabinSize: 'squereSize', cabinType: 'walk_through_cabin', openingType: 'rightOpenType', designProject: 'elite'},
-mirrorParameters
-: 
-{existence: 'haveMirror', mirrorType: 'to_rail', back: true, left: false, right: false},
-otherParameters
-: 
-{left: 'e73d48fc-410e-4a8a-9e70-8711cbc9c609', right: 'e73d48fc-410e-4a8a-9e70-8711cbc9c609', front: 'e73d48fc-410e-4a8a-9e70-8711cbc9c609', back: 'e73d48fc-410e-4a8a-9e70-8711cbc9c609'},
-panelParameters
-: 
-{board: 'e73d48fc-410e-4a8a-9e70-8711cbc9c611', material: 'e73d48fc-410e-4a8a-9e70-8711cbc9c619', panelSide: 'leftPanelSide', panelLocation: 'centerPanelPosition'},
-wallParameters
-: 
-{left: 'e73d78fc-410e-4a8a-9e70-8711cbc9c578', right: 'e73d78fc-410e-4a8a-9e70-8711cbc9c578', front: 'e73d78fc-410e-4a8a-9e70-8711cbc9c578', back: 'e73d78fc-410e-4a8a-9e70-8711cbc9c578'},
-floorParameters : {texture: "e73d48fc-410e-4a8a-9e70-8711cbc9c608"}
-        }
-
-        setAllParameters(params);
-
-        getAllParameters();
+document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.getElementById('saveButton');
+    saveButton.addEventListener('click', () => {
+        loadParametersFromFile();
     });
 });
