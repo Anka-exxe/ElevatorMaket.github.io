@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конфигуратор лифта Могилёвлифтмаш</title>
+    <title>Шаблоны Конфигуратор</title>
     <link rel="stylesheet" href="styles.css">
     <script type="importmap">
         {
@@ -73,6 +73,15 @@
                     </h2>
 
                 <div class="menu-container__options-menu-container-main">
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Название проекта:</h3>
+                        <form class="form-container__form form" name="projectName">
+                            <input class="form__text-input" id="projectTitle" type="text" name="projectTitle" placeholder="Введите название проекта" required />
+                        </form>
+                    </div>
+
+
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Размер кабины:</h3>
                         <form class="form-container__form form" name="cabinSizeForm">
@@ -120,7 +129,7 @@
                     <hr class="menu-container_hr">
 
                     <div class="menu-container__form form-container">
-                        <h3 class="form-container__title">Выбор дизайн-проекта:</h3>
+                        <h3 class="form-container__title">К какому дизайн-проекту относится:</h3>
                         <form class="form-container__form form" name="designForm">
                             <button id="nature" class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
                             <button id="elite" class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
@@ -441,13 +450,13 @@
 
             <div class="menu-container__additional-buttons">
                 <form class="configurator-container__additional-button-container">
-                    <button id="shareButton" type="button" class="form__form-element--with-image additional-button">
-                        <img class="form__button-image" src="./images/share.png">
-                        <p><pre>  Поделиться</pre></p>
+                    <button id="savePatternButton" type="button" class="form__form-element--with-image additional-button" >
+                        <img class="form__button-image" src="./images/save.png">
+                        <p><pre>  Сохранить шаблон</pre></p>
                     </button>
-                    <button id="saveButton" type="button" class="form__form-element--with-image additional-button" >
-                        <img class="form__button-image" src="./images/download.png">
-                        <p><pre>  Загрузить</pre></p>
+                    <button id="deletePatternButton" type="button" class="form__form-element--with-image additional-button">
+                        <img class="form__button-image" src="./images/delete.png">
+                        <p><pre>  Удалить шаблон</pre></p>
                     </button>
                 </form>
             </div>
@@ -463,6 +472,7 @@
     <script type="module" src="./js/models/unusiallElements.js"></script>
     <script type="module" src="./js/models/positionManager.js"></script>
     <script type="module" src="./js/shareConfiguration/allParams.js"></script>
+    <script src="./js/animation/adminButtons.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

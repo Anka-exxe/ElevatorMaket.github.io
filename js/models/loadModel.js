@@ -160,6 +160,15 @@ function init() {
                     DefaultSettings()
                     animate();
 
+                    let pointLight = new THREE.PointLight(0xffffff, 50, 80);
+                    pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
+                    scene.add(pointLight);
+                    
+                    pointLight = new THREE.PointLight(0xffffff, 100, 80);
+                    pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
+                    scene.add(pointLight);
+
+
                     function getObjectNames(obj) {
                         const names = [];
                         obj.traverse((child) => {
@@ -228,6 +237,11 @@ function init() {
             }
         });
     }
+
+
+
+
+
 }
 
 document.addEventListener('DOMContentLoaded', init);

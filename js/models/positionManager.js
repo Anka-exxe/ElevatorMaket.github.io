@@ -17,7 +17,7 @@ export function GetExtremeXPoint() {
 }
 
 export function GetExtremeYPoint() {
-    const element = window.model.getObjectByName('LeftWall4');
+    const element = window.model.getObjectByName('LeftWallMirror');
     const box = new THREE.Box3().setFromObject(element);
     const size = new THREE.Vector3();
     box.getSize(size);

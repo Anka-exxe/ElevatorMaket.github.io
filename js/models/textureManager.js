@@ -1,5 +1,11 @@
 ﻿import * as THREE from 'three';
 import * as WallTextureChoice from '../shareConfiguration/wallTexturesChoice.js';
+import {setDoorTexture} from '../shareConfiguration/doorParams.js';
+import {setFloorTexture} from '../shareConfiguration/floorParameters.js';
+import * as Ceiling from '../shareConfiguration/ceilingParams.js';
+import * as Panel from '../shareConfiguration/panelParams.js';
+import {setHandrailTexture} from '../shareConfiguration/handrailParams.js';
+import * as Bumper from '../shareConfiguration/otherParams.js';
 
 export function applyTextureToElement(model,
                                       elementNames,
@@ -221,11 +227,13 @@ console.log(tabId)
                 }
             } else {
                 console.error('Не найдена активная кнопка выбора стены.');
+                alert('Не выбрана стена, к которой необходимо применить текстуру');
             }
             break;
         case 'CeilingParametrsTab':
             if (textureType === "pattern") {
                 elementNames = ['Lamp'];
+                Ceiling.setCeilingPlafon(textureId);
                 applyTextureToElement(
                     model,
                     elementNames,
@@ -245,21 +253,26 @@ console.log(tabId)
                     });
                 return;
             } else if (textureType === "material") {
+                Ceiling.setCeilingMaterial(textureId);
                 elementNames = ['Ceiling'];
             }
             break;
         case 'FloorParametrsTab':
             elementNames = ['Floor','BackThreshold','FrontThreshold'];
+            setFloorTexture(textureId);
             break;
         case 'BoardParametrsTab':
             if (textureType === "panel") {
+                Panel.setBoard(textureId);
                 elementNames = ['DisplayHorisontal', 'DisplayVertical'];
             } else if (textureType === "panelColor") {
+                Panel.setPanelMaterial(textureId);
                 elementNames = ['ControlPanel'];
             }
             break;
         case 'DoorParametrsTab':
             elementNames = ['Door','DoorCentral','Door1','Door1Central'];
+            setDoorTexture(textureId);
             break;
         case 'OtherParametrsTab':
             var active = tabContainer.querySelector('.form__form-element.active');
@@ -267,26 +280,29 @@ console.log(tabId)
             switch (target) {
                 case 'all':
                     elementNames = ['RightBumper','LeftBumper','BackBumper'];
-                    WallTextureChoice.setAllTextures(textureId);
+                    Bumper.setAllTextures(textureId);
                     break;
                 case 'back':
                     elementNames = ['BackBumper'];
-                    WallTextureChoice.setBackTexture(textureId);
+                    Bumper.setBackTexture(textureId);
                     break;
                 case 'left':
                     elementNames = ['LeftBumper'];
-                    WallTextureChoice.setLeftTexture(textureId);
+                    Bumper.setLeftTexture(textureId);
                     break;
                 case 'right':
                     elementNames = ['RightBumper'];
-                    WallTextureChoice.setRightTexture(textureId);
+                    Bumper.setRightTexture(textureId);
                     break;
                 default:
                     console.error('Неизвестное значение data-target:', target);
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
-                    return;
-                    }
-                    break;
+            return;
+        }
+        break;
+        case 'HandrailParametrsTab':
+            setHandrailTexture(textureId);
+             break;
         default:
             console.error("Неизвестная вкладка:", tabId);
             return;
