@@ -1,4 +1,30 @@
-﻿body {
+﻿@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: normal;
+    src: url(../../fonts/roboto/Roboto-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: bold;
+    src: url(../../fonts/roboto/Roboto-Bold.ttf);
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: italic;
+    font-weight: normal;
+    src: url(../../fonts/roboto/Roboto-Italic.ttf);
+}
+
+*, *::after, *::before {
+    box-sizing: border-box;
+    font-family: "Roboto";
+}
+
+body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -6,10 +32,21 @@
 }
 
 header {
-    background: #333;
+    background: #00406C;
     color: #fff;
     padding: 1em;
     text-align: center;
+}
+
+.title  {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+@media(max-width: 1200px) {
+    .tab-link  {
+        font-size: 20px;
+    }
 }
 
 .tabs {
@@ -39,12 +76,14 @@ header {
 }
 
 .tab-content {
+    border-radius: 10px;
     display: none;
     padding: 1em;
     background: #fff;
 }
 
 .tab-content.active {
+    border-radius: 10px;
     display: block;
 }
 
@@ -113,4 +152,24 @@ header {
     border: 1px solid #007bff;
     border-radius: 4px;
     margin-top: 5px;
+}
+
+.tab-link  {
+    font-weight: normal;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+}
+
+@media(max-width: 1200px) {
+    .tab-link  {
+        font-size: 16px;
+    }
+}
+
+.button {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 10px;
 }

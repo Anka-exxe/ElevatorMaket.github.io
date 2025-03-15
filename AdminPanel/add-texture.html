@@ -23,43 +23,70 @@
     <!-- Форма для добавления/редактирования текстуры -->
     <form id="textureForm">
         <!-- Секция настроек иконки -->
+        <details>
+            <summary>Настройки иконки</summary>
+            <fieldset>
+
+                <div>
+                    <label for="icon.type">Тип текстуры</label>
+                    <select id="icon.type" name="icon.type" required>
+                        <option value="DOOR">Дверь</option>
+                        <option value="WALL">Стена</option>
+                        <option value="FLOOR">Пол</option>
+                        <option value="CEILING">Потолок</option>
+                        <option value="CEILING_MATERIAL">Материал потолка</option>
+                        <option value="CONTROL_PANEL">Панель управления</option>
+                        <option value="HANDRAIL">Перила</option>
+                        <option value="BUMPER">Отбойник</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="icon.name">Название иконки</label>
+                    <input type="text" id="icon.name" name="icon.name" required>
+                </div>
+                <div class="file-input-wrapper">
+                    <label for="icon.icon">Файл иконки</label>
+                    <input type="file" id="icon.icon" name="icon.icon" accept="image/*" required>
+                    <button type="button" class="clear-file-btn" data-target="icon.icon">Удалить файл</button>
+                    <div class="file-preview" id="preview-icon.icon"></div>
+                </div>
+            </fieldset>
+        </details>
+        
+        <!-- Секция свойств текстуры -->
+        <details>
+            <summary>Свойства текстуры</summary>
+            <fieldset>
+                <div>
+                    <label for="name">Название текстуры</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div>
+                    <label for="baseColor">Базовый цвет текстуры</label>
+                    <input type="color" id="baseColor" name="baseColor" value="#ffffff">
+                </div>
+                <div>
+                    <label for="properties.bumpScale">Bump Scale</label>
+                    <input type="number" id="bumpScale" name="properties.bumpScale" step="0.1" value="0">
+                </div>
+                <div>
+                    <label for="properties.metalness">Metalness</label>
+                    <input type="number" id="metalness" name="properties.metalness" step="0.1" value="0">
+                </div>
+                <div>
+                    <label for="properties.roughness">Roughness</label>
+                    <input type="number" id="roughness" name="properties.roughness" step="0.1" value="0">
+                </div>
+                <div>
+                    <label for="properties.emissiveIntensity">Emissive Intensity</label>
+                    <input type="number" id="emissiveIntensity" name="properties.emissiveIntensity" step="0.1" value="0">
+                </div>
+            </fieldset>
+        </details>
+
+        <details>
+            <summary>Карты текстуры</summary>
         <fieldset>
-            <legend>Настройки иконки</legend>
-            <div>
-                <label for="icon.type">Тип текстуры</label>
-                <select id="icon.type" name="icon.type" required>
-                    <option value="DOOR">Дверь</option>
-                    <option value="WALL">Стена</option>
-                    <option value="FLOOR">Пол</option>
-                    <option value="CEILING">Потолок</option>
-                    <option value="CEILING_MATERIAL">Материал потолка</option>
-                    <option value="CONTROL_PANEL">Панель управления</option>
-                    <option value="HANDRAIL">Перила</option>
-                    <option value="BUMPER">Отбойник</option>
-                </select>
-            </div>
-            <div>
-                <label for="icon.name">Название иконки</label>
-                <input type="text" id="icon.name" name="icon.name" required>
-            </div>
-            <div class="file-input-wrapper">
-                <label for="icon.icon">Файл иконки</label>
-                <input type="file" id="icon.icon" name="icon.icon" accept="image/*" required>
-                <button type="button" class="clear-file-btn" data-target="icon.icon">Удалить файл</button>
-                <div class="file-preview" id="preview-icon.icon"></div>
-            </div>
-        </fieldset>
-        <!-- Секция настроек текстуры -->
-        <fieldset>
-            <legend>Настройки текстуры</legend>
-            <div>
-                <label for="name">Название текстуры</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-            <div>
-                <label for="baseColor">Базовый цвет текстуры</label>
-                <input type="color" id="baseColor" name="baseColor" value="#ffffff">
-            </div>
             <!-- Карты текстуры -->
             <div class="file-input-wrapper">
                 <label for="baseTexture">Diffuse (Base)</label>
@@ -112,33 +139,23 @@
                 <button type="button" class="clear-file-btn" data-target="bumpMap">Удалить файл</button>
                 <div class="file-preview" id="preview-bumpMap"></div>
             </div>
-            <!-- Свойства текстуры -->
-            <div>
-                <label for="properties.bumpScale">Bump Scale</label>
-                <input type="number" id="bumpScale" name="properties.bumpScale" step="0.1" value="0">
-            </div>
-            <div>
-                <label for="properties.metalness">Metalness</label>
-                <input type="number" id="metalness" name="properties.metalness" step="0.1" value="0">
-            </div>
-            <div>
-                <label for="properties.roughness">Roughness</label>
-                <input type="number" id="roughness" name="properties.roughness" step="0.1" value="0">
-            </div>
-            <div>
-                <label for="properties.emissiveIntensity">Emissive Intensity</label>
-                <input type="number" id="emissiveIntensity" name="properties.emissiveIntensity" step="0.1" value="0">
-            </div>
-            <div>
-                <label for="shapeSelect">Выберите фигуру для предпросмотра</label>
-                <select id="shapeSelect">
-                    <option value="cube">Куб</option>
-                    <option value="sphere">Сфера</option>
-                    <option value="plane">Плоскость</option>
-                    <option value="cylinder">Цилиндр</option>
-                </select>
-            </div>
-        </fieldset>
+         </fieldset>
+        </details>
+        <details>
+            <summary>Настройки просмотра текстуры</summary>
+            <fieldset>
+                <div>
+                    <label for="shapeSelect">Выберите фигуру для предпросмотра</label>
+                    <select id="shapeSelect">
+                        <option value="cube">Куб</option>
+                        <option value="sphere">Сфера</option>
+                        <option value="plane">Плоскость</option>
+                        <option value="cylinder">Цилиндр</option>
+                    </select>
+                </div>
+            </fieldset>
+        </details>
+       
         <div>
             <button type="submit">Добавить текстуру</button>
         </div>

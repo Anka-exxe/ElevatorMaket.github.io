@@ -6,8 +6,8 @@ import {getDoorState,
     setDoorTextureActive} from './doorParams.js';
 import {getCeilingState, 
     setCeilingParamsActive} from './ceilingParams.js';
-    import {getFloorState, 
-        setFloorTextureActive} from './floorParameters.js';
+import {getFloorState, 
+    setFloorTextureActive} from './floorParameters.js';
 import {getPanelState,
     setPanelParamsActive} from './panelParams.js';
 import {getMirrorParams,
@@ -20,27 +20,27 @@ import {getAllBumperTextures,
 import {showTab} from "../animation/tabFunctions.js";
 
 const allParameters = {
-    mainParameters: null,
-    wallParameters: null,
-    doorParameters: null,
-    ceilingParameters: null,
-    floorParameters: null,
-    panelParameters: null,
-    mirrorParameters: null,
-    handrailParameters: null,
-    otherParameters: null
+    cabin: null,
+    wall: null,
+    doors: null,
+    ceiling: null,
+    floor: null,
+    controlPanel: null,
+    mirror: null,
+    handrail: null,
+    bumpers: null
 };
 
 export function getAllParameters() {
-    allParameters.mainParameters = getMainSelectedParameters();
-    allParameters.wallParameters = getAllWallTextures();
-    allParameters.doorParameters = getDoorState();
-    allParameters.ceilingParameters = getCeilingState();
-    allParameters.floorParameters = getFloorState();
-    allParameters.panelParameters = getPanelState();
-    allParameters.mirrorParameters = getMirrorParams();
-    allParameters.handrailParameters = getHandrailParams();
-    allParameters.otherParameters = getAllBumperTextures();
+    allParameters.cabin = getMainSelectedParameters();
+    allParameters.wall = getAllWallTextures();
+    allParameters.doors = getDoorState();
+    allParameters.ceiling = getCeilingState();
+    allParameters.floor = getFloorState();
+    allParameters.controlPanel = getPanelState();
+    allParameters.mirror = getMirrorParams();
+    allParameters.handrail = getHandrailParams();
+    allParameters.bumpers = getAllBumperTextures();
     //console.log(allParameters);
 }
 
@@ -61,27 +61,27 @@ export function saveParametersToFile() {
 
 export function setAllParameters(parameters) {
     if (parameters && typeof parameters === 'object') {
-        setMainActiveSelections(parameters.mainParameters); 
-        setActiveWallParameters(parameters.wallParameters);
-        setDoorTextureActive(parameters.doorParameters);
-        setCeilingParamsActive(parameters.ceilingParameters);
-        setFloorTextureActive(parameters.floorParameters);
-        setPanelParamsActive(parameters.panelParameters);
-        setMirrorParamsActive(parameters.mirrorParameters);
-        setHandrailParamsActive(parameters.handrailParameters);
-        setActiveBumperParameters(parameters.otherParameters);
+        setMainActiveSelections(parameters.cabin); 
+        setActiveWallParameters(parameters.wall);
+        setDoorTextureActive(parameters.doors);
+        setCeilingParamsActive(parameters.ceiling);
+        setFloorTextureActive(parameters.floor);
+        setPanelParamsActive(parameters.controlPanel);
+        setMirrorParamsActive(parameters.mirror);
+        setHandrailParamsActive(parameters.handrail);
+        setActiveBumperParameters(parameters.bumpers);
 
         //showTab('MainParametersTab');
 
         const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
 
-// Проверка на существование элемента
-if (mainTabMenuTitle) {
-    // Имитируем клик
-    mainTabMenuTitle.click();
-} else {
-    console.error('Элемент с ID "MainTabMenuTitle" не найден.');
-}
+        // Проверка на существование элемента
+        if (mainTabMenuTitle) {
+            // Имитируем клик
+            mainTabMenuTitle.click();
+        } else {
+            console.error('Элемент с ID "MainTabMenuTitle" не найден.');
+        }
         
         console.log('Параметры установлены:', allParameters);
     } else {

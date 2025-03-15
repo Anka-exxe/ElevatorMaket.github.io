@@ -97,3 +97,4 @@ async function fetchIcons() {
         console.error('Ошибка при получении данных:', error); // Обработка ошибок
     }
 }
+
