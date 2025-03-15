@@ -7,8 +7,8 @@ import { setActiveRadioByInputName,
 
 export function getMainSelectedParameters() {
     const selectedParameters = {
-        cabinSize: getCabinSizeParam(),
-        cabinType: getCabinTypeParam(),
+        size: getCabinSizeParam(),
+        type: getCabinTypeParam(),
         openingType: getOpeningTypeParam(),
         designProject: getDesignProjectParam()
     };
@@ -34,8 +34,8 @@ function getDesignProjectParam() {
 }
 
 export function setMainActiveSelections(selectedParameters) {
-    setActiveButtonByFormName('cabinSizeForm', selectedParameters.cabinSize);
-    setActiveRadioByInputName("cabin_type", selectedParameters.cabinType);
+    setActiveButtonByFormName('cabinSizeForm', selectedParameters.size);
+    setActiveRadioByInputName("cabin_type", selectedParameters.type);
     setActiveRadioByInputName("opening_type", selectedParameters.openingType);
     setActiveButtonByFormName('designForm', selectedParameters.designProject);
 }

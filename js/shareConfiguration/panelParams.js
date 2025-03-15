@@ -3,17 +3,17 @@ import {setActiveTextureByContainerName,
     getRadioParamByInputName} from "./findElementsHelper.js";
 
 const PanelState = {
-    board: null,
-    material: null,
-    panelSide: null,
-    panelLocation: null,
-    panelLocationToWall: null
+    indicationBoard: null,
+    texture: null,
+    side: null,
+    location: null,
+    locationToWall: null
 };
 
 export function getPanelState() {
-    PanelState.panelSide = getPanelSide(); 
-    PanelState.panelLocation = getPanelLocation();
-    PanelState.panelLocationToWall = getPanelLocationToWall();
+    PanelState.side = getPanelSide(); 
+    PanelState.location = getPanelLocation();
+    PanelState.locationToWall = getPanelLocationToWall();
     return PanelState;
 }
 
@@ -30,11 +30,11 @@ export function getPanelLocationToWall() {
 }
 
 export function setBoard(textureId) {
-    PanelState.board = textureId;
+    PanelState.indicationBoard = textureId;
 }
 
 export function setPanelMaterial(textureId) {
-    PanelState.material = textureId;
+    PanelState.texture = textureId;
 }
 
 export function setPanelSideActive(radioId) {
@@ -58,11 +58,11 @@ export function setPanelToWallLocationActive(radioId) {
 }
 
 export function setPanelParamsActive(parameters) {
-    setBoardActive(parameters.board);
-    setPanelMaterialActive(parameters.material);
-    setPanelSideActive(parameters.panelSide);
-    setPanelLocationActive(parameters.panelLocation);
-    setPanelToWallLocationActive(parameters.panelLocationToWall);
+    setBoardActive(parameters.indicationBoard);
+    setPanelMaterialActive(parameters.texture);
+    setPanelSideActive(parameters.side);
+    setPanelLocationActive(parameters.location);
+    setPanelToWallLocationActive(parameters.locationToWall);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {

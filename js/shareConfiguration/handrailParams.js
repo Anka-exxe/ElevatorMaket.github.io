@@ -7,11 +7,11 @@ import { setButtonActiveById,
 
 const handrailParameters = {
     existence: null,
-    handrailType: null,
+    type: null,
     back: null,
     left: null,
     right: null,
-    material: null,
+    texture: null,
 };
 
 function getHandrailExistenceParam() {
@@ -35,7 +35,7 @@ function getLeftLocationParam() {
 }
 
 function getMaterialParam() {
-    return handrailParameters.material;
+    return handrailParameters.texture;
 }
 
 export function setHandrailExistenceActive(radioId) {
@@ -65,7 +65,7 @@ export function setHandrailLocation(back, left, right) {
 }
 
 export function setHandrailTexture(textureId) {
-    handrailParameters.material = textureId;
+    handrailParameters.texture = textureId;
 }
 
 function setHandrailTextureActive(texture) {
@@ -74,18 +74,18 @@ function setHandrailTextureActive(texture) {
 
 export function setHandrailParamsActive(parameters) {
     setHandrailExistenceActive(parameters.existence);
-    setHandrailTypeActive(parameters.handrailType);
+    setHandrailTypeActive(parameters.type);
     setHandrailLocation(parameters.back, parameters.left, parameters.right);
-    setHandrailTextureActive(parameters.material);
+    setHandrailTextureActive(parameters.texture);
 }
 
 export function getHandrailParams() {
     handrailParameters.existence = getHandrailExistenceParam();
-    handrailParameters.handrailType = getHandrailTypeParam();
+    handrailParameters.type = getHandrailTypeParam();
     handrailParameters.back = getBackLocationParam();
     handrailParameters.left = getLeftLocationParam();
     handrailParameters.right = getRightLocationParam();
-    handrailParameters.material = getMaterialParam();
+    handrailParameters.texture = getMaterialParam();
 
    // console.log(handrailParameters);
     return handrailParameters;

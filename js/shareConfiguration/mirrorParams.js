@@ -6,7 +6,7 @@ import { setButtonActiveById,
 
 const mirrorParameters = {
     existence: null,
-    mirrorType: null,
+    type: null,
     back: null,
     left: null,
     right: null,
@@ -61,13 +61,13 @@ export function setMirrorLocation(back, left, right) {
 
 export function setMirrorParamsActive(parameters) {
     setMirrorExistenceActive(parameters.existence);
-    setMirrorTypeActive(parameters.mirrorType);
+    setMirrorTypeActive(parameters.type);
     setMirrorLocation(parameters.back, parameters.left, parameters.right);
 }
 
 export function getMirrorParams() {
     mirrorParameters.existence = getMirrorExistenceParam();
-    mirrorParameters.mirrorType = getMirrorTypeParam();
+    mirrorParameters.type = getMirrorTypeParam();
     mirrorParameters.back = getBackLocationParam();
     mirrorParameters.left = getLeftLocationParam();
     mirrorParameters.right = getRightLocationParam();

@@ -1,109 +1,4 @@
-import {handleTextureClick} from "../models/textureManager.js";
-import {images} from "../textureService/textureStorage.js"
-
-const tabImageMap = new Map([
-    ['MainParametersTab', 'main_parameters_icon'],
-    ['WallsParametersTab', 'wall_icon'],
-    ['DoorParametrsTab', 'doors_icon'],
-    ['CeilingParametrsTab', 'ceiling_icon'],
-    ['FloorParametrsTab', 'floor_icon'],
-    ['BoardParametrsTab', 'board_icon'],
-    ['MirrorParametrsTab', 'mirror_icon'],
-    ['HandrailParametrsTab', 'handrail_icon'],
-    ['OtherParametrsTab', 'other_icon']
-]);
-
-export function showTab(tabId) {
-    const tabs = document.querySelectorAll('.menu-container__content');
-    const navigationTabs = document.querySelectorAll('.navigation__tab');
-    const icons = document.querySelectorAll('.navigation--with-animation__animation-picture');
-
-    tabs.forEach(tab => {
-        tab.classList.remove('active');
-    });
-
-    navigationTabs.forEach(tab => {
-        tab.classList.remove('active');
-    });
-
-    icons.forEach(icon => {
-        icon.classList.remove('active');
-    });
-
-    document.getElementById(tabId).classList.add('active');
-
-    const activeTab = Array.from(navigationTabs).find(tab => tab.innerText === document.getElementById(tabId).querySelector('.menu-container__options-menu-title').innerText);
-    if (activeTab) {
-        activeTab.classList.add('active');
-    }
-
-    const iconId = tabImageMap.get(tabId);
-    const activeIcon = document.getElementById(iconId);
-    if (activeIcon) {
-        activeIcon.classList.add('active');
-    }
-
-    let category = '';
-    switch (tabId) {
-        case 'WallsParametersTab':
-            category = 'walls';
-            break;
-        case 'CeilingParametrsTab':
-            category = 'ceiling';
-            break;
-        case 'FloorParametrsTab':
-            category = 'floor';
-            break;
-        case 'BoardParametrsTab':
-            category = 'board';
-            break;
-        case 'DoorParametrsTab':
-            category = 'door';
-            break;
-        case 'HandrailParametrsTab':
-            category = 'handrail';
-            break;
-        case 'OtherParametrsTab':
-            category = 'floor'; 
-            break;
-    }
-
-
-    const parentElement = document.getElementById(tabId);
-    const image_container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container');
-
-
-    const images = image_container.querySelectorAll('img');
-
-    if (images.length > 0) {
-    
-    } else {
-      showImages(category, tabId);
-    }    
-}
-
-
-/*async function fetchIcons() {
-    const url = 'http://localhost:8090/api/v1/icons/WALL?page=0&size=10';
-
-    try {
-        const response = await fetch(url); // Выполняем запрос к API
-        if (!response.ok) {
-            throw new Error(`HTTP error! статус: ${response.status}`); // Обработка ошибок
-        }
-        const data = await response.json(); // Преобразуем ответ в формат JSON
-        console.log(data); // Выводим данные в консоль
-
-        // Здесь можно обработать полученные данные (например, отобразить их на странице)
-        displayIcons(data.content);
-    } catch (error) {
-        console.error('Ошибка при получении данных:', error); // Обработка ошибок
-    }
-}*/
-
-
-
-/*const images = {
+export const images = {
     walls: [
         { "id": "e73d78fc-410e-4a8a-9e70-8711cbc9c578", "icon": "./Стены/5024.jpg", "texture": "./Стены/5024.jpg", "alpha": "", "bump": "" },
         { "id": "f73d48fc-410e-4a8a-9e70-8711cbc9c578", "icon": "./Стены/DL16CE_diffuse.jpg", "texture": "./Стены/DL16CE_diffuse.jpg", "alpha": "", "bump": "" },
@@ -181,60 +76,24 @@ export function showTab(tabId) {
         { "id": "e73d48fc-410e-4a8a-9e70-8711cbc9c626", "icon": "./Двери/шлифованная нержавейка.jpg", "texture": "./Двери/шлифованная нержавейка.jpg", "alpha": "", "bump": "" },
 
     ]
-};*/
+};
 
-function showImages(category, tabId) {
+const url = 'http://localhost:8090/api/v1/icons/WALL?page=0&size=100';
 
-    let addEventListenerToImages = function(container, category) {
-        if (images[category]) {
-            images[category].forEach(item => {
-                const img = document.createElement('img');
-                img.src = item.icon || item.texture;
-                img.alt = `${category} image`;
-    
-                img.setAttribute('data-texture-id', item.id);
-                img.setAttribute('data-texture-url', item.texture);
-                img.setAttribute('data-alpha-url',  item.alpha || "");
-                img.setAttribute('data-bump-url',  item.bump || "");
-    
-                let className = (tabId === 'BoardParametrsTab' && category == 'board') ? 'special-texture-image' : 'texture-image';
-                img.className = className;
-    
-                img.addEventListener('click', handleTextureClick);
-                container.appendChild(img);
-            });
+async function fetchIcons() {
+    const url = 'http://localhost:8090/api/v1/icons/WALL?page=0&size=100';
+
+    try {
+        const response = await fetch(url); // Выполняем запрос к API
+        if (!response.ok) {
+            throw new Error(`HTTP error! статус: ${response.status}`); // Обработка ошибок
         }
-    } 
+        const data = await response.json(); // Преобразуем ответ в формат JSON
+        console.log(data); // Выводим данные в консоль
 
-    const parentElement = document.getElementById(tabId);
-
-    if (category == 'ceiling') {
-       const ceiling_pattern_container = parentElement.querySelector('.menu-container__options-menu-container-main .ceiling-pattern');
-
-       addEventListenerToImages(ceiling_pattern_container, category);
-
-       category = 'ceilingPlafon';
-
-       const ceiling_material_container = parentElement.querySelector('.menu-container__options-menu-container-main .ceiling-material');
-       
-       addEventListenerToImages(ceiling_material_container, category);
-
-    } else if (category == 'board') {
-      const ceiling_pattern_container = parentElement.querySelector('.menu-container__options-menu-container-main .post-orders');
-
-       addEventListenerToImages(ceiling_pattern_container, category);
-
-       category = 'board_color';
-
-       const ceiling_material_container = parentElement.querySelector('.menu-container__options-menu-container-main .panel-color');
-       
-       addEventListenerToImages(ceiling_material_container, category);
-    } else {
-        const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container');
-
-        addEventListenerToImages(container, category);
+        // Здесь можно обработать полученные данные (например, отобразить их на странице)
+        displayIcons(data.content);
+    } catch (error) {
+        console.error('Ошибка при получении данных:', error); // Обработка ошибок
     }
-    
 }
-
-window.showTab = showTab;

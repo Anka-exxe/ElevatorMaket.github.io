@@ -3,8 +3,8 @@ import {setActiveTextureByContainerName,
     getRadioParamByInputName} from "./findElementsHelper.js";
 
 const CeilingState = {
-    ceilingPlafon: null,
-    ceilingMaterial: null,
+    lamp: null,
+    texture: null,
     orientation: null,
 };
 
@@ -19,11 +19,11 @@ export function getCeilingOrientation() {
 }
 
 export function setCeilingMaterial(textureId) {
-    CeilingState.ceilingMaterial = textureId;
+    CeilingState.texture = textureId;
 }
 
 export function setCeilingPlafon(textureId) {
-    CeilingState.ceilingPlafon = textureId;
+    CeilingState.lamp = textureId;
 }
 
 export function setCeilingOrientationActive(radioId) {
@@ -39,8 +39,8 @@ export function setCeilingPlafonActive(textureId) {
 }
 
 export function setCeilingParamsActive(parameters) {
-    setCeilingPlafonActive(parameters.ceilingPlafon);
-    setCeilingMaterialActive(parameters.ceilingMaterial);
+    setCeilingPlafonActive(parameters.lamp);
+    setCeilingMaterialActive(parameters.texture);
     setCeilingOrientationActive(parameters.orientation);
 }
 
