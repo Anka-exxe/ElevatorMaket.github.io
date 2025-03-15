@@ -1,0 +1,116 @@
+﻿body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1em;
+    text-align: center;
+}
+
+.tabs {
+    display: flex;
+    background: #e0e0e0;
+    border-bottom: 1px solid #ccc;
+}
+
+.tabs button {
+    flex: 1;
+    padding: 1em;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.tabs button:hover {
+    background: #d0d0d0;
+}
+
+.tabs button.active {
+    background: #fff;
+    border-bottom: 2px solid #333;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    padding: 1em;
+    background: #fff;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.texture-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.texture-item {
+    border: 1px solid #ccc;
+    padding: 0.5em;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.texture-item img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 8px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+}
+
+.modal-map-img {
+    max-width: 100px;
+    border: 1px solid #007bff;
+    border-radius: 4px;
+    margin-top: 5px;
+}

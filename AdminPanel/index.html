@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Админ-панель конфигуратора</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+    <h1>Админ-панель конфигуратора</h1>
+    <button id="addTextureBtn">Добавить текстуру</button>
+</header>
+
+<div class="tabs">
+    <button class="tab-link active" data-tab="door">Дверь</button>
+    <button class="tab-link" data-tab="walls">Стены</button>
+    <button class="tab-link" data-tab="floor">Пол</button>
+    <button class="tab-link" data-tab="bumper">Отбойник</button>
+    <button class="tab-link" data-tab="ceilingPattern">Рисунок потолка</button>
+    <button class="tab-link" data-tab="ceiling">Потолок</button>
+    <button class="tab-link" data-tab="controlPanel">Панель управления</button>
+    <button class="tab-link" data-tab="handrails">Перила</button>
+</div>
+
+<div class="tab-contents">
+    <div class="tab-content active" id="door">
+        <h2>Текстуры для двери</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="walls">
+        <h2>Текстуры для стен</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="floor">
+        <h2>Текстуры для пола</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="bumper">
+        <h2>Текстуры для отбойника</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="ceilingPattern">
+        <h2>Рисунок потолка</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="ceiling">
+        <h2>Текстуры для потолка</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="controlPanel">
+        <h2>Текстуры для панели управления</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+
+    <div class="tab-content" id="handrails">
+        <h2>Текстуры для перил</h2>
+        <div class="texture-grid">
+            <!-- Иконки загрузятся автоматически -->
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для отображения деталей текстуры -->
+<div id="textureModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Детали текстуры</h2>
+        <div id="textureDetails"></div>
+        <button id="editTextureBtn">Изменить текстуру</button>
+        <button id="deleteTextureBtn">Удалить текстуру</button>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

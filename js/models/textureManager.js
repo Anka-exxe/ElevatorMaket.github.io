@@ -1,7 +1,17 @@
 ﻿import * as THREE from 'three';
 import * as WallTextureChoice from '../shareConfiguration/wallTexturesChoice.js';
 
-export function applyTextureToElement(model, elementNames, textureInput, alphaMapInput = null, materialOptions = {}) {
+export function applyTextureToElement(model,
+                                      elementNames,
+                                      textureInput,
+                                      alphaMapInput = null,
+                                      bump= null,
+                                      aoMap= null,
+                                      displacementMap= null,
+                                      metalnessMap= null,
+                                      normalMap= null,
+                                      roughnessMap= null,
+                                      materialOptions = {}) {
     const elementNamesArr = Array.isArray(elementNames) ? elementNames : [elementNames];
     const textureLoader = new THREE.TextureLoader();
 
@@ -23,8 +33,17 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
         });
     };
 
-    Promise.all([loadTexture(textureInput), loadTexture(alphaMapInput)])
-        .then(([texture, alphaMap]) => {
+    Promise.all([
+        loadTexture(textureInput),
+        loadTexture(alphaMapInput),
+        loadTexture(bump),
+        loadTexture(aoMap),
+        loadTexture(displacementMap),
+        loadTexture(metalnessMap),
+        loadTexture(normalMap),
+        loadTexture(roughnessMap)
+    ])
+        .then(([texture, alphaMap, bump, aoMap, displacementMap, metalnessMap, normalMap]) => {
             if (texture) {
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
@@ -38,22 +57,88 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
             if (alphaMap) {
                 alphaMap.wrapS = THREE.RepeatWrapping;
                 alphaMap.wrapT = THREE.RepeatWrapping;
-                texture.colorSpace = THREE.SRGBColorSpace
-                if (materialOptions.repeatAlpha) {
-                    alphaMap.repeat.set(materialOptions.repeatAlpha.x, materialOptions.repeatAlpha.y);
+                //alphaMap.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    alphaMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
                     alphaMap.repeat.set(1, 1);
                 }
             }
+            if (bump) {
+                bump.wrapS = THREE.RepeatWrapping;
+                bump.wrapT = THREE.RepeatWrapping;
+                //bump.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    bump.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    bump.repeat.set(1, 1);
+                }
+            }
+            if (aoMap) {
+                aoMap.wrapS = THREE.RepeatWrapping;
+                aoMap.wrapT = THREE.RepeatWrapping;
+                //aoMap.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    aoMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    aoMap.repeat.set(1, 1);
+                }
+            }
+            if (displacementMap) {
+                displacementMap.wrapS = THREE.RepeatWrapping;
+                displacementMap.wrapT = THREE.RepeatWrapping;
+                //displacementMap.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    displacementMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    displacementMap.repeat.set(1, 1);
+                }
+            }
+            if (metalnessMap) {
+                metalnessMap.wrapS = THREE.RepeatWrapping;
+                metalnessMap.wrapT = THREE.RepeatWrapping;
+                //metalnessMap.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    metalnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    metalnessMap.repeat.set(1, 1);
+                }
+            }
+            if (normalMap) {
+                normalMap.wrapS = THREE.RepeatWrapping;
+                normalMap.wrapT = THREE.RepeatWrapping;
+                //normalMap.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    normalMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    normalMap.repeat.set(1, 1);
+                }
+            }
+            if (roughnessMap) {
+                roughnessMap.wrapS = THREE.RepeatWrapping;
+                roughnessMap.wrapT = THREE.RepeatWrapping;
+                //normalMap.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    roughnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    roughnessMap.repeat.set(1, 1);
+                }
+            }
+
             model.traverse((child) => {
                 if (child.isMesh && (elementNamesArr.includes(child.name) || hasAncestorWithName(child, elementNamesArr))) {
-               
                     const newMaterial = new THREE.MeshStandardMaterial({
-                        color: 0xffffff,
+                        color: materialOptions.color !== undefined ? materialOptions.color : 0xffffff,
                         map: texture,
                         alphaMap: alphaMap,
-                        // bumpMap: texture,
-                        // bumpScale: 0.5,
+                        bumpMap: bump,
+                        bumpScale: 0.5,
+                        aoMap: aoMap,
+                        displacementMap: displacementMap,
+                        displacementScale: 0,
+                        metalnessMap: metalnessMap,
+                        normalMap: normalMap,
+                        roughnessMap: roughnessMap,
                         transparent: alphaMap ? true : false,
                         metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
                         roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
@@ -70,7 +155,8 @@ export function applyTextureToElement(model, elementNames, textureInput, alphaMa
         });
 }
 
-function hasAncestorWithName(object, names) {
+
+    function hasAncestorWithName(object, names) {
     let parent = object.parent;
     while (parent) {
         if (names.includes(parent.name)) return true;
@@ -145,6 +231,12 @@ console.log(tabId)
                     elementNames,
                     textureURL,
                     alphaURL,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
                     {
                         metalness: 0,
                         roughness: 0.8,
@@ -205,7 +297,7 @@ console.log(tabId)
         return;
     }
 
-    applyTextureToElement(model, elementNames, textureURL, alphaURL, { metalness: 0.5, roughness: 0.8 });
+    applyTextureToElement(model, elementNames, textureURL, alphaURL,null, null,null,null,null, null, { metalness: 0.5, roughness: 0.8 });
 }
 
 export function applyDefaultElevatorTextures() {
@@ -247,15 +339,29 @@ export function applyDefaultElevatorTextures() {
         },
         {
             elementNames: ['LeftWall'],
-            texture: './Стены/DL89E_diffuse.jpg',
+            texture: './Textures/base.jpg',
             alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
+            bump:null,
+            aoMap: './Textures/ao.png',
+            displacementMap: './Textures/displacement.png',
+            metalnessMap: './Textures/metalic.png',
+            normalMap: './Textures/normal.png',
+            options: {
+                metalness: 0.8,
+                roughness: 0.4,
+                color: 0x7C7C7C,
+            }
         },
         {
             elementNames: ['RightWall'],
-            texture: './Стены/DL89E_diffuse.jpg',
+            texture: './TextureWall/brushed.jpg',
             alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
+            bump:null,
+            aoMap: './TextureWall/DisplacementMap1.png',
+            displacementMap:'./TextureWall/DisplacementMap1.png',
+            metalnessMap: './TextureWall/DisplacementMap2.png',
+            normalMap: './TextureWall/NormalMap.png',
+            options: { metalness: 0.6, roughness: 0.5, color: 0x7C7C7C}
         },
         {
             elementNames: ['Floor'],
@@ -296,7 +402,7 @@ export function applyDefaultElevatorTextures() {
         {
             elementNames: ['Lamp'],
             texture: './Потолок/RAL-7035-Svetlo-serii.png',
-            alpha: './Потолок_Текстуры/Р17.png',
+            alpha: './Потолок_Текстуры/Р04.png',
             options: {
                 metalness: 0,
                 roughness: 0.8,
@@ -350,58 +456,21 @@ export function applyDefaultElevatorTextures() {
 
     // Для каждого набора настроек применяем текстуру к соответствующим объектам
     defaultTexturesMapping.forEach(mapping => {
-        applyTextureToElement(model, mapping.elementNames, mapping.texture, mapping.alpha, mapping.options);
+        applyTextureToElement(model,
+            mapping.elementNames,
+            mapping.texture,
+            mapping.alpha,
+            mapping.bump,
+            mapping.aoMap,
+            mapping.displacementMap,
+            mapping.metalnessMap,
+            mapping.normalMap,
+            mapping.roughnessMap,
+            mapping.options);
     });
-
-    defaultVisibility();
 }
 
-function CreateMirror()
-{
-    const mirrorMesh = model.getObjectByName('Mirror');
-    if (mirrorMesh) {
 
-        const reflector = new Reflector(mirrorMesh.geometry, {
-            clipBias: 0.003,
-            textureWidth: window.innerWidth * window.devicePixelRatio,
-            textureHeight: window.innerHeight * window.devicePixelRatio,
-            color: 0x889999
-        });
-
-        reflector.position.copy(mirrorMesh.position);
-        reflector.rotation.copy(mirrorMesh.rotation);
-        reflector.scale.copy(mirrorMesh.scale);
-
-        mirrorMesh.parent.add(reflector);
-        mirrorMesh.visible = false;
-    } else {
-        console.error('Элемент "Mirror" не найден в модели');
-    }
-}
-
-function defaultVisibility() {
-    //model.getObjectByName('LeftDoor1').visible = false;
-    //model.getObjectByName('RightDoor1').visible = false;
-    //model.getObjectByName('BackWall11').visible = false;
-    //model.getObjectByName('BackWall12').visible = false;
-    //model.getObjectByName('BackWall13').visible = false;
-    //model.getObjectByName('BackWall14').visible = false;
-    //model.getObjectByName('RightMirror1').visible = false;
-    //model.getObjectByName('RightMirror2').visible = false;
-    //model.getObjectByName('Threshold1').visible = false;
-    /*model.getObjectByName('RightHandrail11').visible = false;
-    model.getObjectByName('RightHandrail12').visible = false;
-    model.getObjectByName('RightHandrail13').visible = false;
-    model.getObjectByName('RightHandrail14').visible = false;
-    model.getObjectByName('RightHandrail15').visible = false;
-    model.getObjectByName('RightHandrail16').visible = false;
-    model.getObjectByName('RightHandrail17').visible = false;
-    model.getObjectByName('RightHandrail18').visible = false;
-    model.getObjectByName('BackHandrail11').visible = false;
-    model.getObjectByName('BackHandrail12').visible = false;
-    model.getObjectByName('BackHandrail13').visible = false;*/
-    model.getObjectByName('DisplayHorisontal').visible = false;
-}
 
 
 

@@ -115,7 +115,6 @@ export function DefaultSettings(){
     }
 
     updateControlPanelPlacement();
-
     updateMirrorPlacement();
 }
 
@@ -173,7 +172,7 @@ function updateCabinView(cabinType) {
         }
     }
 
-    updateControlPanelPlacement
+    updateControlPanelPlacement();
     updateOpenType();
 }
 
@@ -194,12 +193,11 @@ function updateOpenType(openingType) {
     const isWalkThrough = (cabinRadio && cabinRadio.value === "walk_through_cabin");
 
     if (openingType === "central" || openingType === "Центральное") {
-
         setVisibility("FrontWall", false);
         setVisibility("Door", false);
         setVisibility("Threshold", false);
 
-        setVisibility("FrontWallCentral", true);
+        setVisibility("FrontWallСentral", true);
         setVisibility("DoorCentral", true);
         setVisibility("ThresholdCentral", true);
 
@@ -222,12 +220,14 @@ function updateOpenType(openingType) {
 
         const doorGroup = model.getObjectByName("Door");
         if (doorGroup) doorGroup.rotation.y = 0;
+        console.log("Центральное");
+        console.log(model.getObjectByName("FrontWall").visible);
     } else {
         setVisibility("FrontWall", true);
         setVisibility("Door", true);
         setVisibility("Threshold", true);
 
-        setVisibility("FrontWallCentral", false);
+        setVisibility("FrontWallСentral", false);
         setVisibility("DoorCentral", false);
         setVisibility("ThresholdCentral", false);
         if (isWalkThrough) {
@@ -239,7 +239,8 @@ function updateOpenType(openingType) {
             setVisibility("Threshold1Central", false);
             setVisibility("Door1Central", false);
         }
-
+        console.log(" НЕ Центральное");
+        console.log(model.getObjectByName("FrontWallСentral").visible);
         const doorGroup = model.getObjectByName("Door");
         if (doorGroup) {
             doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;

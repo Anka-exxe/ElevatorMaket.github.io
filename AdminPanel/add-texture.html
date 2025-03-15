@@ -1,0 +1,149 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление/Редактирование текстуры</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/add-texture.css">
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "../node_modules/three/build/three.module.js",
+            "jsm/": "../node_modules/three/examples/jsm/"
+          }
+        }
+    </script>
+</head>
+<body>
+<a class="back-link" href="index.html">&larr; Вернуться к админ-панели</a>
+<h1 id="pageTitle">Добавление новой текстуры</h1>
+<div class="container">
+    <!-- Область предпросмотра -->
+    <div id="preview"></div>
+    <!-- Форма для добавления/редактирования текстуры -->
+    <form id="textureForm">
+        <!-- Секция настроек иконки -->
+        <fieldset>
+            <legend>Настройки иконки</legend>
+            <div>
+                <label for="icon.type">Тип текстуры</label>
+                <select id="icon.type" name="icon.type" required>
+                    <option value="DOOR">Дверь</option>
+                    <option value="WALL">Стена</option>
+                    <option value="FLOOR">Пол</option>
+                    <option value="CEILING">Потолок</option>
+                    <option value="CEILING_MATERIAL">Материал потолка</option>
+                    <option value="CONTROL_PANEL">Панель управления</option>
+                    <option value="HANDRAIL">Перила</option>
+                    <option value="BUMPER">Отбойник</option>
+                </select>
+            </div>
+            <div>
+                <label for="icon.name">Название иконки</label>
+                <input type="text" id="icon.name" name="icon.name" required>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="icon.icon">Файл иконки</label>
+                <input type="file" id="icon.icon" name="icon.icon" accept="image/*" required>
+                <button type="button" class="clear-file-btn" data-target="icon.icon">Удалить файл</button>
+                <div class="file-preview" id="preview-icon.icon"></div>
+            </div>
+        </fieldset>
+        <!-- Секция настроек текстуры -->
+        <fieldset>
+            <legend>Настройки текстуры</legend>
+            <div>
+                <label for="name">Название текстуры</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div>
+                <label for="baseColor">Базовый цвет текстуры</label>
+                <input type="color" id="baseColor" name="baseColor" value="#ffffff">
+            </div>
+            <!-- Карты текстуры -->
+            <div class="file-input-wrapper">
+                <label for="baseTexture">Diffuse (Base)</label>
+                <input type="file" id="baseTexture" name="baseTexture" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="baseTexture">Удалить файл</button>
+                <div class="file-preview" id="preview-baseTexture"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="aoMap">AO</label>
+                <input type="file" id="aoMap" name="aoMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="aoMap">Удалить файл</button>
+                <div class="file-preview" id="preview-aoMap"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="displacementMap">Displacement</label>
+                <input type="file" id="displacementMap" name="displacementMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="displacementMap">Удалить файл</button>
+                <div class="file-preview" id="preview-displacementMap"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="metalMap">Metal</label>
+                <!-- Изменили name на metalnessMap -->
+                <input type="file" id="metalMap" name="metalnessMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="metalMap">Удалить файл</button>
+                <div class="file-preview" id="preview-metalMap"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="normalMapDX">Normal (DX)</label>
+                <!-- Изменили name на normalMap -->
+                <input type="file" id="normalMapDX" name="normalMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="normalMapDX">Удалить файл</button>
+                <div class="file-preview" id="preview-normalMapDX"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="roughGlossMap">Rough Gloss (Roughness Map)</label>
+                <!-- Изменили name на roughnessMap -->
+                <input type="file" id="roughGlossMap" name="roughnessMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="roughGlossMap">Удалить файл</button>
+                <div class="file-preview" id="preview-roughGlossMap"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="alphaMap">Alpha</label>
+                <input type="file" id="alphaMap" name="alphaMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="alphaMap">Удалить файл</button>
+                <div class="file-preview" id="preview-alphaMap"></div>
+            </div>
+            <div class="file-input-wrapper">
+                <label for="bumpMap">Bump</label>
+                <input type="file" id="bumpMap" name="bumpMap" accept="image/*">
+                <button type="button" class="clear-file-btn" data-target="bumpMap">Удалить файл</button>
+                <div class="file-preview" id="preview-bumpMap"></div>
+            </div>
+            <!-- Свойства текстуры -->
+            <div>
+                <label for="properties.bumpScale">Bump Scale</label>
+                <input type="number" id="bumpScale" name="properties.bumpScale" step="0.1" value="0">
+            </div>
+            <div>
+                <label for="properties.metalness">Metalness</label>
+                <input type="number" id="metalness" name="properties.metalness" step="0.1" value="0">
+            </div>
+            <div>
+                <label for="properties.roughness">Roughness</label>
+                <input type="number" id="roughness" name="properties.roughness" step="0.1" value="0">
+            </div>
+            <div>
+                <label for="properties.emissiveIntensity">Emissive Intensity</label>
+                <input type="number" id="emissiveIntensity" name="properties.emissiveIntensity" step="0.1" value="0">
+            </div>
+            <div>
+                <label for="shapeSelect">Выберите фигуру для предпросмотра</label>
+                <select id="shapeSelect">
+                    <option value="cube">Куб</option>
+                    <option value="sphere">Сфера</option>
+                    <option value="plane">Плоскость</option>
+                    <option value="cylinder">Цилиндр</option>
+                </select>
+            </div>
+        </fieldset>
+        <div>
+            <button type="submit">Добавить текстуру</button>
+        </div>
+    </form>
+</div>
+<script type="module" src="js/add-texture.js"></script>
+</body>
+</html>

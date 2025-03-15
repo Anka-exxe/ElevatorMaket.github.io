@@ -21,10 +21,10 @@ function init() {
 
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-   renderer.gammaOutput = true;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
-renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
+    //renderer.outputColorSpace = THREE.SRGBColorSpace;
+    //renderer.gammaOutput = true;
+    //renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
+    //renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
 
 
     scene = new THREE.Scene();
@@ -37,25 +37,47 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
     const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
-    directionalLight.position.set(0, 100, 0);
-    directionalLight.castShadow = true;
+
+    let directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(0, 60, 100);
+    directionalLight.target.position.set(0, 40, 0);
     scene.add(directionalLight);
 
+    // let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
+    // scene.add(directionalLightHelper);
 
-    const skyColor = 0xB1E1FF;  // светло-синий
-    const groundColor = 0xB97A20;  // коричневато-оранжевый
-    const intensity = 1;
-    const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
-    scene.add(light);
+    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight1.position.set(100, 60, 0);
+    directionalLight1.target.position.set(0, 40, 0);
+    scene.add(directionalLight1);
 
-    /*let pointLight = new THREE.PointLight(0xffffff, 50, 80);
-    pointLight.position.set(1, 70, 1);
-    scene.add(pointLight);
-    
-    pointLight = new THREE.PointLight(0xffffff, 100, 80);
-    pointLight.position.set(1, 10, 1);
-    scene.add(pointLight);*/
+    // let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
+    // scene.add(directionalLightHelper1);
+
+    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight2.position.set(-100, 60, 0);
+    directionalLight2.target.position.set(0, 40, 0);
+    scene.add(directionalLight2);
+
+    // let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
+    // scene.add(directionalLightHelper2);
+
+    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight3.position.set(0, 60, -100);
+    directionalLight3.target.position.set(0, 40, 0);
+    scene.add(directionalLight3);
+
+    // let directionalLightHelper3 = new THREE.DirectionalLightHelper(directionalLight3, 3);
+    // scene.add(directionalLightHelper3);
+
+    /*let directionalLight4 = new THREE.AmbientLight(0xffffff, 100);
+    directionalLight4.position.set(0, 80, 0);
+    directionalLight4.target.position.set(0, 40, 0);
+    scene.add(directionalLight4);
+
+    let directionalLightHelper4 = new THREE.DirectionalLightHelper(directionalLight4, 10);
+    scene.add(directionalLightHelper4);*/
+
 
     controls = new OrbitControls(camera, renderer.domElement);
 
@@ -138,15 +160,6 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
                     DefaultSettings()
                     animate();
 
-                    let pointLight = new THREE.PointLight(0xffffff, 50, 80);
-                    pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
-                    scene.add(pointLight);
-                    
-                    pointLight = new THREE.PointLight(0xffffff, 100, 80);
-                    pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
-                    scene.add(pointLight);
-
-
                     function getObjectNames(obj) {
                         const names = [];
                         obj.traverse((child) => {
@@ -215,11 +228,6 @@ renderer.toneMappingExposure = 1; // Настройте этот парамет�
             }
         });
     }
-
-
-
-
-
 }
 
 document.addEventListener('DOMContentLoaded', init);
