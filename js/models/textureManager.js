@@ -167,7 +167,7 @@ export function applyTextureToElement(model,
                     child.material = newMaterial;
                 }
             });
-        ццццц})
+        })
         .catch((error) => {
             console.error("Ошибка загрузки текстуры или альфа-карты:", error);
         });
