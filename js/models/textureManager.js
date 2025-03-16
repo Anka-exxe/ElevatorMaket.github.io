@@ -7,8 +7,10 @@ import * as Panel from '../shareConfiguration/panelParams.js';
 import {setHandrailTexture} from '../shareConfiguration/handrailParams.js';
 import * as Bumper from '../shareConfiguration/otherParams.js';
 
+let currentCeilingTextureURL = null;
 export function applyTextureToElement(model,
                                       elementNames,
+                                      color,
                                       textureInput,
                                       alphaMapInput = null,
                                       bump= null,
@@ -40,6 +42,7 @@ export function applyTextureToElement(model,
     };
 
     Promise.all([
+        color,
         loadTexture(textureInput),
         loadTexture(alphaMapInput),
         loadTexture(bump),
@@ -49,7 +52,16 @@ export function applyTextureToElement(model,
         loadTexture(normalMap),
         loadTexture(roughnessMap)
     ])
-        .then(([texture, alphaMap, bump, aoMap, displacementMap, metalnessMap, normalMap]) => {
+        .then(([color,
+                   texture,
+                   alphaMap,
+                   bump,
+                   aoMap,
+                   displacementMap,
+                   metalnessMap,
+                   normalMap,
+                   roughnessMap
+               ]) => {
             if (texture) {
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
@@ -134,7 +146,7 @@ export function applyTextureToElement(model,
             model.traverse((child) => {
                 if (child.isMesh && (elementNamesArr.includes(child.name) || hasAncestorWithName(child, elementNamesArr))) {
                     const newMaterial = new THREE.MeshStandardMaterial({
-                        color: materialOptions.color !== undefined ? materialOptions.color : 0xffffff,
+                        color: color !== undefined ? color : 0xffffff,
                         map: texture,
                         alphaMap: alphaMap,
                         bumpMap: bump,
@@ -155,7 +167,7 @@ export function applyTextureToElement(model,
                     child.material = newMaterial;
                 }
             });
-        })
+        ццццц})
         .catch((error) => {
             console.error("Ошибка загрузки текстуры или альфа-карты:", error);
         });
@@ -174,9 +186,21 @@ export function applyTextureToElement(model,
 
 export function handleTextureClick(event) {
     const img = event.currentTarget;
-    const textureURL = img.getAttribute('data-texture-url');
-    const alphaURL = img.getAttribute('data-alpha-url') || null;
     const textureId = img.getAttribute('data-texture-id');
+    const textureURL = img.getAttribute('data-texture-url') || null;
+    const alphaURL = img.getAttribute('data-alpha-url') || null;
+    const bumpUrl = img.getAttribute('data-bump-url') || null;
+    const aoURL = img.getAttribute('data-ao-url') || null;
+    const displacementURL = img.getAttribute('data-displacement-url') || null;
+    const metalnessURL = img.getAttribute('data-metalness-url') || null;
+    const roughnessURL = img.getAttribute('data-roughness-url') || null;
+    const normalURL = img.getAttribute('data-normal-url') || null;
+
+    const bumpScale = img.getAttribute('data-bump-scale') || null;
+    const metalness = img.getAttribute('data-metalness') || null;
+    const roughness = img.getAttribute('data-roughness') || null;
+    const emissive = img.getAttribute('data-emissive-intensity') || null;
+    const color = img.getAttribute('data-color') || null;
 
     const texturesContainer = img.closest('.textures-container');
     const tabContainer = texturesContainer.closest('.menu-container__content');
@@ -237,24 +261,26 @@ console.log(tabId)
                 applyTextureToElement(
                     model,
                     elementNames,
-                    textureURL,
+                    color,
+                    currentCeilingTextureURL ,
                     alphaURL,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
+                    bumpUrl,
+                    aoURL,
+                    displacementURL,
+                    metalnessURL,
+                    normalURL,
+                    roughnessURL,
                     {
-                        metalness: 0,
-                        roughness: 0.8,
+                        metalness: metalness,
+                        roughness: roughness,
                         emissive: new THREE.Color(0xffffee),
-                        emissiveIntensity: 1
+                        emissiveIntensity: emissive,
                     });
                 return;
             } else if (textureType === "material") {
                 Ceiling.setCeilingMaterial(textureId);
                 elementNames = ['Ceiling'];
+                currentCeilingTextureURL = textureURL;
             }
             break;
         case 'FloorParametrsTab':
@@ -313,7 +339,22 @@ console.log(tabId)
         return;
     }
 
-    applyTextureToElement(model, elementNames, textureURL, alphaURL,null, null,null,null,null, null, { metalness: 0.5, roughness: 0.8 });
+    applyTextureToElement(
+        model,
+        elementNames,
+        color,
+        textureURL,
+        alphaURL,
+        bumpUrl,
+        aoURL,
+        displacementURL,
+        metalnessURL,
+        normalURL,
+        roughnessURL,
+        {
+            metalness: metalness,
+            roughness: roughness,
+        });
 }
 
 export function applyDefaultElevatorTextures() {
@@ -474,6 +515,7 @@ export function applyDefaultElevatorTextures() {
     defaultTexturesMapping.forEach(mapping => {
         applyTextureToElement(model,
             mapping.elementNames,
+            '#ffffff',
             mapping.texture,
             mapping.alpha,
             mapping.bump,

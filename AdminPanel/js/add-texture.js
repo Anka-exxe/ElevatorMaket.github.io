@@ -1,7 +1,7 @@
 ﻿import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 
-// Глобальный объект для хранения старых URL карт
+// Глобальный объект для хранения старых URL или файлов для карт
 let oldMapValues = {};
 
 (function() {
@@ -22,7 +22,7 @@ let oldMapValues = {};
     renderer.setSize(previewContainer.clientWidth, previewContainer.clientHeight);
     previewContainer.appendChild(renderer.domElement);
 
-    // Настройка OrbitControls для вращения модели
+    // Настройка OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -51,7 +51,7 @@ let oldMapValues = {};
     }
     animate();
 
-    // Функция обновления превью картинки для конкретного файлового поля
+    // Функция обновления превью картинки для конкретного поля
     function updateFilePreview(inputId, url) {
         const previewDiv = document.getElementById("preview-" + inputId);
         if (previewDiv) {
@@ -59,7 +59,8 @@ let oldMapValues = {};
         }
     }
 
-    // Функция обновления текстуры материала по файловому input с сохранением URL в oldMapValues
+    // Функция обновления текстуры материала по файловому input.
+    // После загрузки файла, вызывается updateFilePreview и сохраняется URL в oldMapValues.
     function updateMaterialMap(inputId, mapType, oldKey) {
         const input = document.getElementById(inputId);
         if (input.files && input.files[0]) {
@@ -101,8 +102,8 @@ let oldMapValues = {};
                 }
                 material.needsUpdate = true;
                 updateFilePreview(inputId, url);
-                // Сохраняем новый URL в oldMapValues
-                if(oldKey) {
+                // Сохраняем URL в oldMapValues, чтобы при отправке формы при отсутствии нового файла использовать его
+                if (oldKey) {
                     oldMapValues[oldKey] = url;
                 }
             });
@@ -174,14 +175,13 @@ let oldMapValues = {};
         scene.add(mesh);
     });
 
-    // Обработчик очистки файловых инпутов, сброса карт и обновления oldMapValues
+    // Обработчик кнопок удаления файлов: очищает input, сбрасывает свойство материала и удаляет значение из oldMapValues
     document.querySelectorAll('.clear-file-btn').forEach(button => {
         button.addEventListener('click', function() {
             const targetId = this.getAttribute('data-target');
             const fileInput = document.getElementById(targetId);
             fileInput.value = "";
             let mapKey = null;
-            // Определяем oldKey в зависимости от targetId
             switch(targetId) {
                 case 'baseTexture':
                     mapKey = 'baseTexture';
@@ -212,7 +212,6 @@ let oldMapValues = {};
             if (mapKey) {
                 material[mapKey] = null;
                 material.needsUpdate = true;
-                // Удаляем соответствующее значение из oldMapValues
                 oldMapValues[mapKey] = null;
             }
             const previewDiv = document.getElementById("preview-" + targetId);
@@ -220,7 +219,7 @@ let oldMapValues = {};
         });
     });
 
-    // Режим редактирования: если есть параметр id в URL, заполняем форму
+    // Режим редактирования: если есть параметр id в URL, заполняем форму и сохраняем старые URL в oldMapValues
     const urlParams = new URLSearchParams(window.location.search);
     const textureId = urlParams.get('id');
     const pageTitle = document.getElementById('pageTitle');
@@ -265,7 +264,7 @@ let oldMapValues = {};
                     alphaMap: data.alphaMapUrl,
                     bumpMap: data.bumpMapUrl
                 };
-                // Отображаем превью для каждого поля, если URL присутствует
+                // Отображаем превью, если URL присутствует
                 if (oldMapValues.baseTexture) updateFilePreview('baseTexture', oldMapValues.baseTexture);
                 if (oldMapValues.aoMap) updateFilePreview('aoMap', oldMapValues.aoMap);
                 if (oldMapValues.displacementMap) updateFilePreview('displacementMap', oldMapValues.displacementMap);
@@ -281,11 +280,18 @@ let oldMapValues = {};
             });
     }
 
-    document.getElementById('textureForm').addEventListener('submit', (e) => {
+    // Обработчик отправки формы – асинхронный, чтобы для опциональных полей, если новый файл не выбран, загрузить файл по старому URL
+    document.getElementById('textureForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
 
+        // Вывод содержимого FormData для отладки
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
         const optionalKeys = [
+            'baseTexture',
             'aoMap',
             'displacementMap',
             'metalnessMap',
@@ -294,17 +300,36 @@ let oldMapValues = {};
             'alphaMap',
             'bumpMap'
         ];
-        optionalKeys.forEach(key => {
+
+        for (const key of optionalKeys) {
             const file = formData.get(key);
             if (!file || (file instanceof File && file.size === 0)) {
-                // Если в режиме редактирования и для этого поля существует старое значение, добавляем его
                 if (textureId && oldMapValues && oldMapValues[key]) {
-                    formData.append(key, oldMapValues[key]);
+                    try {
+                        const response = await fetch(oldMapValues[key]);
+                        if (response.ok) {
+                            const blob = await response.blob();
+                            // Попытаемся извлечь имя файла из URL
+                            const urlParts = oldMapValues[key].split('/');
+                            let originalName = urlParts[urlParts.length - 1] || (key + ".png");
+                            // Если имя не содержит расширение, добавим его из blob.type (например, .png)
+                            if (!originalName.includes('.')) {
+                                const ext = blob.type.split('/')[1]; // например, "png"
+                                originalName = key + "." + ext;
+                            }
+                            const newFile = new File([blob], originalName, { type: blob.type });
+                            formData.append(key, newFile);
+                        } else {
+                            console.error("Ошибка загрузки файла по URL", oldMapValues[key]);
+                        }
+                    } catch (error) {
+                        console.error("Ошибка при получении файла", error);
+                    }
                 } else {
                     formData.delete(key);
                 }
             }
-        });
+        }
 
         const url = textureId
             ? `http://localhost:8090/api/v1/textures/${textureId}`
@@ -316,7 +341,9 @@ let oldMapValues = {};
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Ошибка при сохранении текстуры");
+                    return response.text().then(text => {
+                        throw new Error(`Ошибка ${response.status}: ${text}`);
+                    });
                 }
                 return response.json();
             })
@@ -328,4 +355,5 @@ let oldMapValues = {};
                 alert("Ошибка при сохранении текстуры");
             });
     });
+
 })();

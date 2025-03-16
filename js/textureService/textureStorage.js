@@ -183,7 +183,7 @@ async function fetchIcons(elementType) {
                 metalness: texture.properties.metalness,
                 roughness: texture.properties.roughness,
                 emissiveIntensity: texture.properties.emissiveIntensity,
-                color: "#ffffff" // Установите нужный цвет, если нужно
+                color: texture.baseColor // Установите нужный цвет, если нужно
             }
         }));
     
