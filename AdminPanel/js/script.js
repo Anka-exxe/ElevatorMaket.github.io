@@ -7,6 +7,7 @@ const tabTypeMapping = {
     ceilingPattern: 'CEILING_MATERIAL',
     ceiling: 'CEILING',
     controlPanel: 'CONTROL_PANEL',
+    indicationBoard: 'INDICATION_BOARD',
     handrails: 'HANDRAIL'
 };
 

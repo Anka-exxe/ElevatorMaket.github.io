@@ -1,0 +1,14 @@
+﻿version: '3'
+services:
+  main:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+  admin:
+    build:
+      context: ./AdminPanel
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"

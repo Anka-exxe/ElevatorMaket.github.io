@@ -141,20 +141,35 @@ export async function showImages(category, tabId) {
                 img.alt = `${category} image`;
 
                 img.setAttribute('data-texture-id', item.id);
+<<<<<<< HEAD
                 img.setAttribute('data-texture-url', item.texture);
                 img.setAttribute('data-alpha-url', item.alpha || "");
                 img.setAttribute('data-bump-url', item.bump || "");
+=======
+                img.setAttribute('data-texture-url', item.texture || "");
+                img.setAttribute('data-alpha-url',  item.alpha || "");
+                img.setAttribute('data-bump-url',  item.bump || "");
+>>>>>>> 1855e63de56d60d7bf25ed9a93e6933c14b7133a
                 img.setAttribute('data-ao-url', item.aoMap || "");
                 img.setAttribute('data-displacement-url', item.displacementMap || "");
                 img.setAttribute('data-metalness-url', item.metalnessMap || "");
                 img.setAttribute('data-roughness-url', item.roughnessMap || "");
                 img.setAttribute('data-normal-url', item.normalMap || "");
+<<<<<<< HEAD
                 img.setAttribute('data-bump-scale', item.options.bumpScale || undefined);
                 img.setAttribute('data-metalness', item.options.metalness || undefined);
                 img.setAttribute('data-roughness', item.options.roughness || undefined);
                 img.setAttribute('data-emissive-intensity', item.options.emissiveIntensity || undefined);
                 img.setAttribute('data-color', item.options.color || "#ffffff");
 
+=======
+                img.setAttribute('data-bump-scale', item.options.bumpScale || null);
+                img.setAttribute('data-metalness', item.options.metalness || null);
+                img.setAttribute('data-roughness', item.options.roughness || null);
+                img.setAttribute('data-emissive-intensity', item.options.emissiveIntensity || null);
+                img.setAttribute('data-color', item.options.color || "#ffffff");
+    
+>>>>>>> 1855e63de56d60d7bf25ed9a93e6933c14b7133a
                 let className = (tabId === 'BoardParametrsTab' && category == 'board') ? 'special-texture-image' : 'texture-image';
                 img.className = className;
 
