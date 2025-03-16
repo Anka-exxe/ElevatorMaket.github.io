@@ -1,8 +1,60 @@
 ﻿import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 
-// Глобальный объект для хранения старых URL или файлов для карт
+
+// Предполагается, что textureId уже получен из URL
+const urlParams = new URLSearchParams(window.location.search);
+const textureId = urlParams.get('id');
+
+// Если мы в режиме редактирования, назначаем обработчик для кнопки "Изменить название"
+if (textureId) {
+    document.getElementById('changeNameBtn').addEventListener('click', () => {
+        const newName = document.getElementById('name').value.trim();
+        if (!newName) {
+            alert("Введите новое название текстуры");
+            return;
+        }
+        // Отправляем запрос на изменение названия текстуры
+        fetch(`http://localhost:8090/api/v1/textures/${textureId}/name`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: newName })
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        throw new Error(`Ошибка ${response.status}: ${text}`);
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Название текстуры успешно изменено!');
+            })
+            .catch(err => {
+                console.error("Ошибка при изменении названия текстуры", err);
+                alert("Ошибка при изменении названия текстуры");
+            });
+    });
+}
+
+// Глобальные объекты для хранения старых URL (или файлов) и флагов удаления
 let oldMapValues = {};
+let removeFlags = {};  // например, { baseTexture: true, metalnessMap: true, ... }
+
+// Маппинг для флагов удаления: для поля baseTexture флаг называется removeBaseTexture и т.д.
+const removeMapping = {
+    baseTexture: "removeBaseTexture",
+    alphaMap: "removeAlphaMap",
+    bumpMap: "removeBumpMap",
+    normalMap: "removeNormalMap",
+    metalnessMap: "removeMetalnessMap",
+    roughnessMap: "removeRoughnessMap",
+    aoMap: "removeAoMap",
+    displacementMap: "removeDisplacementMap"
+};
 
 (function() {
     // Создаем сцену предпросмотра
@@ -60,10 +112,12 @@ let oldMapValues = {};
     }
 
     // Функция обновления текстуры материала по файловому input.
-    // После загрузки файла, вызывается updateFilePreview и сохраняется URL в oldMapValues.
+    // После загрузки файла вызывается updateFilePreview и сохраняется URL в oldMapValues.
     function updateMaterialMap(inputId, mapType, oldKey) {
         const input = document.getElementById(inputId);
         if (input.files && input.files[0]) {
+            // Если пользователь выбирает новый файл, сбрасываем флаг удаления
+            removeFlags[oldKey] = false;
             const file = input.files[0];
             const url = URL.createObjectURL(file);
             const loader = new THREE.TextureLoader();
@@ -97,12 +151,13 @@ let oldMapValues = {};
                     case 'bumpMap':
                         material.bumpMap = texture;
                         break;
+                    case 'icon': // Для иконки обновляем только превью
+                        break;
                     default:
                         break;
                 }
                 material.needsUpdate = true;
                 updateFilePreview(inputId, url);
-                // Сохраняем URL в oldMapValues, чтобы при отправке формы при отсутствии нового файла использовать его
                 if (oldKey) {
                     oldMapValues[oldKey] = url;
                 }
@@ -110,8 +165,9 @@ let oldMapValues = {};
         }
     }
 
-    // Массив файловых инпутов с типами и ключами для oldMapValues
+    // Массив файловых инпутов с типами и ключами (oldKey соответствует ключу, который используется в oldMapValues и на сервере)
     const fileInputs = [
+        { id: 'icon.icon', type: 'icon', oldKey: 'icon' },
         { id: 'baseTexture', type: 'baseTexture', oldKey: 'baseTexture' },
         { id: 'aoMap', type: 'aoMap', oldKey: 'aoMap' },
         { id: 'displacementMap', type: 'displacementMap', oldKey: 'displacementMap' },
@@ -144,7 +200,6 @@ let oldMapValues = {};
         material.emissive = new THREE.Color(0xffffff);
         material.emissiveIntensity = parseFloat(e.target.value);
     });
-    // Новый параметр: базовый цвет текстуры
     document.getElementById('baseColor').addEventListener('input', (e) => {
         material.color = new THREE.Color(e.target.value);
     });
@@ -175,7 +230,7 @@ let oldMapValues = {};
         scene.add(mesh);
     });
 
-    // Обработчик кнопок удаления файлов: очищает input, сбрасывает свойство материала и удаляет значение из oldMapValues
+    // Обработчик кнопок удаления файлов: очищает input, сбрасывает свойство материала и устанавливает флаг удаления
     document.querySelectorAll('.clear-file-btn').forEach(button => {
         button.addEventListener('click', function() {
             const targetId = this.getAttribute('data-target');
@@ -183,36 +238,48 @@ let oldMapValues = {};
             fileInput.value = "";
             let mapKey = null;
             switch(targetId) {
+                case 'icon.icon':
+                    mapKey = 'icon';
+                    break;
                 case 'baseTexture':
                     mapKey = 'baseTexture';
+                    material.map = null;
                     break;
                 case 'aoMap':
                     mapKey = 'aoMap';
+                    material.aoMap = null;
                     break;
                 case 'displacementMap':
                     mapKey = 'displacementMap';
+                    material.displacementMap = null;
                     break;
                 case 'metalMap':
                     mapKey = 'metalnessMap';
+                    material.metalnessMap = null;
                     break;
                 case 'normalMapDX':
                     mapKey = 'normalMap';
+                    material.normalMap = null;
                     break;
                 case 'roughGlossMap':
                     mapKey = 'roughnessMap';
+                    material.roughnessMap = null;
                     break;
                 case 'alphaMap':
                     mapKey = 'alphaMap';
+                    material.alphaMap = null;
                     material.transparent = false;
                     break;
                 case 'bumpMap':
                     mapKey = 'bumpMap';
+                    material.bumpMap = null;
                     break;
             }
             if (mapKey) {
-                material[mapKey] = null;
                 material.needsUpdate = true;
                 oldMapValues[mapKey] = null;
+                // Устанавливаем флаг удаления для этого поля
+                removeFlags[mapKey] = true;
             }
             const previewDiv = document.getElementById("preview-" + targetId);
             if (previewDiv) previewDiv.innerHTML = "";
@@ -253,7 +320,7 @@ let oldMapValues = {};
                     document.getElementById('baseColor').value = baseColor;
                     material.color = new THREE.Color(baseColor);
                 }
-                // Сохраняем старые URL для карт в oldMapValues
+                // Сохраняем старые URL для карт в oldMapValues, включая иконку
                 oldMapValues = {
                     baseTexture: data.baseTextureUrl,
                     aoMap: data.aoMapUrl,
@@ -262,17 +329,63 @@ let oldMapValues = {};
                     normalMap: data.normalMapUrl,
                     roughnessMap: data.roughnessMapUrl,
                     alphaMap: data.alphaMapUrl,
-                    bumpMap: data.bumpMapUrl
+                    bumpMap: data.bumpMapUrl,
+                    icon: data.icon.icon  // URL для иконки
                 };
-                // Отображаем превью, если URL присутствует
-                if (oldMapValues.baseTexture) updateFilePreview('baseTexture', oldMapValues.baseTexture);
-                if (oldMapValues.aoMap) updateFilePreview('aoMap', oldMapValues.aoMap);
-                if (oldMapValues.displacementMap) updateFilePreview('displacementMap', oldMapValues.displacementMap);
-                if (oldMapValues.metalnessMap) updateFilePreview('metalMap', oldMapValues.metalnessMap);
-                if (oldMapValues.normalMap) updateFilePreview('normalMapDX', oldMapValues.normalMap);
-                if (oldMapValues.roughnessMap) updateFilePreview('roughGlossMap', oldMapValues.roughnessMap);
-                if (oldMapValues.alphaMap) updateFilePreview('alphaMap', oldMapValues.alphaMap);
-                if (oldMapValues.bumpMap) updateFilePreview('bumpMap', oldMapValues.bumpMap);
+
+                // Функция для загрузки текстуры и назначения свойству материала
+                function loadTexture(url, assignFn) {
+                    new THREE.TextureLoader().load(url, (tex) => {
+                        tex.needsUpdate = true;
+                        assignFn(tex);
+                        material.needsUpdate = true;
+                    });
+                }
+
+                // Загружаем и применяем текстурные карты, если URL присутствует
+                if (oldMapValues.baseTexture) {
+                    loadTexture(oldMapValues.baseTexture, (tex) => {
+                        tex.encoding = THREE.sRGBEncoding;
+                        material.map = tex;
+                    });
+                    updateFilePreview('baseTexture', oldMapValues.baseTexture);
+                }
+                if (oldMapValues.aoMap) {
+                    loadTexture(oldMapValues.aoMap, (tex) => { material.aoMap = tex; });
+                    updateFilePreview('aoMap', oldMapValues.aoMap);
+                }
+                if (oldMapValues.displacementMap) {
+                    loadTexture(oldMapValues.displacementMap, (tex) => { material.displacementMap = tex; });
+                    updateFilePreview('displacementMap', oldMapValues.displacementMap);
+                }
+                if (oldMapValues.metalnessMap) {
+                    loadTexture(oldMapValues.metalnessMap, (tex) => { material.metalnessMap = tex; });
+                    updateFilePreview('metalMap', oldMapValues.metalnessMap);
+                }
+                if (oldMapValues.normalMap) {
+                    loadTexture(oldMapValues.normalMap, (tex) => { material.normalMap = tex; });
+                    updateFilePreview('normalMapDX', oldMapValues.normalMap);
+                }
+                if (oldMapValues.roughnessMap) {
+                    loadTexture(oldMapValues.roughnessMap, (tex) => { material.roughnessMap = tex; });
+                    updateFilePreview('roughGlossMap', oldMapValues.roughnessMap);
+                }
+                if (oldMapValues.alphaMap) {
+                    loadTexture(oldMapValues.alphaMap, (tex) => {
+                        material.alphaMap = tex;
+                        material.transparent = true;
+                        material.alphaTest = 0.5;
+                    });
+                    updateFilePreview('alphaMap', oldMapValues.alphaMap);
+                }
+                if (oldMapValues.bumpMap) {
+                    loadTexture(oldMapValues.bumpMap, (tex) => { material.bumpMap = tex; });
+                    updateFilePreview('bumpMap', oldMapValues.bumpMap);
+                }
+                // Для иконки – обновляем только превью, материал не меняем
+                if (oldMapValues.icon) {
+                    updateFilePreview('icon.icon', oldMapValues.icon);
+                }
             })
             .catch(err => {
                 console.error("Ошибка загрузки данных текстуры", err);
@@ -280,12 +393,14 @@ let oldMapValues = {};
             });
     }
 
-    // Обработчик отправки формы – асинхронный, чтобы для опциональных полей, если новый файл не выбран, загрузить файл по старому URL
+
+    // Обработчик отправки формы – асинхронный, чтобы для опциональных полей, если новый файл не выбран, загрузить файл по старому URL,
+    // а если пользователь удалил файл (removeFlags установлен), добавить соответствующий флаг.
     document.getElementById('textureForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
 
-        // Вывод содержимого FormData для отладки
+        // Для отладки: выводим все пары key/value
         for (let [key, value] of formData.entries()) {
             console.log(key, value);
         }
@@ -303,31 +418,15 @@ let oldMapValues = {};
 
         for (const key of optionalKeys) {
             const file = formData.get(key);
+            // Если пользователь не выбрал новый файл (поле пустое)
             if (!file || (file instanceof File && file.size === 0)) {
-                if (textureId && oldMapValues && oldMapValues[key]) {
-                    try {
-                        const response = await fetch(oldMapValues[key]);
-                        if (response.ok) {
-                            const blob = await response.blob();
-                            // Попытаемся извлечь имя файла из URL
-                            const urlParts = oldMapValues[key].split('/');
-                            let originalName = urlParts[urlParts.length - 1] || (key + ".png");
-                            // Если имя не содержит расширение, добавим его из blob.type (например, .png)
-                            if (!originalName.includes('.')) {
-                                const ext = blob.type.split('/')[1]; // например, "png"
-                                originalName = key + "." + ext;
-                            }
-                            const newFile = new File([blob], originalName, { type: blob.type });
-                            formData.append(key, newFile);
-                        } else {
-                            console.error("Ошибка загрузки файла по URL", oldMapValues[key]);
-                        }
-                    } catch (error) {
-                        console.error("Ошибка при получении файла", error);
-                    }
-                } else {
-                    formData.delete(key);
+                // Если пользователь удалил файл – добавляем флаг удаления
+                if (removeFlags[key]) {
+                    const flagName = removeMapping[key];
+                    formData.append(flagName, "true");
                 }
+                // Если поле не заполнено, просто удаляем его – на сервере его отсутствие можно трактовать как null.
+                formData.delete(key);
             }
         }
 
@@ -355,5 +454,4 @@ let oldMapValues = {};
                 alert("Ошибка при сохранении текстуры");
             });
     });
-
 })();

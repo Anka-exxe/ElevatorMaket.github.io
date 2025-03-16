@@ -111,7 +111,7 @@ export async function getFloor() {
 
 export async function getBoard() {
     if (images.isBoardEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.CONTROL_PANEL);
+        let texturePatterns = await fetchIcons(UrlHelper.INDICATION_BOARD);
         images.board.push(...texturePatterns);
     }
     return images.board;

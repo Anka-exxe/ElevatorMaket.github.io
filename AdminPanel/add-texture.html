@@ -36,6 +36,7 @@
                         <option value="CEILING">МАтериал потолка</option>
                         <option value="CEILING_MATERIAL">Рисунок потолка</option>
                         <option value="CONTROL_PANEL">Панель управления</option>
+                        <option value="INDICATION_BOARD">Табло индикации</option>
                         <option value="HANDRAIL">Перила</option>
                         <option value="BUMPER">Отбойник</option>
                     </select>
@@ -54,17 +55,21 @@
         </details>
         
         <!-- Секция свойств текстуры -->
+        <!-- Секция свойств текстуры -->
         <details>
             <summary>Свойства текстуры</summary>
             <fieldset>
                 <div>
                     <label for="name">Название текстуры</label>
                     <input type="text" id="name" name="name" required>
+                    <!-- Кнопка для отдельного изменения имени -->
+                    <button type="button" id="changeNameBtn">Изменить название</button>
                 </div>
                 <div>
                     <label for="baseColor">Базовый цвет текстуры</label>
                     <input type="color" id="baseColor" name="baseColor" value="#ffffff">
                 </div>
+                <!-- Другие поля свойств... -->
                 <div>
                     <label for="properties.bumpScale">Bump Scale</label>
                     <input type="number" id="bumpScale" name="properties.bumpScale" step="0.1" value="0">
@@ -83,6 +88,7 @@
                 </div>
             </fieldset>
         </details>
+
 
         <details>
             <summary>Карты текстуры</summary>

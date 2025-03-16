@@ -4,6 +4,7 @@ export const FLOOR = 'FLOOR';
 export const CEILING = 'CEILING';
 export const CEILING_MATERIAL = 'CEILING_MATERIAL';
 export const CONTROL_PANEL = 'CONTROL_PANEL';
+export const INDICATION_BOARD = 'INDICATION_BOARD';
 export const HANDRAIL = 'HANDRAIL';
 export const BUMPER = 'BUMPER';
 
