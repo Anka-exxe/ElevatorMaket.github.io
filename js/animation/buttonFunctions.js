@@ -1,8 +1,8 @@
-function selectWall(button) {
+ function selectWall(button) {
     selectParameterButton(button);
 }
 
-function selectParameterButton(button) {
+export function selectParameterButton(button) {
     const container = button.parentNode; 
     const buttons = container.querySelectorAll('button'); 
     buttons.forEach(btn => {

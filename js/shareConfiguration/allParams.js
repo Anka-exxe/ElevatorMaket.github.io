@@ -19,6 +19,8 @@ import {getAllBumperTextures,
 
 import {showTab} from "../animation/tabFunctions.js";
 
+import {urlTemplateGetWordFile} from "../urlHelper/urls.js"
+
 const allParameters = {
     cabin: null,
     wall: null,
@@ -131,3 +133,49 @@ document.addEventListener('DOMContentLoaded', () => {
         loadParametersFromFile();
     });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const saveButton = document.getElementById('questionNaireBtn');
+    saveButton.addEventListener('click', () => {
+        getWordFileFromServer();
+    });
+});
+
+
+async function getWordFileFromServer() {
+    getAllParameters();
+
+    try {
+        const response = await fetch(urlTemplateGetWordFile, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(allParameters)
+        });
+
+        // Проверка статуса ответа
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        // Получаем blob (файл) из ответа
+        const blob = await response.blob();
+
+        // Создаем URL для blob
+        const url = window.URL.createObjectURL(blob);
+
+        // Создаем элемент <a> для загрузки файла
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'опросный_лист.pdf'; // Имя файла
+        document.body.appendChild(a);
+        a.click();
+
+        // Удаляем элемент <a>
+        a.remove();
+        window.URL.revokeObjectURL(url); // Освобождаем память
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}

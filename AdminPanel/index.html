@@ -84,7 +84,7 @@
     <div class="tab-content" id="patterns">
         <div class="design-project_header">
             <h2 class="title">Дизайн-проекты</h2>
-            <button class="small-button inlineButton">Добавить дизайн-проект</button>
+            <button id="addDesignProjectBtn" class="small-button inlineButton">Добавить дизайн-проект</button>
         </div>
     
         <div class="search-field">
@@ -98,31 +98,73 @@
         </div>
         
     
-        <section class="designProjectCard">
-            <h3 class="title">
-                CLASSIC 
-                <button class="small-button">Изменить</button>
-                <button class="small-button">Удалить</button>
-            </h3>
+        <section class="designProjectCard" data-category="classic">
+            <div class="designProjectHeader">
+                <h3 class="title"> CLASSIC </h3>
+                <button class="small-button editDesignProjectBtn">Изменить</button>
+                <button class="small-button deleteDesignProjectBtn">Удалить</button>
+            </div>
+    
             <div class="pattern-grid">
                 <section class="pattern-card">
                     <strong>CLASSIC 10</strong><br>
                     <img src="../pattern_img_preview/картинка1.png" alt="CLASSIC 10" class="pattern-img">
                     <div class="pattern-card__button-container">
-                        <button class="small-button" id="editPatternBtn">Изменить</button>
-                        <button class="small-button" id="deletePatternBtn">Удалить</button>
+                        <button class="small-button editPatternBtn">Изменить</button>
+                        <button class="small-button deletePatternBtn">Удалить</button>
                     </div>
-                </section>  
+                </section>
                 <section class="pattern-card">
                     <strong>CLASSIC 20</strong><br>
                     <img src="../pattern_img_preview/картинка1.png" alt="CLASSIC 20" class="pattern-img">
                     <div class="pattern-card__button-container">
-                        <button class="small-button" id="editPatternBtn">Изменить</button>
-                        <button class="small-button" id="deletePatternBtn">Удалить</button>
+                        <button class="small-button editPatternBtn">Изменить</button>
+                        <button class="small-button deletePatternBtn">Удалить</button>
                     </div>
                 </section>
             </div>
-        </section>        
+        </section>
+
+        <section class="designProjectCard" data-category="elite">
+            <div class="designProjectHeader">
+                <h3 class="title"> ELITE </h3>
+                <button class="small-button editDesignProjectBtn">Изменить</button>
+                <button class="small-button deleteDesignProjectBtn">Удалить</button>
+            </div>
+    
+            <div class="pattern-grid">
+                <section class="pattern-card">
+                    <strong>Elite line 10</strong><br>
+                    <img src="../pattern_img_preview/картинка1.png" alt="Elite 10" class="pattern-img">
+                    <div class="pattern-card__button-container">
+                        <button class="small-button editPatternBtn">Изменить</button>
+                        <button class="small-button deletePatternBtn">Удалить</button>
+                    </div>
+                </section>
+                <section class="pattern-card">
+                    <strong>Elite line 20</strong><br>
+                    <img src="../pattern_img_preview/картинка1.png" alt="Elite 20" class="pattern-img">
+                    <div class="pattern-card__button-container">
+                        <button class="small-button editPatternBtn">Изменить</button>
+                        <button class="small-button deletePatternBtn">Удалить</button>
+                    </div>
+                </section>
+            </div>
+        </section>
+        
+        
+        <!-- Модальное окно -->
+    <div id="designProjectModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" id="closeModal">&times;</span>
+            <h2>Добавить/Изменить дизайн-проект</h2>
+            <input class="textInput" type="text" id="projectNameInput" placeholder="Введите название проекта">
+            <div class="modal__footer">
+                <button id="confirmAddProjectBtn" class="modal-button">ОК</button>
+                <button id="cancelAddProjectBtn" class="modal-button">Отмена</button>
+            </div>
+        </div>
+    </div>
     </div>
 
 </div>
@@ -138,6 +180,7 @@
     </div>
 </div>
 
-<script src="js/script.js"></script>
+<script src="./js/script.js"></script>
+<script src="./js/patterns/animation/designProjectButtons.js"></script>
 </body>
 </html>

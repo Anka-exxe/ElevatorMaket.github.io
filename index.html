@@ -56,7 +56,7 @@
 
                     <div id="MainTabMenuTitle" class="navigation__tab active" onclick="showTab('MainParametersTab')">Основные параметры</div>
                     <div id="WallTab" class="navigation__tab" onclick="showTab('WallsParametersTab')">Стены</div>
-                    <div class="navigation__tab" onclick="showTab('DoorParametrsTab')">Двери</div>
+                    <div class="navigation__tab" onclick="showTab('PatternsParametersTab')">Двери</div>
                     <div class="navigation__tab" onclick="showTab('CeilingParametrsTab')">Потолок</div>
                     <div class="navigation__tab" onclick="showTab('FloorParametrsTab')">Пол</div>
                     <div class="navigation__tab" onclick="showTab('BoardParametrsTab')">Панель управления</div>
@@ -77,7 +77,7 @@
                         <h3 class="form-container__title">Размер кабины:</h3>
                         <form class="form-container__form form" name="cabinSizeForm">
                             <button id="wideSize" class="form__form-element active" type="button" onclick="selectParameterButton(this)">Широкая</button>
-                            <button id="squereSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
+                            <button id="squareSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
                             <button id="deepSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Глубокая</button>
                         </form>
                     </div>
@@ -122,14 +122,24 @@
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Выбор дизайн-проекта:</h3>
                         <form class="form-container__form form" name="designForm">
-                            <button id="nature" class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
-                            <button id="elite" class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
-                            <button id="modern" class="form__form-element" type="button" onclick="selectParameterButton(this)">MODERN</button>
-                            <button id="classic" class="form__form-element" type="button" onclick="selectParameterButton(this)">CLASSIC</button>
+                          
                         </form>
                     </div>
 
                 </div>
+            </div>
+
+            <div id="PatternsParametersTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Шаблоны
+                </h2>
+                <div class="menu-container__options-menu-container-main">
+                <button id="backToMainParameters" class="left-arrow-button" onclick="showTab('MainParametersTab')"></button>
+
+                <div id="templatesList" class="pattern-container">
+
+                </div>
+            </div>
             </div>
 
             <div id="WallsParametersTab" class="menu-container__content">
@@ -449,21 +459,26 @@
                         <img class="form__button-image" src="./images/download.png">
                         <p><pre>  Загрузить</pre></p>
                     </button>
+
+                    <button id="questionNaireBtn" type="button" class="form__form-element--with-image additional-button" >
+                        <p><pre>  Опросный лист</pre></p>
+                    </button>
                 </form>
             </div>
         </div>
     </div>
 
     
-<script src="./js/animation/buttonFunctions.js"></script>
+<script type="module" src="./js/animation/buttonFunctions.js"></script>
 
- <script type="module" src="./js/models/loadModel.js"></script>
+ <!--<script type="module" src="./js/models/loadModel.js"></script>-->
  <script type="module" src="./js/animation/tabFunctions.js"></script>
     <script type="module" src="./js/models/textureManager.js"></script>
     <script type="module" src="./js/models/unusiallElements.js"></script>
     <script type="module" src="./js/models/positionManager.js"></script>
     <script type="module" src="./js/shareConfiguration/allParams.js"></script>
     <script type="module" src="./js/textureService/textureStorage.js"></script>
+    <script type="module" src="./js/animation/designProjectAnimation.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
