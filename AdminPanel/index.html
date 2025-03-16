@@ -9,6 +9,7 @@
 <header>
     <h1>Админ-панель конфигуратора</h1>
     <button id="addTextureBtn" class="button">Добавить текстуру</button>
+    <button id="addPatternBtn" class="button">Добавить шаблон</button>
 </header>
 
 <div class="tabs">
@@ -20,6 +21,7 @@
     <button class="tab-link" data-tab="ceiling">Потолок</button>
     <button class="tab-link" data-tab="controlPanel">Панель управления</button>
     <button class="tab-link" data-tab="handrails">Перила</button>
+    <button class="tab-link" data-tab="patterns">Шаблоны</button>
 </div>
 
 <div class="tab-contents">
@@ -78,6 +80,51 @@
             <!-- Иконки загрузятся автоматически -->
         </div>
     </div>
+
+    <div class="tab-content" id="patterns">
+        <div class="design-project_header">
+            <h2 class="title">Дизайн-проекты</h2>
+            <button class="small-button inlineButton">Добавить дизайн-проект</button>
+        </div>
+    
+        <div class="search-field">
+        <p >Показать:</p>
+        <select class="search-select" id="designProjectSelect">
+            <option value="all">Все</option>
+            <option value="classic">CLASSIC</option>
+            <option value="elite">ELITE</option>
+            <option value="modern">MODERN</option>
+        </select>
+        </div>
+        
+    
+        <section class="designProjectCard">
+            <h3 class="title">
+                CLASSIC 
+                <button class="small-button">Изменить</button>
+                <button class="small-button">Удалить</button>
+            </h3>
+            <div class="pattern-grid">
+                <section class="pattern-card">
+                    <strong>CLASSIC 10</strong><br>
+                    <img src="../pattern_img_preview/картинка1.png" alt="CLASSIC 10" class="pattern-img">
+                    <div class="pattern-card__button-container">
+                        <button class="small-button" id="editPatternBtn">Изменить</button>
+                        <button class="small-button" id="deletePatternBtn">Удалить</button>
+                    </div>
+                </section>  
+                <section class="pattern-card">
+                    <strong>CLASSIC 20</strong><br>
+                    <img src="../pattern_img_preview/картинка1.png" alt="CLASSIC 20" class="pattern-img">
+                    <div class="pattern-card__button-container">
+                        <button class="small-button" id="editPatternBtn">Изменить</button>
+                        <button class="small-button" id="deletePatternBtn">Удалить</button>
+                    </div>
+                </section>
+            </div>
+        </section>        
+    </div>
+
 </div>
 
 <!-- Модальное окно для отображения деталей текстуры -->
@@ -86,8 +133,8 @@
         <span class="close">&times;</span>
         <h2 class="title">Детали текстуры</h2>
         <div id="textureDetails"></div>
-        <button id="editTextureBtn">Изменить текстуру</button>
-        <button id="deleteTextureBtn">Удалить текстуру</button>
+        <button class="small-button" id="editTextureBtn">Изменить текстуру</button>
+        <button class="small-button" id="deleteTextureBtn">Удалить текстуру</button>
     </div>
 </div>
 

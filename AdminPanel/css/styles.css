@@ -19,6 +19,10 @@
     src: url(../../fonts/roboto/Roboto-Italic.ttf);
 }
 
+:root {
+    --primary-color: #00406C; 
+}
+
 *, *::after, *::before {
     box-sizing: border-box;
     font-family: "Roboto";
@@ -41,6 +45,7 @@ header {
 .title  {
     font-weight: bold;
     font-size: 24px;
+    margin-right: 20px;
 }
 
 @media(max-width: 1200px) {
@@ -171,5 +176,63 @@ header {
     cursor: pointer;
     font-size: 18px;
     padding: 10px;
+    margin-left: 20px;
     border-radius: 10px;
 }
+
+.small-button {
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.search-select {
+    cursor: pointer;
+    width: 20%;
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    outline: none;
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.pattern-img {
+    max-width: 150px;
+    max-height: 300px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.pattern-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 4px;
+}
+
+.pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.pattern-card__button-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.search-field, .design-project_header {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: baseline;
+}
+

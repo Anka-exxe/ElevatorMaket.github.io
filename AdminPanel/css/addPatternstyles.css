@@ -1,0 +1,422 @@
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: normal;
+    src: url(../../fonts/roboto/Roboto-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: bold;
+    src: url(../../fonts/roboto/Roboto-Bold.ttf);
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: italic;
+    font-weight: normal;
+    src: url(../../fonts/roboto/Roboto-Italic.ttf);
+}
+
+*, *::after, *::before {
+    box-sizing: border-box;
+    font-family: "Roboto";
+}
+
+body {
+    background-color: #E0E0E0;
+    margin: 0;
+    font-family: "Roboto";
+    height: 100vh;
+    overflow: hidden;
+}
+
+.configurator-container {
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+}
+.configurator-container__elevator-container {
+    flex-grow: 2;
+    width: 100%;
+    align-self: stretch;
+}
+
+.elevator-container {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 20% 70% 10%;
+}
+
+.elevator-container__header {
+    grid-area: 1 / 1;
+    z-index: 2;
+    justify-self: start;
+}
+
+.elevator-container__logo {
+    object-fit: cover; 
+    width: 100%;
+    height: 100%;
+}
+
+.logo__image {
+    object-fit: contain; 
+    width: 100%;
+    height: 100%;
+}
+
+.elevator-container__elevator-observer {
+    grid-area: 1 / 1 / 4 / 3;
+    z-index: 1;
+}
+
+.elevator-observer {
+    width: 100%;
+    height: 100%;
+    background-color: #E0E0E0;
+}
+
+.elevator-container__footer {
+    grid-area: 3 / 1 / 4 / 3;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    width: 840px;
+}
+
+@media(max-width: 1900px) {
+    .elevator-container__footer {
+        width: 740px;
+    }
+}
+
+@media(max-width: 1700px) {
+    .elevator-container__footer {
+        width: 640px;
+    }
+}
+
+@media(max-width: 1500px) {
+    .elevator-container__footer {
+        width: 540px;
+    }
+}
+
+@media(max-width: 1200px) {
+    .elevator-container__footer {
+        width: 440px;
+    }
+}
+
+.form-container--transparent {
+    display: flex;
+    justify-content: center;
+}
+
+.elevator-container__right-arrow-button {
+    flex-grow: 1;
+    width: fit-content;
+    height: 30%;
+    cursor: pointer;
+}
+
+.right-arrow-button {
+    background:  url("images/arrow_icon.png") no-repeat center center;
+    background-size: contain;
+    border: none;
+}
+
+.elevator-container__options-menu {
+    flex-grow: 5;
+}
+
+.menu-container {
+    flex-basis: 0;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    background-color: #E0E0E0;
+    align-items: center;
+   
+}
+
+.menu-container__header {
+    flex-basis: 0;
+    flex-grow: 1;
+}
+
+.menu-container__navigation--with-animation {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    column-gap: 5px;
+    row-gap: 10px;
+    grid-template-columns: repeat(9, auto);
+    grid-template-rows: repeat(2, 1fr);
+}
+
+@media(max-width: 1200px) {
+    .menu-container__navigation--with-animation{
+        column-gap: 2px;
+        row-gap: 5px;
+    }
+}
+
+.navigation--with-animation__animation-picture {
+    visibility: hidden;
+    width: 60px;
+    height: 60px;
+}
+
+@media(max-width: 1200px) {
+    .navigation--with-animation__animation-picture {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+.navigation--with-animation__animation-picture.active {
+    visibility: visible;
+}
+
+.navigation__tab {
+    font-weight: normal;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+@media(max-width: 1200px) {
+    .navigation__tab {
+        font-size: 16px;
+    }
+}
+
+.navigation__tab.active {
+    font-weight: bold;
+}
+
+.menu-container__options-menu-container {
+    box-sizing: content-box;
+    flex-grow: 4;
+    position: relative;
+    background-color: #00406C;
+    border-radius: 40px;
+    width: 720px;
+    overflow: hidden; 
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+@media(max-width: 1300px) {
+    .menu-container__options-menu-container {
+        width: 90%;
+    }
+}
+
+@media(max-width: 1150px) {
+    .menu-container__options-menu-container {
+        width: 500px;
+    }
+}
+
+.menu-container__options-menu-title {
+    margin: 15px;
+    font-weight: bold;
+    font-size: 30px;
+    color: white;
+    margin-left: 30px;
+}
+
+.menu-container__options-menu-container-main {
+    background-color: white;
+    border-radius: 30px;
+    padding: 3% 7%;
+    height: 100%;
+    overflow-y: auto;
+    box-shadow: rgb(191, 191, 191) 0 2px 4px;
+    flex-grow: 1;
+    overflow-y: auto;
+    height: auto; 
+}
+
+.form-container, .form-container--radio {
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+.form-container__title, 
+.form-container--radio__title,
+.additional-title {
+    margin: 0;
+    margin-bottom: 15px;
+    font-weight: normal;
+    font-size: 25px;
+}
+
+.form {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+.form__form-element, .form__form-element--transparent {
+    cursor: pointer;
+    border: solid #E0E0E0 2px;
+    border-radius: 8px;
+    background-color: white;
+    padding: 9px;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.form__form-element.active, 
+.form__form-element--with-image,
+.form__form-element--transparent.active {
+    font-size: 20px;
+    background-color: #00406C;
+    color:white;
+    border: solid #303030 1px;
+}
+
+.form__form-element--with-image {
+    border-radius: 5px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+}
+
+.menu-container_hr {
+    margin: 0px;
+}
+
+.menu-container__additional-buttons {
+    margin-top: 30px;
+    flex-grow: 1;
+    flex-basis: 0;
+    align-self: stretch;
+}
+
+.configurator-container__additional-button-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.form_form-label{
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.form__radio  {
+    transform: scale(1.2);
+    accent-color: black;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.form__button-image {
+    margin: auto auto;
+}
+
+.form-container--radio__form {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 5px;
+}
+
+.menu-container__content {
+    display: none;
+}
+
+.menu-container__content.active {
+    display: contents;
+}
+
+.textures-container {
+    gap: 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.additional-title {
+    margin-top: 15px;
+}
+
+.navigation--with-animation__animation-picture {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.navigation--with-animation__animation-picture.active {
+    opacity: 1;
+}
+
+.texture-image {
+    cursor: pointer;
+    height: auto;
+    width: 31%;
+    object-fit: contain; 
+    border: solid #E0E0E0 1px;
+    border-radius: 10px;
+}
+
+.texture-image.active {
+    border: solid #00406C 3px;
+}
+
+@media(max-width: 1250px) {
+    .texture-image {
+        height: 120px;
+        width: 120px;
+        object-fit: contain; 
+        border: solid #E0E0E0 1px;
+        border-radius: 10px;
+    }
+}
+
+.additional-button {
+    height: 45px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.special-texture-image {
+    cursor: pointer;
+    height: 150px;
+    margin: 5px;
+    width: auto;
+    border: solid #E0E0E0 1px;
+}
+
+.special-texture-image.active {
+    border: solid #00406C 3px;
+}
+
+.form__text-input {
+    width: 100%; /* Занимает всю ширину родительского контейнера */
+    padding: 15px; /* Внутренние отступы для удобства ввода */
+    font-size: 18px; /* Размер шрифта */
+    border: 2px solid #ccc; /* Цвет и толщина рамки */
+    border-radius: 5px; /* Закругленные углы рамки */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Небольшая тень для визуального эффекта */
+    transition: border 0.3s ease; /* Плавный переход для изменения цвета рамки */
+}
+
+.form__text-input:focus {
+    border-color: #00406C; 
+    outline: none; 
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}

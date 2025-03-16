@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шаблоны Конфигуратор</title>
+    <link rel="stylesheet" href="./css/addPatternstyles.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "../../node_modules/three/build/three.module.js",
+                "jsm/": "../../node_modules/three/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="configurator-container">
+        <div class="configurator-container__elevator-container elevator-container"> 
+            <header class="elevator-container__header">
+                <div class="elevator-container__logo logo">
+                 <img class="logo__image" src="../../images/Logo.svg" alt="Movel"> 
+                </div>
+            </header>  
+
+            <canvas class="elevator-container__elevator-observer elevator-observer">
+    
+            </canvas>
+
+            <footer class="elevator-container__footer">
+                <button class="elevator-container__right-arrow-button right-arrow-button"></button>
+                
+                <div class="elevator-container__options-menu">
+                    <form class="elevator-container__form-container--transparent form-container--transparent">
+                        <button id="view3d" class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Вид 3D</button>
+                        <button id="viewFront"  class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Спереди</button>
+                        <button id="viewUp" class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Сверху</button>
+                        <button id="viewInside" class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Внутри</button>
+                    </form>
+                </div>
+            </footer>
+        </div>
+
+        <div class="configurator-container__menu-container menu-container">
+            <header class="menu-container__header">
+                <div class="menu-container__navigation--with-animation navigation--with-animation"> 
+                    <img id="main_parameters_icon" class="navigation--with-animation__animation-picture active" src="../../images/main_parameters_icon.png">
+                    <img id="wall_icon" class="navigation--with-animation__animation-picture" src="../../images/wall_icon.png">
+                    <img id="doors_icon" class="navigation--with-animation__animation-picture" src="../../images/doors_icon.png">
+                    <img id="ceiling_icon" class="navigation--with-animation__animation-picture" src="../../images/ceiling_icon.png">
+                    <img id="floor_icon" class="navigation--with-animation__animation-picture" src="../../images/floor_icon.png">
+                    <img id="board_icon" class="navigation--with-animation__animation-picture" src="../../images/board_icon.png">
+                    <img id="mirror_icon" class="navigation--with-animation__animation-picture" src="../../images/mirror_icon.png">
+                    <img id="handrail_icon" class="navigation--with-animation__animation-picture" src="../../images/handrail_icon.png">
+                    <img id="other_icon" class="navigation--with-animation__animation-picture" src="../../images/other_icon.png">
+
+                    <div id="MainTabMenuTitle" class="navigation__tab active" onclick="showTab('MainParametersTab')">Основные параметры</div>
+                    <div id="WallTab" class="navigation__tab" onclick="showTab('WallsParametersTab')">Стены</div>
+                    <div class="navigation__tab" onclick="showTab('DoorParametrsTab')">Двери</div>
+                    <div class="navigation__tab" onclick="showTab('CeilingParametrsTab')">Потолок</div>
+                    <div class="navigation__tab" onclick="showTab('FloorParametrsTab')">Пол</div>
+                    <div class="navigation__tab" onclick="showTab('BoardParametrsTab')">Панель управления</div>
+                    <div class="navigation__tab" onclick="showTab('MirrorParametrsTab')">Зеркало</div>
+                    <div class="navigation__tab" onclick="showTab('HandrailParametrsTab')">Поручни</div>
+                    <div class="navigation__tab" onclick="showTab('OtherParametrsTab')">Остальное</div>
+                </div>
+            </header>
+
+            <div class="menu-container__options-menu-container">
+                <div id="MainParametersTab" class="menu-container__content active">
+                    <h2 class="menu-container__options-menu-title">
+                    Основные параметры
+                    </h2>
+
+                <div class="menu-container__options-menu-container-main">
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Название проекта:</h3>
+                        <form class="form-container__form form" name="projectName">
+                            <input class="form__text-input" id="projectTitle" type="text" name="projectTitle" placeholder="Введите название проекта" required />
+                        </form>
+                    </div>
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Превью проекта:</h3>
+                        <form class="form-container__form form" name="projectName">
+                            <input type="file" id="patternPreview" name="patternPreview" accept="image/*">
+                            <button type="button" class="clear-file-btn" data-target="patternPreview">Удалить файл</button>
+                            <div class="file-preview" id="preview-pattern"></div>
+                        </form>
+                    </div>
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Размер кабины:</h3>
+                        <form class="form-container__form form" name="cabinSizeForm">
+                            <button id="wideSize" class="form__form-element active" type="button" onclick="selectParameterButton(this)">Широкая</button>
+                            <button id="squereSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
+                            <button id="deepSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Глубокая</button>
+                        </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Тип кабины:</h3>
+                        <form class="form-container--radio__form form">                   
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="cabin_type" class="form__form-element" value="not_walk_through_cabin" id="not_walk_through_cabin" checked>
+                                <label class="form_form-label" for="not_walk_through_cabin">Непроходная</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="cabin_type" class="form__form-element" value="walk_through_cabin" id="walk_through_cabin">
+                                <label class="form_form-label" for="walk_through_cabin">Проходная</label>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <hr class="menu-container_hr">
+                    
+                    <div class="menu-containerr__form-container form-container--radio">
+                        <h3 class="form-container--radio__title">Тип открывания:</h3>
+                        <form class="form-container--radio__form form">
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="central" id="centralOpenType">
+                                <label class="form_form-label" for="centralOpenType">Центральное</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="left" id="leftOpenType" checked>
+                                <label class="form_form-label" for="leftOpenType">Телескопическое (левое)</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="opening_type" class="form__form-element" value="right" id="rightOpenType">
+                                <label class="form_form-label" for="rightOpenType">Телескопическое (правое)</label>
+                            </div>
+                        </form>
+                    </div>  
+                    
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">К какому дизайн-проекту относится:</h3>
+                        <form class="form-container__form form" name="designForm">
+                            <button id="nature" class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
+                            <button id="elite" class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
+                            <button id="modern" class="form__form-element" type="button" onclick="selectParameterButton(this)">MODERN</button>
+                            <button id="classic" class="form__form-element" type="button" onclick="selectParameterButton(this)">CLASSIC</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="WallsParametersTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Стены
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Стена:</h3>
+                        <form class="form-container__form form" name="wallSideWalls">
+                            <button class="form__form-element active" data-target="all" type="button" onclick="selectWall(this)">Все</button>
+                            <button class="form__form-element" data-target="front" type="button" onclick="selectWall(this)">Передняя</button>
+                            <button class="form__form-element" data-target="back" type="button" onclick="selectWall(this)">Задняя</button>
+                            <button class="form__form-element" data-target="left" type="button" onclick="selectWall(this)">Левая</button>
+                            <button class="form__form-element" data-target="right" type="button" onclick="selectWall(this)">Правая</button>
+                        </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <div class="textures-container" name="wallTextures">
+
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="DoorParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Двери
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+
+                    <div class="textures-container" name="doorTextures">
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="CeilingParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Потолок
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+                    <h3 class="additional-title">
+                        Узор потолка:
+                    </h3>
+                    <div class="textures-container ceiling-pattern" data-texture-type="pattern"  name="ceilingPlafonTextureContainer">
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <h3 class="additional-title">
+                        Материал плафона потолка:
+                    </h3>
+
+                    <div class="textures-container ceiling-material" data-texture-type="material" name="ceilingMaterialTextureContainer">
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Ориентация рисунка светильника:</h3>
+                        <form class="form-container--radio__form form">                   
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="light_orientation_type" class="form__form-element" value="horizontal" id="horizontal" checked>
+                                <label class="form_form-label" for="horizontal">Горизонтальная</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="light_orientation_type" class="form__form-element" value="vertical" id="vertical">
+                                <label class="form_form-label" for="vertical">Вертикальная</label>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div id="FloorParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Пол
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+
+                    <div class="textures-container" name="floorTextureContainer">
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="BoardParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Панель управления
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+
+                    <h3 class="additional-title">
+                        Табло индикации в кабине:
+                    </h3>
+                    <div class="textures-container post-orders" data-texture-type="panel" name="boardTextureContainer">
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Материал панели:</h3>
+
+                        <div class="textures-container panel-color" data-texture-type="panelColor" name="panelMaterialTextureContainer">
+
+                        </div>
+
+                        <div class="menu-container__form form-container--radio">
+                            <h3 class="form-container--radio__title">Сторона панели:</h3>
+                            <form class="form-container--radio__form form">
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_side" value="left" id="leftPanelSide" checked>
+                                    <label class="form_form-label" for="leftPanelSide">Левое</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_side" value="right" id="rightPanelSide">
+                                    <label class="form_form-label" for="rightPanelSide">Правое</label>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="menu-container__form form-container--radio">
+                            <h3 class="form-container--radio__title">Расположение панели:</h3>
+                            <form class="form-container--radio__form form">
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_location" value="closer_to_door" id="closerToDoorPanelPosition" checked>
+                                    <label class="form_form-label" for="closerToDoorPanelPosition">Ближе к двери</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_location" value="center" id="centerPanelPosition">
+                                    <label class="form_form-label" for="centerPanelPosition">По центру</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_location" value="both_sides" id="bothSidesPanelPosition">
+                                    <label class="form_form-label" for="bothSidesPanelPosition">С двух сторон</label>
+                                </div>
+                            </form>
+                            
+                        </div>
+
+                        
+                        <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Расположение относительно стен:</h3>
+                            <form class="form-container--radio__form form">
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_wall_position" value="front" id="frontWallPosition" checked>
+                                    <label class="form_form-label" for="frontWallPosition">Ближе к передней стене</label>
+                                </div>
+                                <div class="form__radio-with-label">
+                                    <input class="form__radio" type="radio" name="panel_wall_position" value="back" id="backWallPosition">
+                                    <label class="form_form-label" for="backWallPosition">Ближе к задней стене</label>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="textures-container">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="MirrorParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Зеркало
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Наличие:</h3>
+                        <form class="form-container--radio__form form">
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="mirror_availability" class="form__form-element" value="yes" id="haveMirror">
+                                <label class="form_form-label" for="haveMirror">Да</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="mirror_availability" class="form__form-element" value="no" id="noMirror" checked>
+                                <label class="form_form-label" for="noMirror">Нет</label>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Тип зеркала:</h3>
+                        <form class="form-container--radio__form form">
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="mirror_type" class="form__form-element" value="floor" id="floor" checked>
+                                <label class="form_form-label" for="floor">В пол</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="mirror_type" class="form__form-element" value="to_rail" id="to_rail">
+                                <label class="form_form-label" for="to_rail">До поручня</label>
+                            </div>
+                        </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Расположение:</h3>
+                        <form class="form-container--radio__form form" name="mirror_location">
+                            <button class="form__form-element mirror-location-button active" type="button" data-location="back" id="backMirror" >Сзади</button>
+                            <button class="form__form-element mirror-location-button" type="button" data-location="right" id="rightMirror">Справа</button>
+                            <button class="form__form-element mirror-location-button" type="button" data-location="left" id="leftMirror">Слева</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div id="HandrailParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Поручни
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Наличие:</h3>
+                        <form class="form-container--radio__form form">
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="yes" id="haveHand" checked>
+                            <label class="form_form-label" for="haveHand">Да</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="handrail_availability" class="form__form-element" value="no" id="noHand" >
+                            <label class="form_form-label" for="noHand">Нет</label>
+                        </div>
+                    </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Тип поручня:</h3>
+                        <form class="form-container--radio__form form">
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="railing_type" class="form__form-element" value="composite" id="composite" checked>
+                                <label class="form_form-label" for="composite">Составной</label>
+                            </div>
+                            <div class="form__radio-with-label">
+                                <input class="form__radio" type="radio" name="railing_type" class="form__form-element" value="unified" id="unified">
+                                <label class="form_form-label" for="unified">Объединённый</label>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <hr class="menu-container_hr">
+
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Расположение поручня:</h3>
+                        <form class="form-container__form form">
+                            <button class="form__form-element active" name="railing_position" type="button" id="backHandrailButton">Сзади</button>
+                            <button class="form__form-element" type="button" name="railing_position" id="rightHandrailButton">Справа</button>
+                            <button class="form__form-element" type="button" name="railing_position" id="leftHandrailButton">Слева</button>
+                        </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <h3 class="additional-title">
+                        Материал поручня:
+                    </h3>
+                    <div class="textures-container" name="handrailTextureContainer">
+
+                    </div>
+                </div>
+            </div>
+
+            <div id="OtherParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Остальные параметры
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Стена:</h3>
+                        <form class="form-container__form form" name="wallSideBumpers">
+                            <button class="form__form-element wall-parameter-button active" data-target="all" type="button" onclick="selectWall(this)">Все</button>
+                            <button class="form__form-element wall-parameter-button" data-target="back" type="button" onclick="selectWall(this)">Задняя</button>
+                            <button class="form__form-element wall-parameter-button" data-target="left" type="button" onclick="selectWall(this)">Левая</button>
+                            <button class="form__form-element wall-parameter-button" data-target="right" type="button" onclick="selectWall(this)">Правая</button>
+                        </form>
+                    </div>
+
+                    <hr class="menu-container_hr">
+
+                    <h3 class="additional-title">
+                        Материал отбойников:
+                    </h3>
+
+                    <div class="textures-container" name="bumperTextures">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="menu-container__additional-buttons">
+                <form class="configurator-container__additional-button-container">
+                    <button id="savePatternButton" type="button" class="form__form-element--with-image additional-button" >
+                        <p><pre>  Сохранить изменения</pre></p>
+                    </button>
+                    <button id="deletePatternButton" type="button" class="form__form-element--with-image additional-button">
+                        <p><pre>  Отменить изменения</pre></p>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    
+    <script src="../../js/animation/buttonFunctions.js"></script>
+    <script type="module" src="../../js/animation/tabFunctions.js"></script>
+
+ <script type="module" src="../../js/models/loadModel.js"></script>
+    <script type="module" src="../../js/models/textureManager.js"></script>
+    <script type="module" src="../../js/models/unusiallElements.js"></script>
+    <script type="module" src="../../js/models/positionManager.js"></script>
+    <script type="module" src="../../js/shareConfiguration/allParams.js"></script>
+    <script src="../../js/animation/adminButtons.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            showTab('MainParametersTab');
+        });
+    </script>
+</body>
+</html>

@@ -88,6 +88,31 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    width: 840px;
+}
+
+@media(max-width: 1900px) {
+    .elevator-container__footer {
+        width: 740px;
+    }
+}
+
+@media(max-width: 1700px) {
+    .elevator-container__footer {
+        width: 640px;
+    }
+}
+
+@media(max-width: 1500px) {
+    .elevator-container__footer {
+        width: 540px;
+    }
+}
+
+@media(max-width: 1200px) {
+    .elevator-container__footer {
+        width: 440px;
+    }
 }
 
 .form-container--transparent {
@@ -121,6 +146,7 @@ body {
     align-items: center;
    
 }
+
 .menu-container__header {
     flex-basis: 0;
     flex-grow: 1;

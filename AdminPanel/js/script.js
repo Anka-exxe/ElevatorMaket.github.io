@@ -201,7 +201,12 @@ document.querySelectorAll('.tab-link').forEach(button => {
         document.getElementById(tabId).classList.add('active');
 
         // Загружаем иконки для выбранной вкладки, если они ещё не загружены
-        loadIconsForTab(tabId);
+
+        if(tabId != 'patterns') {
+            loadIconsForTab(tabId);
+        } else {
+            //alert("Hi");
+        }
     });
 });
 
