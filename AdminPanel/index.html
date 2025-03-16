@@ -10,6 +10,7 @@
     <h1>Админ-панель конфигуратора</h1>
     <button id="addTextureBtn" class="button">Добавить текстуру</button>
     <button id="addPatternBtn" class="button">Добавить шаблон</button>
+    <button id="uploadSurveyTemplateBtn" class="button">Загрузить шаблон опросного листа</button>
 </header>
 
 <div class="tabs">
@@ -146,6 +147,116 @@
     </div>
 </div>
 
+<div id="uploadTemplateModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="uploadTemplateClose">&times;</span>
+        <h2>Загрузить шаблон опросного листа (.docx)</h2>
+        <div id="dropZone" class="drop-zone">
+            <p>Перетащите .docx файл сюда или нажмите кнопку для выбора файла.</p>
+            <input type="file" id="fileInput" accept=".docx" style="display: none;" />
+            <button id="chooseFileBtn" class="button">Выбрать файл</button>
+            <!-- Блок для отображения информации о выбранном файле -->
+            <div id="fileInfo"></div>
+        </div>
+        <!-- Кнопка отправки файла -->
+        <button id="sendFileBtn" class="button" disabled>Отправить файл</button>
+    </div>
+</div>
+
 <script src="js/script.js"></script>
+<script>
+    // Открытие модального окна по нажатию на кнопку "Загрузить шаблон опросного листа"
+    document.getElementById('uploadSurveyTemplateBtn').addEventListener('click', () => {
+        document.getElementById('uploadTemplateModal').style.display = 'block';
+    });
+
+    // Закрытие модального окна
+    document.getElementById('uploadTemplateClose').addEventListener('click', closeUploadModal);
+    function closeUploadModal() {
+        document.getElementById('uploadTemplateModal').style.display = 'none';
+        // Сброс выбранного файла и информации
+        selectedFile = null;
+        document.getElementById('fileInfo').innerHTML = '';
+        document.getElementById('sendFileBtn').disabled = true;
+    }
+
+    let selectedFile = null;
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const chooseFileBtn = document.getElementById('chooseFileBtn');
+    const sendFileBtn = document.getElementById('sendFileBtn');
+    const fileInfoDiv = document.getElementById('fileInfo');
+
+    // Обработка событий drag’n’drop
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            setSelectedFile(e.dataTransfer.files[0]);
+        }
+    });
+
+    // Выбор файла через диалоговое окно
+    chooseFileBtn.addEventListener('click', () => {
+        fileInput.click();
+    });
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            setSelectedFile(fileInput.files[0]);
+        }
+    });
+
+    // Функция для установки выбранного файла и отображения информации о нем
+    function setSelectedFile(file) {
+        // Проверка расширения файла (можно добавить дополнительную валидацию)
+        if (!file.name.endsWith('.docx')) {
+            alert('Выберите файл в формате .docx');
+            return;
+        }
+        selectedFile = file;
+        fileInfoDiv.innerHTML = `<p>Выбран файл: <strong>${file.name}</strong> (${(file.size / 1024).toFixed(2)} KB)</p>`;
+        sendFileBtn.disabled = false;
+    }
+
+    // Отправка файла по нажатию на кнопку "Отправить файл"
+    sendFileBtn.addEventListener('click', () => {
+        if (!selectedFile) {
+            alert('Файл не выбран');
+            return;
+        }
+        uploadFile(selectedFile);
+    });
+
+    // Функция отправки файла на бекенд с использованием FormData
+    function uploadFile(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        fetch('http://localhost:8090/api/v1/files/document-template', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Файл успешно загружен');
+                    closeUploadModal();
+                } else {
+                    throw new Error('Ошибка при загрузке файла');
+                }
+            })
+            .catch(err => {
+                console.error('Ошибка загрузки файла', err);
+                alert('Ошибка загрузки файла');
+            });
+    }
+</script>
 </body>
 </html>
