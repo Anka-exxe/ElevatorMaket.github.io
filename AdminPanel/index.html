@@ -98,68 +98,9 @@
         <div class="search-field">
         <p >Показать:</p>
         <select class="search-select" id="designProjectSelect">
-            <option value="all">Все</option>
-            <option value="classic">CLASSIC</option>
-            <option value="elite">ELITE</option>
-            <option value="modern">MODERN</option>
+       
         </select>
         </div>
-        
-    
-        <section class="designProjectCard" data-category="classic">
-            <div class="designProjectHeader">
-                <h3 class="title"> CLASSIC </h3>
-                <button class="small-button editDesignProjectBtn">Изменить</button>
-                <button class="small-button deleteDesignProjectBtn">Удалить</button>
-            </div>
-    
-            <div class="pattern-grid">
-                <section class="pattern-card">
-                    <strong>CLASSIC 10</strong><br>
-                    <img src="pattern_img_preview/картинка1.png" alt="CLASSIC 10" class="pattern-img">
-                    <div class="pattern-card__button-container">
-                        <button class="small-button editPatternBtn">Изменить</button>
-                        <button class="small-button deletePatternBtn">Удалить</button>
-                    </div>
-                </section>
-                <section class="pattern-card">
-                    <strong>CLASSIC 20</strong><br>
-                    <img src="pattern_img_preview/картинка1.png" alt="CLASSIC 20" class="pattern-img">
-                    <div class="pattern-card__button-container">
-                        <button class="small-button editPatternBtn">Изменить</button>
-                        <button class="small-button deletePatternBtn">Удалить</button>
-                    </div>
-                </section>
-            </div>
-        </section>
-
-        <section class="designProjectCard" data-category="elite">
-            <div class="designProjectHeader">
-                <h3 class="title"> ELITE </h3>
-                <button class="small-button editDesignProjectBtn">Изменить</button>
-                <button class="small-button deleteDesignProjectBtn">Удалить</button>
-            </div>
-    
-            <div class="pattern-grid">
-                <section class="pattern-card">
-                    <strong>Elite line 10</strong><br>
-                    <img src="../pattern_img_preview/картинка1.png" alt="Elite 10" class="pattern-img">
-                    <div class="pattern-card__button-container">
-                        <button class="small-button editPatternBtn">Изменить</button>
-                        <button class="small-button deletePatternBtn">Удалить</button>
-                    </div>
-                </section>
-                <section class="pattern-card">
-                    <strong>Elite line 20</strong><br>
-                    <img src="../pattern_img_preview/картинка1.png" alt="Elite 20" class="pattern-img">
-                    <div class="pattern-card__button-container">
-                        <button class="small-button editPatternBtn">Изменить</button>
-                        <button class="small-button deletePatternBtn">Удалить</button>
-                    </div>
-                </section>
-            </div>
-        </section>
-        
         
         <!-- Модальное окно -->
     <div id="designProjectModal" class="modal" style="display: none;">
@@ -189,6 +130,6 @@
 </div>
 
 <script src="./js/script.js"></script>
-<script src="./js/patterns/animation/designProjectButtons.js"></script>
+<script type="module" src="./js/patterns/animation/designProjectButtons.js"></script>
 </body>
 </html>

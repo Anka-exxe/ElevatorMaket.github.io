@@ -19,7 +19,7 @@
         <div class="configurator-container__elevator-container elevator-container"> 
             <header class="elevator-container__header">
                 <div class="elevator-container__logo logo">
-                 <img class="logo__image" src="../../images/Logo.svg" alt="Movel"> 
+                 <img class="logo__image" src="./images/Logo.svg" alt="Movel"> 
                 </div>
             </header>  
 
@@ -44,15 +44,15 @@
         <div class="configurator-container__menu-container menu-container">
             <header class="menu-container__header">
                 <div class="menu-container__navigation--with-animation navigation--with-animation"> 
-                    <img id="main_parameters_icon" class="navigation--with-animation__animation-picture active" src="../../images/main_parameters_icon.png">
-                    <img id="wall_icon" class="navigation--with-animation__animation-picture" src="../../images/wall_icon.png">
-                    <img id="doors_icon" class="navigation--with-animation__animation-picture" src="../../images/doors_icon.png">
-                    <img id="ceiling_icon" class="navigation--with-animation__animation-picture" src="../../images/ceiling_icon.png">
-                    <img id="floor_icon" class="navigation--with-animation__animation-picture" src="../../images/floor_icon.png">
-                    <img id="board_icon" class="navigation--with-animation__animation-picture" src="../../images/board_icon.png">
-                    <img id="mirror_icon" class="navigation--with-animation__animation-picture" src="../../images/mirror_icon.png">
-                    <img id="handrail_icon" class="navigation--with-animation__animation-picture" src="../../images/handrail_icon.png">
-                    <img id="other_icon" class="navigation--with-animation__animation-picture" src="../../images/other_icon.png">
+                    <img id="main_parameters_icon" class="navigation--with-animation__animation-picture active" src="./images/main_parameters_icon.png">
+                    <img id="wall_icon" class="navigation--with-animation__animation-picture" src="./images/wall_icon.png">
+                    <img id="doors_icon" class="navigation--with-animation__animation-picture" src="./images/doors_icon.png">
+                    <img id="ceiling_icon" class="navigation--with-animation__animation-picture" src="./images/ceiling_icon.png">
+                    <img id="floor_icon" class="navigation--with-animation__animation-picture" src="./images/floor_icon.png">
+                    <img id="board_icon" class="navigation--with-animation__animation-picture" src="./images/board_icon.png">
+                    <img id="mirror_icon" class="navigation--with-animation__animation-picture" src="./images/mirror_icon.png">
+                    <img id="handrail_icon" class="navigation--with-animation__animation-picture" src="./images/handrail_icon.png">
+                    <img id="other_icon" class="navigation--with-animation__animation-picture" src="./images/other_icon.png">
 
                     <div id="MainTabMenuTitle" class="navigation__tab active" onclick="showTab('MainParametersTab')">Основные параметры</div>
                     <div id="WallTab" class="navigation__tab" onclick="showTab('WallsParametersTab')">Стены</div>
@@ -137,12 +137,9 @@
                     <hr class="menu-container_hr">
 
                     <div class="menu-container__form form-container">
-                        <h3 class="form-container__title">К какому дизайн-проекту относится:</h3>
+                        <h3 class="form-container__title">Выбор дизайн-проекта:</h3>
                         <form class="form-container__form form" name="designForm">
-                            <button id="nature" class="form__form-element active" type="button" onclick="selectParameterButton(this)">NATURE</button>
-                            <button id="elite" class="form__form-element" type="button" onclick="selectParameterButton(this)">ELITE</button>
-                            <button id="modern" class="form__form-element" type="button" onclick="selectParameterButton(this)">MODERN</button>
-                            <button id="classic" class="form__form-element" type="button" onclick="selectParameterButton(this)">CLASSIC</button>
+                          
                         </form>
                     </div>
 
@@ -470,15 +467,16 @@
     </div>
 
     
-    <script src="../../js/animation/buttonFunctions.js"></script>
-    <script type="module" src="../../js/animation/tabFunctions.js"></script>
+    <script src="./js/animation/buttonFunctions.js"></script>
+    <script type="module" src="./js/animation/tabFunctions.js"></script>
 
- <script type="module" src="../../js/models/loadModel.js"></script>
-    <script type="module" src="../../js/models/textureManager.js"></script>
-    <script type="module" src="../../js/models/unusiallElements.js"></script>
-    <script type="module" src="../../js/models/positionManager.js"></script>
-    <script type="module" src="../../js/shareConfiguration/allParams.js"></script>
-    <script src="./js/patterns/animation/addPatternButton.js"></script>
+ <script type="module" src="./js/models/loadModel.js"></script>
+ <script type="module" src="./js/patterns/animation/addPatternFillData.js"></script>
+    <script type="module" src="./js/models/textureManager.js"></script>
+    <script type="module" src="./js/models/unusiallElements.js"></script>
+    <script type="module" src="./js/models/positionManager.js"></script>
+    <script type="module" src="./js/shareConfiguration/allParams.js"></script>
+    <script type="module" src="./js/patterns/animation/addPatternButton.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

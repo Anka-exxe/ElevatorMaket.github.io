@@ -216,3 +216,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const activeTab = document.querySelector('.tab-content.active').id;
     loadIconsForTab(activeTab);
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+        const tabButton = document.querySelector(`.tab-link[data-tab="${activeTab}"]`);
+        if (tabButton) {
+            tabButton.click(); // Симулируем клик на кнопке
+        }
+        // Удаляем значение из localStorage, чтобы не возвращаться к этой вкладке при следующей загрузке
+        localStorage.removeItem('activeTab');
+    }
+});
