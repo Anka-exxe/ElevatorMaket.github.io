@@ -18,15 +18,40 @@ function displayTemplates(templates) {
     const templatesList = document.getElementById('templatesList');
     templatesList.innerHTML = ''; // Очистка предыдущих шаблонов
 
+    // Оборачиваем шаблоны в контейнер
+    const patternGrid = document.createElement('div');
+    patternGrid.className = 'pattern-grid';
+
     if (templates && templates.length > 0) {
         templates.forEach(template => {
-            const listItem = document.createElement('li');
-            listItem.textContent = template.name; // Предполагаем, что у шаблона есть поле name
-            templatesList.appendChild(listItem);
+            // Создаем карточку шаблона
+            const patternCard = document.createElement('section');
+            patternCard.className = 'pattern-card';
+
+            // Добавляем название шаблона
+            const title = document.createElement('strong');
+            title.textContent = template.name; // Предполагаем, что у шаблона есть поле name
+            patternCard.appendChild(title);
+            patternCard.appendChild(document.createElement('br')); // Перенос строки
+
+            // Добавляем изображение шаблона
+            const img = document.createElement('img');
+            img.src = template.imageUrl; // Предполагаем, что у шаблона есть поле imageUrl
+            img.alt = template.name; // Альтернативный текст
+            img.className = 'pattern-img'; // Класс изображения
+            patternCard.appendChild(img);
+
+            // Добавляем карточку в контейнер
+            patternGrid.appendChild(patternCard);
         });
     } else {
-        templatesList.innerHTML = '<li>No templates available.</li>'; // Сообщение, если шаблонов нет
+        const noTemplatesMessage = document.createElement('p');
+        noTemplatesMessage.textContent = 'No templates available.';
+        templatesList.appendChild(noTemplatesMessage); // Сообщение, если шаблонов нет
     }
+
+    // Добавляем контейнер с шаблонами в список
+    templatesList.appendChild(patternGrid);
 }
 
 async function populateForm() {
