@@ -4,8 +4,8 @@ const tabTypeMapping = {
     walls: 'WALL',
     floor: 'FLOOR',
     bumper: 'BUMPER',
-    ceilingPattern: 'CEILING_MATERIAL',
-    ceiling: 'CEILING',
+    ceilingPattern: 'CEILING',
+    ceiling: 'CEILING_MATERIAL',
     controlPanel: 'CONTROL_PANEL',
     indicationBoard: 'INDICATION_BOARD',
     handrails: 'HANDRAIL'
