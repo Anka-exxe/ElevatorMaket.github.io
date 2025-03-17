@@ -1,4 +1,4 @@
-import * as UrlHelper from "./urls.js";
+import * as UrlHelper from "../urlHelper/urls.js";
 
 export const texturePattern = {
     "id": "",

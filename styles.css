@@ -88,7 +88,7 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    width: 840px;
+    width: 1100px;
 }
 
 @media(max-width: 1900px) {
@@ -419,4 +419,37 @@ body {
     border-color: #00406C; 
     outline: none; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+.left-arrow-button {
+    cursor: pointer;
+    margin-top: 10px;
+    border: none;
+    height: 30px;
+    width: 40px;
+    background: url("images/arrow_icon.png") no-repeat center center;
+    background-size: contain; /* Или другой размер, если нужно */
+    transform: rotate(180deg); /* Поворот на 180 градусов */
+}
+
+.pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 1em;
+    margin-top: 1em;
+}
+
+.pattern-img {
+    max-width: 100px;
+    max-height: 250px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.pattern-card {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 4px;
 }

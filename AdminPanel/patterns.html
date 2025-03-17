@@ -83,10 +83,10 @@
 
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Превью проекта:</h3>
-                        <form class="form-container__form form" name="projectName">
+                        <form class="form-container__form form--picture" name="projectName">
                             <input type="file" id="patternPreview" name="patternPreview" accept="image/*">
-                            <button type="button" class="clear-file-btn" data-target="patternPreview">Удалить файл</button>
                             <div class="file-preview" id="preview-pattern"></div>
+                            <button type="button" class="clear-file-btn" data-target="patternPreview">Удалить файл</button>
                         </form>
                     </div>
 
@@ -462,7 +462,7 @@
                         <p><pre>  Сохранить изменения</pre></p>
                     </button>
                     <button id="deletePatternButton" type="button" class="form__form-element--with-image additional-button">
-                        <p><pre>  Отменить изменения</pre></p>
+                        <p><pre>  Отменить и выйти</pre></p>
                     </button>
                 </form>
             </div>
@@ -478,7 +478,7 @@
     <script type="module" src="../../js/models/unusiallElements.js"></script>
     <script type="module" src="../../js/models/positionManager.js"></script>
     <script type="module" src="../../js/shareConfiguration/allParams.js"></script>
-    <script src="../../js/animation/adminButtons.js"></script>
+    <script src="./js/patterns/animation/addPatternButton.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

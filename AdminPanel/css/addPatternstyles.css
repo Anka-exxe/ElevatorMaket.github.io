@@ -271,6 +271,14 @@ body {
     justify-content: flex-start;
 }
 
+.form--picture {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .form__form-element, .form__form-element--transparent {
     cursor: pointer;
     border: solid #E0E0E0 2px;
@@ -420,3 +428,22 @@ body {
     outline: none; 
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
 }
+
+.pattern-img {
+    max-width: 100px;
+    max-height: 250px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.clear-file-btn {
+    padding: 8px 12px;
+    height: 30px;
+background: #00406C;
+color: #fff;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+font-size: 13px;
+}
+

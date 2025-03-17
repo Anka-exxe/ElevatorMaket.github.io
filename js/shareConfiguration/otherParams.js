@@ -3,7 +3,6 @@ import { setActiveTextureWithAllWalls } from './findElementsHelper.js';
 const bumperState = {
     left: null,
     right: null,
-    front: null,
     back: null
 };
 
@@ -15,10 +14,6 @@ export function setRightTexture(id) {
     bumperState.right = id;
 }
 
-export function setFrontTexture(id) {
-    bumperState.front = id;
-}
-
 export function setBackTexture(id) {
     bumperState.back = id;
 }
@@ -26,7 +21,6 @@ export function setBackTexture(id) {
 export function setAllTextures(id) {
     setLeftTexture(id);
     setRightTexture(id);
-    setFrontTexture(id);
     setBackTexture(id);
 }
 
@@ -36,10 +30,6 @@ export function getLeftTexture() {
 
 export function getRightTexture() {
     return bumperState.right;
-}
-
-export function getFrontTexture() {
-    return bumperState.front;
 }
 
 export function getBackTexture() {
