@@ -16,14 +16,14 @@
 </head>
 <body>
     <div id="configurator-container" class="configurator-container">
-        <div class="configurator-container__elevator-container elevator-container"> 
+        <div id="elevator-container" class="configurator-container__elevator-container elevator-container"> 
             <header class="elevator-container__header">
                 <div class="elevator-container__logo logo">
                  <img class="logo__image" src="./images/Logo.svg" alt="Movel"> 
                 </div>
             </header>  
 
-            <canvas class="elevator-container__elevator-observer elevator-observer">
+            <canvas id="elevatorCanvas" class="elevator-container__elevator-observer elevator-observer">
     
             </canvas>
 
@@ -43,7 +43,7 @@
 
         <div class="configurator-container__menu-container menu-container">
             <header class="menu-container__header">
-                <div class="menu-container__navigation--with-animation navigation--with-animation"> 
+                <div id="menuTabs" class="menu-container__navigation--with-animation navigation--with-animation"> 
                     <img id="main_parameters_icon" class="navigation--with-animation__animation-picture active" src="./images/main_parameters_icon.png">
                     <img id="wall_icon" class="navigation--with-animation__animation-picture" src="./images/wall_icon.png">
                     <img id="doors_icon" class="navigation--with-animation__animation-picture" src="./images/doors_icon.png">
@@ -52,6 +52,7 @@
                     <img id="board_icon" class="navigation--with-animation__animation-picture" src="./images/board_icon.png">
                     <img id="mirror_icon" class="navigation--with-animation__animation-picture" src="./images/mirror_icon.png">
                     <img id="handrail_icon" class="navigation--with-animation__animation-picture" src="./images/handrail_icon.png">
+                    <img id="other_icon" class="navigation--with-animation__animation-picture" src="./images/other_icon.png">
                     <img id="other_icon" class="navigation--with-animation__animation-picture" src="./images/other_icon.png">
 
                     <div id="MainTabMenuTitle" class="navigation__tab active" onclick="showTab('MainParametersTab')">Основные параметры</div>
@@ -63,6 +64,7 @@
                     <div class="navigation__tab" onclick="showTab('MirrorParametrsTab')">Зеркало</div>
                     <div class="navigation__tab" onclick="showTab('HandrailParametrsTab')">Поручни</div>
                     <div class="navigation__tab" onclick="showTab('OtherParametrsTab')">Остальное</div>
+                    <div class="navigation__tab" onclick="showTab('OtherParametrsTab')">Холл</div>
                 </div>
             </header>
 

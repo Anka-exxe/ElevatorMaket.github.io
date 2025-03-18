@@ -154,6 +154,7 @@ body {
 }
 
 .menu-container__navigation--with-animation {
+    margin-left: 15px;
     display: grid;
     justify-content: center;
     justify-items: center;

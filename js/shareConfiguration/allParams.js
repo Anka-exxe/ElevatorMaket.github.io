@@ -54,7 +54,7 @@ export function saveParametersToFile() {
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'parameters.json'; // Имя файла для сохранения
+    a.download = 'configuration.json'; // Имя файла для сохранения
     document.body.appendChild(a);
     a.click(); // Симулируем клик для начала загрузки
     document.body.removeChild(a);

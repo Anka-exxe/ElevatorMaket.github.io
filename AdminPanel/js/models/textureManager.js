@@ -527,8 +527,3 @@ export function applyDefaultElevatorTextures() {
             mapping.options);
     });
 }
-
-
-
-
-

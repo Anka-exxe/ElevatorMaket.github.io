@@ -35,13 +35,13 @@ document.getElementById('cancelAddProjectBtn').addEventListener('click', functio
     document.getElementById('designProjectModal').style.display = 'none';
 });
 
-document.getElementById('confirmAddProjectBtn').addEventListener('click', function() {
+document.getElementById('confirmAddProjectBtn').addEventListener('click', async function() {
     const projectName = document.getElementById('projectNameInput').value;
     if (projectName) {
         if (isEditMode) {
-            updateDesignProject(editedProjectId, projectName);
+            await updateDesignProject(editedProjectId, projectName);
         } else {
-            createNewDesignProject(projectName);
+            await createNewDesignProject(projectName);
         }
         document.getElementById('designProjectModal').style.display = 'none';
         document.getElementById('projectNameInput').value = ''; // Очистка поля ввода
@@ -121,7 +121,8 @@ export async function populateDesignProjects() {
                 const confirmation = confirm(`Вы уверены, что хотите удалить проект "${projectName}"?`);
                 if (confirmation) {
                     await deleteDesignProject(projectId);
-                    patternsContainer.removeChild(projectSection); 
+                    localStorage.setItem('activeTab', 'patterns');
+                    location.reload();
                 }
             }
         });
