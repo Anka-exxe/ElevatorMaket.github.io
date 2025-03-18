@@ -160,13 +160,16 @@ function init() {
                     DefaultSettings()
                     animate();
 
-                    let pointLight = new THREE.PointLight(0xffffff, 50, 80);
+                    document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+                    document.getElementById('configurator-container').style.visibility = 'visible'; 
+
+                    /*let pointLight = new THREE.PointLight(0xffffff, 50, 80);
                     pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
                     scene.add(pointLight);
                     
                     pointLight = new THREE.PointLight(0xffffff, 100, 80);
                     pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
-                    scene.add(pointLight);
+                    scene.add(pointLight);*/
 
 
                     function getObjectNames(obj) {

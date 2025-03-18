@@ -187,6 +187,9 @@ function init() {
                         });}
 
                         loadConfiguration();
+
+                        document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+                        document.getElementById('configurator-container').style.visibility = 'visible'; 
                 },
                 undefined,
                 (error) => {

@@ -120,6 +120,7 @@ fetch(urlTemplateCreateNewDesignProject, {
 })
 .then(response => {
     if (!response.ok) {
+        alert('Ошибка сети');
         throw new Error('Ошибка сети');
     }
     return response.json();
@@ -128,6 +129,7 @@ fetch(urlTemplateCreateNewDesignProject, {
     console.log('Успех:', data);
 })
 .catch(error => {
+    alert('Ошибка при отправке данных:', error);
     console.error('Ошибка при отправке данных:', error);
 });
 }

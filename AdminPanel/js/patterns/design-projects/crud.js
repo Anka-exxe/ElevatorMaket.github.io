@@ -19,12 +19,14 @@ export async function createNewDesignProject(projectName) {
         });
 
         if (!response.ok) {
+            alert(`Ошибка: ${response.status}`);
             throw new Error(`Ошибка: ${response.status}`); // Обработка ошибок
         }
 
         const result = await response.json(); // Получаем ответ в формате JSON
         console.log('Новый проект создан:', result);
     } catch (error) {
+        alert('Ошибка при создании проекта:', error);
         console.error('Ошибка при создании проекта:', error);
     }
 }
@@ -44,12 +46,14 @@ export async function updateDesignProject(projectId, projectName) {
         });
 
         if (!response.ok) {
+            alert(`Ошибка: ${response.status}`);
             throw new Error(`Ошибка: ${response.status}`); // Обработка ошибок
         }
 
         const result = await response.json(); // Получаем ответ в формате JSON
         console.log('Проект обновлен:', result);
     } catch (error) {
+        alert('Ошибка при обновлении проекта:', error);
         console.error('Ошибка при обновлении проекта:', error);
     }
 }
@@ -67,6 +71,7 @@ export async function deleteDesignProject(projectId) {
         const result = await response.json(); // Получаем ответ в формате JSON
         console.log('Проект удален:', result);
     } catch (error) {
+        alert('Ошибка при удалении проекта:', error);
         console.error('Ошибка при удалении проекта:', error);
     }
 }

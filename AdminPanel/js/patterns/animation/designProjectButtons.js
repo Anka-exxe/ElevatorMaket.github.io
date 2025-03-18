@@ -2,9 +2,11 @@ import {deleteDesignProject,
     updateDesignProject, 
     createNewDesignProject} from "../design-projects/crud.js";
 
-    import {projectsCache, templatesCache,
-        fetchDesignProjects,fetchTemplates} 
-        from "../../designProjectService/designProjectStorage.js";
+        import {projectsCache, templatesCache,
+            fetchDesignProjects,fetchTemplates} 
+            from "../../designProjectService/designProjectStorage.js";
+
+import { getUrl, urlTemplateDeletePattern } from "../../urlHelper/urls.js";
 
 let isEditMode = false; // Флаг для режима редактирования
 let editedProjectId = null;
@@ -150,7 +152,7 @@ export async function populateDesignProjects() {
             templateCard.querySelector('.deletePatternBtn').addEventListener('click', async function() {
                 const confirmed = confirm(`Вы уверены, что хотите удалить шаблон "${template.name}"?`);
                 if (confirmed) {
-                    await deleteDesignProject(template.id); // Удаляем шаблон с помощью метода deleteDesignProject
+                    await deletePattern(template.id); // Удаляем шаблон с помощью метода deleteDesignProject
                     patternGrid.removeChild(templateCard); // Удаляем карточку шаблона из DOM
                 }
             });
@@ -160,6 +162,26 @@ export async function populateDesignProjects() {
 
         projectSection.appendChild(patternGrid);
         patternsContainer.appendChild(projectSection);
+    });
+}
+
+function deletePattern(petternId) {
+    fetch(getUrl(urlTemplateDeletePattern, petternId), {
+        method: 'DELETE',
+    })
+    .then(response => {
+        if (!response.ok) {
+            alert('Ошибка при удалении ' + response.statusText);
+            throw new Error('Ошибка при удалении: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Успешно удалено:', data);
+    })
+    .catch(error => {
+        alert('Ошибка: ', error);
+        console.error('Ошибка:', error);
     });
 }
 
