@@ -54,11 +54,6 @@ export async function showTab(tabId) {
     if (activeIcon) {
         activeIcon.classList.add('active');
     }
-
-    if(!isImagesShowed) {
-        await loadImagesForAllTabs();
-        isImagesShowed = true;
-    }
 }
 
 export function getCategoryByTabId(tabId) {
@@ -106,8 +101,6 @@ export async function loadImagesForAllTabs() {
             showImages(getCategoryByTabId(tabId), tabId)
         )
     );
-
-
 }
 
 export async function loadAllImages() {
