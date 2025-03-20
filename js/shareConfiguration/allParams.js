@@ -61,20 +61,21 @@ export function saveParametersToFile() {
     URL.revokeObjectURL(url); // Освобождаем память, удаляя объект URL
 }
 
-export function setAllParameters(parameters) {
+export async function setAllParameters(parameters) {
     if (parameters && typeof parameters === 'object') {
-        setMainActiveSelections(parameters.cabin); 
-        setActiveWallParameters(parameters.wall);
-        setDoorTextureActive(parameters.doors);
-        setCeilingParamsActive(parameters.ceiling);
-        setFloorTextureActive(parameters.floor);
-        setPanelParamsActive(parameters.controlPanel);
-        setMirrorParamsActive(parameters.mirror);
-        setHandrailParamsActive(parameters.handrail);
-        setActiveBumperParameters(parameters.bumpers);
+        await setMainActiveSelections(parameters.cabin); 
+
+        await setDoorTextureActive(parameters.doors);
+        await setCeilingParamsActive(parameters.ceiling);
+        await setFloorTextureActive(parameters.floor);
+        await setPanelParamsActive(parameters.controlPanel);
+        await setMirrorParamsActive(parameters.mirror);
+        await setHandrailParamsActive(parameters.handrail);
+        await setActiveBumperParameters(parameters.bumpers);
+        await setActiveWallParameters(parameters.wall);
 
         //showTab('MainParametersTab');
-
+console.log(parameters);
         const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
 
         // Проверка на существование элемента

@@ -166,22 +166,29 @@ export async function populateDesignProjects() {
     });
 }
 
-function deletePattern(petternId) {
-    fetch(getUrl(urlTemplateDeletePattern, petternId), {
+function deletePattern(patternId) {
+    fetch(getUrl(urlTemplateDeletePattern, patternId), {
         method: 'DELETE',
     })
     .then(response => {
         if (!response.ok) {
-            alert('Ошибка при удалении ' + response.statusText);
+            alert('Ошибка при удалении: ' + response.statusText);
             throw new Error('Ошибка при удалении: ' + response.statusText);
+        }
+        // Если статус 204, ничего не возвращаем
+        if (response.status === 204) {
+            console.log('Успешно удалено');
+            return null;
         }
         return response.json();
     })
     .then(data => {
-        console.log('Успешно удалено:', data);
+        if (data) {
+            console.log('Успешно удалено:', data);
+        }
     })
     .catch(error => {
-        alert('Ошибка: ', error);
+        alert('Ошибка: ' + error);
         console.error('Ошибка:', error);
     });
 }

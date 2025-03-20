@@ -41,8 +41,8 @@ export function getAllBumperTextures() {
     return bumperState;
 }
 
-export function setActiveBumperParameters(bumperParameters) {
-    setActiveTextureWithAllWalls('OtherParametrsTab', 
+export async function setActiveBumperParameters(bumperParameters) {
+    await setActiveTextureWithAllWalls('OtherParametrsTab', 
     'wallSideBumpers', "bumperTextures", bumperParameters);
 }
 

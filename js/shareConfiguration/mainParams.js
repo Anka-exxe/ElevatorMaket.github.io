@@ -33,7 +33,7 @@ function getDesignProjectParam() {
     return getButtonParamByFormName('designForm');
 }
 
-export function setMainActiveSelections(selectedParameters) {
+export async  function setMainActiveSelections(selectedParameters) {
     setActiveButtonByFormName('cabinSizeForm', selectedParameters.size);
     setActiveRadioByInputName("cabin_type", selectedParameters.type);
     setActiveRadioByInputName("opening_type", selectedParameters.openingType);

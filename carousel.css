@@ -1,0 +1,167 @@
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: normal;
+    src: url(./fonts/roboto/Roboto-Regular.ttf);
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: normal;
+    font-weight: bold;
+    src: url(./fonts/roboto/Roboto-Bold.ttf);
+}
+
+@font-face {
+    font-family: "Roboto";
+    font-style: italic;
+    font-weight: normal;
+    src: url(./fonts/roboto/Roboto-Italic.ttf);
+}
+
+*, *::after, *::before {
+    box-sizing: border-box;
+    font-family: "Roboto";
+    -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+    position: relative;
+}
+
+.title {
+    margin-bottom: 10px;
+    font-size: 28px;
+    color: #333;
+}
+
+.title--level2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.carousel {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    width: 80%;
+    position: relative;
+    margin-top: 60px;
+}
+.cards {
+    display: flex;
+    transition: transform 0.5s ease;
+    margin-left: 0; /* Убираем сдвиг */
+}
+.card {
+    min-width: 200px;
+    margin: 0 10px;
+    padding: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1;
+    width: 50px; /* Ширина кнопки */
+    height: 50px; /* Высота кнопки */
+    background-size: contain; /* Подгонка изображения под размер кнопки */
+    background-repeat: no-repeat; /* Запрет повторения изображения */
+}
+.prev {
+    background-image: url("./images/left_arrow_carousel.png"); /* Измените на ваше изображение */
+    left: 10px;
+}
+.next {
+    background-image: url("./images/right_arrow_carousel.png"); /* Измените на ваше изображение */
+    right: 10px;
+}
+.logo {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 150px;
+}
+
+@media(max-width: 1500px) {
+    .logo {
+        width: 120px;
+    }
+}
+
+
+.project-card {
+    border: black 1px solid;
+    padding: 20px;
+    margin: 10px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    font-size: 25px;
+    width: 170px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.pattern-card {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    text-align: center;
+    background: #fafafa;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.pattern-img {
+    max-width: 200px;
+    max-height: 350px;
+    border-radius: 7px;
+}
+
+.pattern-card__title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.backButton {
+    cursor: pointer;
+font-size: 14px;
+padding: 2px 2px;
+border-radius: 5px;
+margin-left: 10px;
+background: white;
+color: black;
+border: black 1px solid;
+width: 100px;
+border-radius: 10px;
+padding: 0px 5px;
+font-size: 18px;
+position: static;
+top: 0%;
+transform: none;
+margin-top: 20px;
+}
+
+

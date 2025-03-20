@@ -25,7 +25,7 @@ export const tabNames = [
     'OtherParametrsTab'
 ];
 
-export function showTab(tabId) {
+export async function showTab(tabId) {
     const tabs = document.querySelectorAll('.menu-container__content');
     const navigationTabs = document.querySelectorAll('.navigation__tab');
     const icons = document.querySelectorAll('.navigation--with-animation__animation-picture');
@@ -56,7 +56,7 @@ export function showTab(tabId) {
     }
 
     if(!isImagesShowed) {
-        loadImagesForAllTabs();
+        await loadImagesForAllTabs();
         isImagesShowed = true;
     }
 }

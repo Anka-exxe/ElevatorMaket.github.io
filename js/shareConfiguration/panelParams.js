@@ -45,21 +45,21 @@ export function setPanelLocationActive(radioId) {
     setActiveRadioByInputName("panel_location", radioId);
 }
 
-export function setPanelMaterialActive(textureId) {
-    setActiveTextureByContainerName('BoardParametrsTab', "panelMaterialTextureContainer", textureId);
+export async function setPanelMaterialActive(textureId) {
+    await setActiveTextureByContainerName('BoardParametrsTab', "panelMaterialTextureContainer", textureId);
 }
 
-export function setBoardActive(textureId) {
-    setActiveTextureByContainerName('BoardParametrsTab', "boardTextureContainer", textureId);
+export async function setBoardActive(textureId) {
+    await setActiveTextureByContainerName('BoardParametrsTab', "boardTextureContainer", textureId);
 }
 
 export function setPanelToWallLocationActive(radioId) {
     setActiveRadioByInputName("panel_wall_position", radioId);
 }
 
-export function setPanelParamsActive(parameters) {
-    setBoardActive(parameters.indicationBoard);
-    setPanelMaterialActive(parameters.texture);
+export async function setPanelParamsActive(parameters) {
+    await setBoardActive(parameters.indicationBoard);
+    await setPanelMaterialActive(parameters.texture);
     setPanelSideActive(parameters.side);
     setPanelLocationActive(parameters.location);
     setPanelToWallLocationActive(parameters.locationToWall);

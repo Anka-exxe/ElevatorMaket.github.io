@@ -25,7 +25,7 @@ export const templatesCache = {};
                 console.error('Error fetching design projects:', error);
             }
         }
-
+        
        export async function fetchTemplates(projectId) {
             if (templatesCache[projectId]) {
                 return templatesCache[projectId]; // Возвращаем кэшированные шаблоны

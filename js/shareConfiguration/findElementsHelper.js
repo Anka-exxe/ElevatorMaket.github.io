@@ -38,8 +38,8 @@ export function setActiveButtonByFormName(formName, buttonId) {
     activeButton.click();
 }
 
-export function setActiveTextureWithAllWalls(tabName, formName, textureContainerName, parameters) {
-    showTab(tabName);
+export async function setActiveTextureWithAllWalls(tabName, formName, textureContainerName, parameters) {
+    await showTab(tabName);
 
     const form = document.forms[formName];
 
@@ -86,8 +86,8 @@ export function setActiveTextureWithAllWalls(tabName, formName, textureContainer
     });
 }
 
-export function setActiveTextureByContainerName(tabName, textureContainerName, textureId) {
-    showTab(tabName);
+export async function setActiveTextureByContainerName(tabName, textureContainerName, textureId) {
+    await showTab(tabName);
 
     const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
     if (!texturesContainer) {

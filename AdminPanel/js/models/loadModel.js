@@ -305,7 +305,7 @@ const buttonViewInside = document.getElementById('viewInside');
 
 buttonView3D.onclick = function() {
     animateButton(buttonView3D);
-    camera.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() + 110); 
+    camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2); 
     controls.enableZoom = true;
     controls.enableRotate = true;
     controls.target.set(0, 50, 0);

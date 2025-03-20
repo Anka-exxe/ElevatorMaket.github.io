@@ -30,17 +30,17 @@ export function setCeilingOrientationActive(radioId) {
     setActiveRadioByInputName("light_orientation_type", radioId);
 }
 
-export function setCeilingMaterialActive(textureId) {
-    setActiveTextureByContainerName('CeilingParametrsTab', "ceilingMaterialTextureContainer", textureId);
+export async function setCeilingMaterialActive(textureId) {
+    await setActiveTextureByContainerName('CeilingParametrsTab', "ceilingMaterialTextureContainer", textureId);
 }
 
-export function setCeilingPlafonActive(textureId) {
-    setActiveTextureByContainerName('CeilingParametrsTab', "ceilingPlafonTextureContainer", textureId);
+export async function setCeilingPlafonActive(textureId) {
+    await setActiveTextureByContainerName('CeilingParametrsTab', "ceilingPlafonTextureContainer", textureId);
 }
 
-export function setCeilingParamsActive(parameters) {
-    setCeilingPlafonActive(parameters.lamp);
-    setCeilingMaterialActive(parameters.texture);
+export async function setCeilingParamsActive(parameters) {
+    await setCeilingPlafonActive(parameters.lamp);
+    await setCeilingMaterialActive(parameters.texture);
     setCeilingOrientationActive(parameters.orientation);
 }
 

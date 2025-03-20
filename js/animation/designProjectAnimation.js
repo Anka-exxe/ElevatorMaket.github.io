@@ -87,7 +87,7 @@ async function populateForm() {
             form.appendChild(button);
         });
     } else {
-        console.log('No design projects available.');
+        console.log('Нет доступных групп дизайн проектов');
     }
 }
 

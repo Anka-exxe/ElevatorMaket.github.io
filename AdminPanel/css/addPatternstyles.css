@@ -189,6 +189,7 @@ body {
 }
 
 .navigation__tab {
+    color: #484747;
     font-weight: normal;
     font-size: 20px;
     text-align: center;
@@ -202,6 +203,7 @@ body {
 }
 
 .navigation__tab.active {
+    color: black;
     font-weight: bold;
 }
 
@@ -308,7 +310,7 @@ body {
 }
 
 .menu-container_hr {
-    margin: 0px;
+    margin: 10px 0px;
 }
 
 .menu-container__additional-buttons {

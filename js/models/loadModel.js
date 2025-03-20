@@ -7,6 +7,8 @@ import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
 import * as Element from "./elementNames.js";
+import {setAllParameters} from 
+    "../shareConfiguration/allParams.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -177,19 +179,18 @@ function init() {
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
                 './liftModels/Model1Final.fbx',
-                (object) => {
+                async (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
                     model = object;
                     window.model = model;
                     getObjectNames(object);
-                    applyDefaultElevatorTextures();
+                    //applyDefaultElevatorTextures();
                   // applyTextures();
                     DefaultSettings()
                     animate();
 
-                    document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
-                    document.getElementById('configurator-container').style.visibility = 'visible'; 
+                  
 
                     /*let pointLight = new THREE.PointLight(0xffffff, 50, 80);
                     pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
@@ -213,7 +214,11 @@ function init() {
                             }
                         });}
 
-                       
+                        await loadConfiguration();
+
+                        document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+                        document.getElementById('configurator-container').style.visibility = 'visible'; 
+                       console.log("Hi");
                 },
                 undefined,
                 (error) => {
@@ -232,45 +237,21 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     });
-
-    function applyTextures() {
-        const textureLoader = new THREE.TextureLoader();
-
-        // Загрузка текстур
-        const albedoTexture = textureLoader.load('./wood/TCom_Wood_OakVeneer2_512_albedo.png', (texture) => {
-            texture.colorSpace = THREE.SRGBColorSpace
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            texture.repeat.set(1, 1); // Настройте повторение по необходимости
-        });
-        
-        const normalTexture = textureLoader.load('./wood/TCom_Wood_OakVeneer2_512_normal.png', (texture) => {
-            texture.colorSpace = THREE.SRGBColorSpace
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-        });
-        
-        const roughnessTexture = textureLoader.load('./wood/TCom_Wood_OakVeneer2_512_roughness.png', (texture) => {
-            texture.colorSpace = THREE.SRGBColorSpace
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-        });
-        
-        // Создание материала с использованием загруженных текстур
-        const material = new THREE.MeshStandardMaterial({
-            map: albedoTexture,
-            normalMap: normalTexture,
-            roughnessMap: roughnessTexture,
-            roughness: 0.9, // Настройте по желанию
-        });
-    
-        model.traverse((child) => {
-            if (child.isMesh) {
-                child.material = material; // Примените созданный материал
-            }
-        });
-    }
 }
+
+async function loadConfiguration() {
+const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
+
+if (templateConfiguration) {
+    console.log(JSON.parse(templateConfiguration));
+    await setAllParameters(JSON.parse(templateConfiguration));
+} else {
+    window.location.href = `index.html`;
+}
+
+localStorage.removeItem('templateConfiguration');
+}
+
 
 document.addEventListener('DOMContentLoaded', init);
 
