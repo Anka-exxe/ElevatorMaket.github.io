@@ -5,17 +5,11 @@ import {setActiveTextureByContainerName,
 const CeilingState = {
     lamp: null,
     texture: null,
-    orientation: null,
 };
 
-export function getCeilingState() {
-    CeilingState.orientation = getCeilingOrientation(); 
+export function getCeilingState() { 
     //console.log(CeilingState);
     return CeilingState;
-}
-
-export function getCeilingOrientation() {
-    return getRadioParamByInputName("light_orientation_type");
 }
 
 export function setCeilingMaterial(textureId) {
@@ -24,10 +18,6 @@ export function setCeilingMaterial(textureId) {
 
 export function setCeilingPlafon(textureId) {
     CeilingState.lamp = textureId;
-}
-
-export function setCeilingOrientationActive(radioId) {
-    setActiveRadioByInputName("light_orientation_type", radioId);
 }
 
 export async function setCeilingMaterialActive(textureId) {
@@ -41,7 +31,6 @@ export async function setCeilingPlafonActive(textureId) {
 export async function setCeilingParamsActive(parameters) {
     await setCeilingPlafonActive(parameters.lamp);
     await setCeilingMaterialActive(parameters.texture);
-    setCeilingOrientationActive(parameters.orientation);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {

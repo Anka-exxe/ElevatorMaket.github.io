@@ -43,7 +43,7 @@ export function getAllParameters() {
     allParameters.mirror = getMirrorParams();
     allParameters.handrail = getHandrailParams();
     allParameters.bumpers = getAllBumperTextures();
-    //console.log(allParameters);
+    console.log(allParameters);
 }
 
 export function saveParametersToFile() {

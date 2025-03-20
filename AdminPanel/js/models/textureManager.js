@@ -302,29 +302,10 @@ console.log(tabId)
             break;
         case 'OtherParametrsTab':
             var active = tabContainer.querySelector('.form__form-element.active');
-            const target = active.getAttribute('data-target');
-            switch (target) {
-                case 'all':
-                    elementNames = ['RightBumper','LeftBumper','BackBumper'];
-                    Bumper.setAllTextures(textureId);
-                    break;
-                case 'back':
-                    elementNames = ['BackBumper'];
-                    Bumper.setBackTexture(textureId);
-                    break;
-                case 'left':
-                    elementNames = ['LeftBumper'];
-                    Bumper.setLeftTexture(textureId);
-                    break;
-                case 'right':
-                    elementNames = ['RightBumper'];
-                    Bumper.setRightTexture(textureId);
-                    break;
-                default:
-                    console.error('Неизвестное значение data-target:', target);
+            //const target = active.getAttribute('data-target');
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
-            return;
-        }
+            Bumper.setAllTextures(textureId);
+            elementNames = ['RightBumper','LeftBumper','BackBumper'];
         break;
         case 'HandrailParametrsTab':
             setHandrailTexture(textureId);
@@ -527,3 +508,8 @@ export function applyDefaultElevatorTextures() {
             mapping.options);
     });
 }
+
+
+
+
+

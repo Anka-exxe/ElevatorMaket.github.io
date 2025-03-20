@@ -66,14 +66,21 @@ body {
 
 .elevator-container__logo {
     object-fit: cover; 
-    width: 250px;
-    height: 250px;
+    width: 200px;
+    height: 200px;
+}
+
+@media(max-width: 1800px) {
+    .elevator-container__logo {
+        width: 170px;
+        height: 170px;
+    }
 }
 
 @media(max-width: 1500px) {
     .elevator-container__logo {
-        width: 200px;
-        height: 200px;
+        width: 150px;
+        height: 150px;
     }
 }
 
@@ -320,12 +327,10 @@ body {
     background-color: white;
     border-radius: 30px;
     padding: 3% 7%;
-    height: 100%;
+    height: auto; /* Убедитесь, что высота задана правильно */
     overflow-y: auto;
-    box-shadow: rgb(191, 191, 191) 0 2px 4px;
+    box-shadow: 0px 50px 50px 0px rgba(0, 0, 0, 0.5);
     flex-grow: 1;
-    overflow-y: auto;
-    height: auto; 
 }
 
 .form-container, .form-container--radio {

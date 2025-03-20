@@ -50,11 +50,9 @@ export async function setActiveTextureWithAllWalls(tabName, formName, textureCon
 
     let wallSides;
 
-    if (tabName === 'OtherParametrsTab') {
-        wallSides = ['left', 'right', 'back'];
-    } else {
-        wallSides = ['left', 'right', 'front', 'back'];
-    }
+  
+    wallSides = ['left', 'right', 'front', 'back'];
+    
 
     wallSides.forEach(side => {
         const button = form.querySelector(`button[data-target="${side}"]`);

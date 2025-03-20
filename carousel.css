@@ -105,9 +105,16 @@ button {
     width: 150px;
 }
 
-@media(max-width: 1500px) {
+
+@media(max-width: 1800px) {
     .logo {
         width: 120px;
+    }
+}
+
+@media(max-width: 1500px) {
+    .logo {
+        width: 100px;
     }
 }
 

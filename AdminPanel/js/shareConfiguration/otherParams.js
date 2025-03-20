@@ -1,39 +1,11 @@
-import { setActiveTextureWithAllWalls } from './findElementsHelper.js';
+import { setActiveTextureByContainerName } from './findElementsHelper.js';
 
 const bumperState = {
-    left: null,
-    right: null,
-    back: null
+    texture: null,
 };
 
-export function setLeftTexture(id) {
-    bumperState.left = id;
-}
-
-export function setRightTexture(id) {
-    bumperState.right = id;
-}
-
-export function setBackTexture(id) {
-    bumperState.back = id;
-}
-
 export function setAllTextures(id) {
-    setLeftTexture(id);
-    setRightTexture(id);
-    setBackTexture(id);
-}
-
-export function getLeftTexture() {
-    return bumperState.left;
-}
-
-export function getRightTexture() {
-    return bumperState.right;
-}
-
-export function getBackTexture() {
-    return bumperState.back;
+    bumperState.texture = id;
 }
 
 export function getAllBumperTextures() {
@@ -41,11 +13,9 @@ export function getAllBumperTextures() {
     return bumperState;
 }
 
-export function setActiveBumperParameters(bumperParameters) {
-    setActiveTextureWithAllWalls('OtherParametrsTab', 
-    'wallSideBumpers', "bumperTextures", bumperParameters);
+export async function setActiveBumperParameters(bumperParameters) {
+    await setActiveTextureByContainerName('OtherParametrsTab', "bumperTextures", bumperParameters.texture);
 }
-
 /*document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('saveButton');
     saveButton.addEventListener('click', () => {

@@ -7,13 +7,15 @@ const PanelState = {
     texture: null,
     side: null,
     location: null,
-    locationToWall: null
+    locationToWall: null,
+    type: null
 };
 
 export function getPanelState() {
     PanelState.side = getPanelSide(); 
     PanelState.location = getPanelLocation();
     PanelState.locationToWall = getPanelLocationToWall();
+    PanelState.type = getPanelType();
     return PanelState;
 }
 
@@ -27,6 +29,14 @@ export function getPanelLocation() {
 
 export function getPanelLocationToWall() {
     return getRadioParamByInputName("panel_wall_position");
+}
+
+export function getPanelType() {
+    if(getPanelLocation() == "centerPanelPosition") {
+        return "invoice";
+    } else {
+        return "mortise";
+    }
 }
 
 export function setBoard(textureId) {
