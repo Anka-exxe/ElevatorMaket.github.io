@@ -18,7 +18,7 @@ import {getAllBumperTextures,
     setActiveBumperParameters} from './otherParams.js';
 
 import {showTab} from "../animation/tabFunctions.js";
-
+import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
 import {urlTemplateGetWordFile} from "../urlHelper/urls.js"
 
 const allParameters = {
@@ -63,6 +63,10 @@ export function saveParametersToFile() {
 
 export async function setAllParameters(parameters) {
     if (parameters && typeof parameters === 'object') {
+        if(!isImagesShowed) {
+            await loadImagesForAllTabs();
+        }
+
         await setMainActiveSelections(parameters.cabin); 
 
         await setDoorTextureActive(parameters.doors);
