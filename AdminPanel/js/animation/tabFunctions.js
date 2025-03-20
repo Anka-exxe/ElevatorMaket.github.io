@@ -107,12 +107,13 @@ export async function loadImagesForAllTabs() {
         )
     );
 
-
+    isImagesShowed = true;
 }
 
 export async function loadAllImages() {
-    console.log("Loading all images...");
+   
     if (images.walls.length === 0) {
+        console.log("Loading all images...");
     images.walls = await TextureStorage.getWalls();
     images.ceiling = await TextureStorage.getCeilingPlafon();
     images.ceilingMaterial = await TextureStorage.getCeilingMaterial();
@@ -122,8 +123,9 @@ export async function loadAllImages() {
     images.board_color = await TextureStorage.getBoardColor();
     images.door = await TextureStorage.getDoor();
     images.bumper = await TextureStorage.getBumper();
-    }
     console.log("All images loaded.");
+    }
+
 }
 
 export async function showImages(category, tabId) {
