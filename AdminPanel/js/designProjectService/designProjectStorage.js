@@ -50,7 +50,6 @@ export async function fetchTemplates(projectId) {
     }
 }
 
-// Новая функция для получения шаблона по ID
 export async function fetchTemplateById(templateId) {
     const url = getUrl(urlGetTemplateById, templateId); // Формируем URL с ID шаблона
 
@@ -61,8 +60,12 @@ export async function fetchTemplateById(templateId) {
         }
 
         const data = await response.json();
+        if (!data.content) {
+            throw new Error('Template data is undefined');
+        }
         return data.content; // Возвращаем информацию о шаблоне
     } catch (error) {
         console.error('Error fetching template by ID:', error);
+        throw error; // Пробрасываем ошибку дальше для обработки
     }
 }

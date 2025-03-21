@@ -10,6 +10,7 @@ import * as Element from "./elementNames.js";
 import {setAllParameters, 
     getAllParameters} from 
     "../shareConfiguration/allParams.js";
+import {fetchTemplateById} from "../designProjectService/designProjectStorage.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -240,37 +241,38 @@ function init() {
 
 export let templateId;
 
-function loadConfiguration() {
-    templateId = localStorage.getItem('templateId');
-const templateName = localStorage.getItem('templateName');
-const templatePreviewImageUrl = localStorage.getItem('templatePreviewImageUrl');
-const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
+async function loadConfiguration() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const designProjectId = urlParams.get('designProject'); // Получаем ID проекта
+    const templateId = urlParams.get('templateId'); // Получаем ID шаблона
 
-if (templateId && templateName) {
-    document.getElementById('projectTitle').value = templateName; 
+    if (templateId) {
+        try {
+            const template = await fetchTemplateById(templateId); // Ожидаем результат
 
-    // Элемент <div> для отображения изображения
-    const preview = document.getElementById('preview-pattern');
-    if (preview) {
-        preview.innerHTML = `<img src="${templatePreviewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`; // Установка изображения
+            if (!template) {
+                throw new Error('Template not found');
+            }
+
+            document.getElementById('projectTitle').value = template.name; // Используем имя шаблона
+
+            const preview = document.getElementById('preview-pattern');
+            if (preview) {
+                preview.innerHTML = `<img src="${template.previewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`;
+            }
+
+            setAllParameters(JSON.parse(template.configuration));
+        } catch (error) {
+            alert('Ошибка при загрузке шаблона: ' + error.message); // Уведомляем пользователя об ошибке
+        }
+    } else {
+        // Очистка формы, если templateId не указан
+        document.getElementById('projectTitle').value = '';
+        const preview = document.getElementById('preview-pattern');
+        if (preview) {
+            preview.innerHTML = '';
+        }
     }
-
-    setAllParameters(JSON.parse(templateConfiguration));
-} else {
-    // Если данных нет, очищаем поля ввода
-    document.getElementById('projectTitle').value = ''; // Исправлено на правильное поле
-
-    // Очистка содержимого <div>
-    const preview = document.getElementById('preview-pattern');
-    if (preview) {
-        preview.innerHTML = ''; // Очистка <div>
-    }
-}
-
-localStorage.removeItem('templateId');
-localStorage.removeItem('templateName');
-localStorage.removeItem('templatePreviewImageUrl');
-localStorage.removeItem('templateConfiguration');
 }
 
 document.addEventListener('DOMContentLoaded', init);

@@ -146,17 +146,24 @@ export async function populateDesignProjects() {
             
             // Добавляем обработчик для кнопки "Изменить"
             templateCard.querySelector('.editPatternBtn').addEventListener('click', function() {
-                const url = `patterns.html?${designProject}=${template.id}`;
-
+                const url = `patterns.html?designProject=${template.id}`;
+                console.log(url); // Проверка URL
                 window.location.href = url;
             });
 
             // Добавляем обработчик для кнопки "Удалить"
-            templateCard.querySelector('.editPatternBtn').addEventListener('click', function() {
+            templateCard.querySelector('.deletePatternBtn').addEventListener('click', async function() {
                 if (projectId) {
-                    const url = `patterns.html?designProj=${template.id}`;
-                    console.log(url); // Проверка URL
-                    window.location.href = url;
+                    if (confirm('Вы уверены, что хотите удалить этот элемент?')) {
+                        try {
+                            await deletePattern(template.id); // Ждем завершения удаления
+                            localStorage.setItem('activeTab', 'patterns');
+                            templateCard.remove(); // Удаляем карточку с шаблоном из DOM
+                        } catch (error) {
+                            console.error('Ошибка при удалении:', error);
+                            alert('Не удалось удалить шаблон. Попробуйте еще раз позже.'); // Отображаем сообщение об ошибке
+                        }
+                    }
                 } else {
                     console.error('designProject is undefined or empty');
                 }
@@ -170,31 +177,20 @@ export async function populateDesignProjects() {
     });
 }
 
-function deletePattern(patternId) {
-    fetch(getUrl(urlTemplateDeletePattern, patternId), {
+async function deletePattern(patternId) {
+    const url = getUrl(urlTemplateDeletePattern, patternId); // Формируем URL
+    console.log('Запрос на удаление по URL:', url); // Логируем URL для проверки
+
+    const response = await fetch(url, {
         method: 'DELETE',
-    })
-    .then(response => {
-        if (!response.ok) {
-            alert('Ошибка при удалении: ' + response.statusText);
-            throw new Error('Ошибка при удалении: ' + response.statusText);
-        }
-        // Если статус 204, ничего не возвращаем
-        if (response.status === 204) {
-            console.log('Успешно удалено');
-            return null;
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data) {
-            console.log('Успешно удалено:', data);
-        }
-    })
-    .catch(error => {
-        alert('Ошибка: ' + error);
-        console.error('Ошибка:', error);
     });
+
+    if (!response.ok) {
+        const errorText = await response.text(); // Получаем текст ошибки от сервера
+        throw new Error(`Ошибка при удалении: ${response.statusText} - ${errorText}`);
+    }
+
+    return response; // Возвращаем ответ
 }
 
 // Вызов функции для заполнения проектов

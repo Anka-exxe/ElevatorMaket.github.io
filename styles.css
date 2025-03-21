@@ -405,7 +405,7 @@ body {
     flex-grow: 1;
     flex-basis: 0;
     align-self: stretch;
-    margin-right: 20px;
+    margin-right: 40px;
 }
 
 .configurator-container__additional-button-container {
@@ -613,7 +613,7 @@ body {
 
 .tooltip .tooltip-text {
     visibility: hidden; /* Скрыто по умолчанию */
-    width: 100px; /* Ширина подсказки */
+    width: 130px; /* Ширина подсказки */
     background-color: #00406C; /* Цвет фона подсказки */
     color: #fff; /* Цвет текста */
     text-align: center; /* Выравнивание текста */
