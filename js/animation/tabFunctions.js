@@ -101,11 +101,14 @@ export async function loadImagesForAllTabs() {
             showImages(getCategoryByTabId(tabId), tabId)
         )
     );
+    isImagesShowed= true;
+
 }
 
 export async function loadAllImages() {
-    console.log("Loading all images...");
+
     if (images.walls.length === 0) {
+        console.log("Loading all images...");
     images.walls = await TextureStorage.getWalls();
     images.ceiling = await TextureStorage.getCeilingPlafon();
     images.ceilingMaterial = await TextureStorage.getCeilingMaterial();

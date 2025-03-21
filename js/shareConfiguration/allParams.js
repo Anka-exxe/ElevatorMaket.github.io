@@ -62,6 +62,7 @@ export function saveParametersToFile() {
 }
 
 export async function setAllParameters(parameters) {
+    console.log(parameters);
     if (parameters && typeof parameters === 'object') {
         if(!isImagesShowed) {
             await loadImagesForAllTabs();
@@ -79,7 +80,7 @@ export async function setAllParameters(parameters) {
         await setActiveWallParameters(parameters.wall);
 
         //showTab('MainParametersTab');
-console.log(parameters);
+
         const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
 
         // Проверка на существование элемента
