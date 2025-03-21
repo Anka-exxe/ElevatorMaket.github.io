@@ -9,8 +9,8 @@ const textureId = urlParams.get('id');
 // Если мы в режиме редактирования, назначаем обработчик для кнопки "Изменить название"
 if (textureId) {
     document.getElementById('changeNameBtn').addEventListener('click', () => {
-        const newName = document.getElementById('name').value.trim();
-        if (!newName) {
+        const name = document.getElementById('name').value.trim();
+        if (!name) {
             alert("Введите новое название текстуры");
             return;
         }
@@ -20,7 +20,7 @@ if (textureId) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name: newName })
+            body: JSON.stringify({ name: name })
         })
             .then(response => {
                 if (!response.ok) {

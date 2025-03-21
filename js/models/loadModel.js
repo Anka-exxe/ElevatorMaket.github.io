@@ -185,7 +185,7 @@ function init() {
                     model = object;
                     window.model = model;
                     getObjectNames(object);
-                    //applyDefaultElevatorTextures();
+                    applyDefaultElevatorTextures();
                   // applyTextures();
                     DefaultSettings()
                     animate();

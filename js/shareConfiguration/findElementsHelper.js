@@ -95,6 +95,7 @@ export async function setActiveTextureByContainerName(tabName, textureContainerN
 
     if (textureId) {
         const texture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
+        console.log(texture);
         texture.click();
     }
 }
