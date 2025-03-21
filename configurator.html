@@ -64,7 +64,7 @@
                     <div class="navigation__tab" onclick="showTab('MirrorParametrsTab')">Зеркало</div>
                     <div class="navigation__tab" onclick="showTab('HandrailParametrsTab')">Поручни</div>
                     <div class="navigation__tab" onclick="showTab('OtherParametrsTab')">Остальное</div>
-                    <div class="navigation__tab" onclick="showTab('OtherParametrsTab')">Холл</div>
+                    <div class="navigation__tab" onclick="showTab('HallParametrsTab')">Холл</div>
                 </div>
             </header>
 
@@ -161,7 +161,7 @@
                         </form>
                     </div>
 
-                    <hr class="menu-container_hr">
+                    <hr class="menu-container_hr--textures">
 
                     <div class="textures-container" name="wallTextures">
 
@@ -195,7 +195,7 @@
                     <div class="textures-container ceiling-pattern" data-texture-type="pattern"  name="ceilingPlafonTextureContainer">
                     </div>
 
-                    <hr class="menu-container_hr">
+                    <hr class="menu-container_hr--textures">
 
                     <h3 class="additional-title">
                         Материал плафона потолка:
@@ -233,7 +233,7 @@
                     <div class="textures-container post-orders" data-texture-type="panel" name="boardTextureContainer">
                     </div>
 
-                    <hr class="menu-container_hr">
+                    <hr class="menu-container_hr--textures">
 
                     <div class="menu-container__form form-container--radio">
                         <h3 class="form-container--radio__title">Материал панели:</h3>
@@ -241,6 +241,8 @@
                         <div class="textures-container panel-color" data-texture-type="panelColor" name="panelMaterialTextureContainer">
 
                         </div>
+
+                        <hr class="menu-container_hr--textures">
 
                         <div class="menu-container__form form-container--radio">
                             <h3 class="form-container--radio__title">Сторона панели:</h3>
@@ -335,9 +337,9 @@
 
                     <hr class="menu-container_hr">
 
-                    <div class="menu-container__form form-container--radio">
-                        <h3 class="form-container--radio__title">Расположение:</h3>
-                        <form class="form-container--radio__form form" name="mirror_location">
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Расположение:</h3>
+                        <form class="form-container__form form" name="mirror_location">
                             <button class="form__form-element mirror-location-button active" type="button" data-location="back" id="backMirror" >Сзади</button>
                             <button class="form__form-element mirror-location-button" type="button" data-location="right" id="rightMirror">Справа</button>
                             <button class="form__form-element mirror-location-button" type="button" data-location="left" id="leftMirror">Слева</button>
@@ -420,24 +422,48 @@
                     </div>
                 </div>
             </div>
+
+            <div id="HallParametrsTab" class="menu-container__content">
+                <h2 class="menu-container__options-menu-title">
+                    Холл
+                </h2>
+
+                <div class="menu-container__options-menu-container-main">
+                    <h3 class="additional-title">
+                        Холл:
+                    </h3>
+
+                    <div class="textures-container" name="bumperTextures">
+
+                    </div>
+                </div>
+            </div>
         </div>
 
-            <div class="menu-container__additional-buttons">
-                <form class="configurator-container__additional-button-container">
+        <div class="menu-container__additional-buttons">
+            <form class="configurator-container__additional-button-container">
+                <div class="tooltip">
+                    <button id="saveButton" type="button" class="form__form-element--with-image additional-button">
+                        <img class="form__button-image" src="./images/download_circle_icon.png">
+                    </button>
+                    <span class="tooltip-text">Загрузить конфигурацию</span> <!-- Подсказка для кнопки сохранения -->
+                </div>
+        
+                <div class="tooltip">
                     <button id="shareButton" type="button" class="form__form-element--with-image additional-button">
-                        <img class="form__button-image" src="./images/share.png">
-                        <p><pre>  Поделиться</pre></p>
+                        <img class="form__button-image" src="./images/share_icon.png">
                     </button>
-                    <button id="saveButton" type="button" class="form__form-element--with-image additional-button" >
-                        <img class="form__button-image" src="./images/download.png">
-                        <p><pre>  Загрузить</pre></p>
+                    <span class="tooltip-text">Поделиться</span> <!-- Подсказка для кнопки поделиться -->
+                </div>
+        
+                <div class="tooltip">
+                    <button id="questionNaireBtn" type="button" class="form__form-element--with-image additional-button">
+                        <img class="form__button-image" src="./images/file_icon.png">
                     </button>
-
-                    <button id="questionNaireBtn" type="button" class="form__form-element--with-image additional-button" >
-                        <p><pre>  Опросный лист</pre></p>
-                    </button>
-                </form>
-            </div>
+                    <span class="tooltip-text">Опросный лист</span> <!-- Подсказка для кнопки анкеты -->
+                </div>
+            </form>
+        </div>
         </div>
     </div>
 

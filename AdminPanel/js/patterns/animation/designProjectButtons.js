@@ -146,15 +146,19 @@ export async function populateDesignProjects() {
             
             // Добавляем обработчик для кнопки "Изменить"
             templateCard.querySelector('.editPatternBtn').addEventListener('click', function() {
-                openEditTemplatePage(template); // Используем метод для открытия страницы редактирования
+                const url = `patterns.html?${designProject}=${template.id}`;
+
+                window.location.href = url;
             });
 
             // Добавляем обработчик для кнопки "Удалить"
-            templateCard.querySelector('.deletePatternBtn').addEventListener('click', async function() {
-                const confirmed = confirm(`Вы уверены, что хотите удалить шаблон "${template.name}"?`);
-                if (confirmed) {
-                    await deletePattern(template.id); // Удаляем шаблон с помощью метода deleteDesignProject
-                    patternGrid.removeChild(templateCard); // Удаляем карточку шаблона из DOM
+            templateCard.querySelector('.editPatternBtn').addEventListener('click', function() {
+                if (projectId) {
+                    const url = `patterns.html?designProj=${template.id}`;
+                    console.log(url); // Проверка URL
+                    window.location.href = url;
+                } else {
+                    console.error('designProject is undefined or empty');
                 }
             });
         
@@ -193,14 +197,6 @@ function deletePattern(patternId) {
     });
 }
 
-// Функция для открытия страницы редактирования
-function openEditTemplatePage(template) {
-    localStorage.setItem('templateId', template.id);
-    localStorage.setItem('templateName', template.name);
-    localStorage.setItem('templatePreviewImageUrl', template.previewImageUrl);
-    localStorage.setItem('templateConfiguration', JSON.stringify(template.configuration)); // Сохраняем конфигурацию как строку
-    window.location.href = 'patterns.html'; // Переход на страницу редактирования
-}
 // Вызов функции для заполнения проектов
 populateDesignProjects();
 

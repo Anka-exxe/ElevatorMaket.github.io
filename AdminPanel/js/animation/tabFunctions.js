@@ -12,7 +12,8 @@ const tabImageMap = new Map([
     ['BoardParametrsTab', 'board_icon'],
     ['MirrorParametrsTab', 'mirror_icon'],
     ['HandrailParametrsTab', 'handrail_icon'],
-    ['OtherParametrsTab', 'other_icon']
+    ['OtherParametrsTab', 'other_icon'],
+    ['HallParametrsTab', 'hall_icon']
 ]);
 
 export const tabNames = [

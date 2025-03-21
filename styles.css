@@ -68,6 +68,7 @@ body {
     object-fit: cover; 
     width: 200px;
     height: 200px;
+    position: relative;
 }
 
 @media(max-width: 1800px) {
@@ -88,6 +89,9 @@ body {
     object-fit: contain; 
     width: 100%;
     height: 100%;
+    position: absolute; /* Позволяет свободно позиционировать элемент */
+    top: 0;            /* Устанавливает верхнюю границу в 0 */
+    left: 0; 
 }
 
 .elevator-container__elevator-observer {
@@ -290,7 +294,7 @@ body {
     position: relative;
     background-color: #00406C;
     border-radius: 40px;
-    width: 720px;
+    width: 700px;
     overflow: hidden; 
     display: flex;
     flex-direction: column;
@@ -344,9 +348,10 @@ body {
 .form-container--radio__title,
 .additional-title {
     margin: 0;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-weight: normal;
     font-size: 25px;
+    color: #000000;
 }
 
 .form {
@@ -363,7 +368,7 @@ body {
     background-color: white;
     padding: 9px;
     font-size: 20px;
-    margin-right: 10px;
+    margin-right: 17px;
     margin-top: 5px;
 }
 
@@ -388,7 +393,11 @@ body {
 }
 
 .menu-container_hr {
-    margin: 10px 0px;
+    margin: 5px 0px;
+}
+
+.menu-container_hr--textures {
+    margin: 20px 0px;
 }
 
 .menu-container__additional-buttons {
@@ -396,18 +405,21 @@ body {
     flex-grow: 1;
     flex-basis: 0;
     align-self: stretch;
+    margin-right: 20px;
 }
 
 .configurator-container__additional-button-container {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
+    justify-content: flex-end;
+    gap: 20px;
 }
 
 .form_form-label{
     font-size: 20px;
     margin-right: 10px;
+    color: #1e1e1e;
 }
 
 .form__radio  {
@@ -417,13 +429,19 @@ body {
     cursor: pointer;
 }
 
+.form__radio-with-label {
+    margin-bottom: 12px;
+}
+
 .form__button-image {
     margin: auto auto;
+    height: 39px;
+    width: auto;
 }
 
 .form-container--radio__form {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 300px 300px;
     gap: 5px;
 }
 
@@ -478,7 +496,8 @@ body {
 }
 
 .additional-button {
-    height: 45px;
+    height: 54px;
+    width: 61px;
     cursor: pointer;
     font-size: 18px;
 }
@@ -585,4 +604,31 @@ body {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+.tooltip {
+    position: relative;
+    display: inline-block; /* Чтобы элемент занимал только необходимое пространство */
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden; /* Скрыто по умолчанию */
+    width: 100px; /* Ширина подсказки */
+    background-color: #00406C; /* Цвет фона подсказки */
+    color: #fff; /* Цвет текста */
+    text-align: center; /* Выравнивание текста */
+    border-radius: 5px; /* Скругление углов */
+    padding: 5px; /* Отступы */
+    position: absolute; /* Позволяет позиционировать подсказку */
+    z-index: 1; /* Убедитесь, что подсказка выше других элементов */
+    bottom: 125%; /* Позиция над элементом */
+    left: 50%; /* Центрирование по горизонтали */
+    margin-left: -50px; /* Сдвиг влево для центрирования */
+    opacity: 0; /* Скрыто по умолчанию */
+    transition: opacity 0.3s; /* Плавный переход */
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible; /* Показывать при наведении */
+    opacity: 1; /* Делаем видимой */
 }

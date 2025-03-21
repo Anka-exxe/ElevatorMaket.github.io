@@ -20,6 +20,7 @@ export const urlTemplateUpdateDesignProject = `${host}design-projects/{}`;
 export const urlTemplateDeleteDesignProject = `${host}design-projects/{}`;
 export const urlTemplateCreateNewPattern = `${host}project-templates`;
 export const urlTemplateDeletePattern = `${host}project-templates/{}`;
+export const urlGetTemplateById= `${host}project-templates/{}`;
 
 export function getUrl(urlTemplate, parameter) {
     return urlTemplate.replace('{}', parameter);
