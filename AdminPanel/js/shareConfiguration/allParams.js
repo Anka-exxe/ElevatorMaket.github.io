@@ -64,6 +64,7 @@ export function saveParametersToFile() {
 
 export function setAllParameters(parameters) {
     if (parameters && typeof parameters === 'object') {
+
         setMainActiveSelections(parameters.cabin); 
         setActiveWallParameters(parameters.wall);
         setDoorTextureActive(parameters.doors);
