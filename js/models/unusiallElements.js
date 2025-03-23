@@ -54,17 +54,17 @@
 
     panelSideRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
-        window.model.getObjectByName("DisplayHorisontal").visible = false;
+        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     });
 
     panelLocationRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
-        window.model.getObjectByName("DisplayHorisontal").visible = false;
+        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     });
 
     panelWallPositionsRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
-        window.model.getObjectByName("DisplayHorisontal").visible = false;
+        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     });
 
     const mirrorAvailabilityRadios = document.querySelectorAll('input[name="mirror_availability"]');
@@ -77,6 +77,7 @@
     const mirrorButtons = document.querySelectorAll('.mirror-location-button');
     mirrorButtons.forEach(button => {
         button.addEventListener('click', () => {
+            console.log("Mirror location clicked");
             button.classList.toggle('active');
             updateMirrorPlacement();
         });
@@ -119,7 +120,7 @@ export function DefaultSettings(){
 
     updateControlPanelPlacement();
     updateMirrorPlacement();
-    window.model.getObjectByName("DisplayHorisontal").visible = false;
+    //window.model.getObjectByName("DisplayHorisontal").visible = false;
 }
 
 
@@ -254,7 +255,7 @@ function updateOpenType(openingType) {
             door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
         }
     }
-    window.model.getObjectByName("DisplayHorisontal").visible = false;
+    //window.model.getObjectByName("DisplayHorisontal").visible = false;
     updateControlPanelPlacement();
 }
 
@@ -509,7 +510,7 @@ function updateControlPanelPlacement() {
     if (panelGroup) {
         panelGroup.visible = true;
         console.log(`Отображается группа панели: ${groupName}`);
-        window.model.getObjectByName("DisplayHorisontal").visible = false;
+        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     } else {
         console.warn(`Группа панели ${groupName} не найдена`);
     }
@@ -572,7 +573,6 @@ function updateMirrorPlacement() {
         const wall = window.model.getObjectByName(name);
         if (wall) wall.visible = true;
     });
-
     // 3. Проверяем, включены ли зеркала
     const availabilityRadio = document.querySelector('input[name="mirror_availability"]:checked');
     const isMirrorEnabled = (availabilityRadio && availabilityRadio.value === "yes");
@@ -632,7 +632,6 @@ function updateMirrorPlacement() {
             }
         }
     }
-
     console.log("Mirror placement updated:",
         "Back:", mirrorBack ? mirrorBack.visible : "not found",
         "Right:", mirrorRight ? mirrorRight.visible : "not found",
