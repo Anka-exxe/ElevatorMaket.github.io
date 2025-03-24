@@ -57,6 +57,7 @@ export function displayTemplates(templates) {
             patternCard.onclick = () => {
                 try {
                     localStorage.setItem('templateConfiguration', JSON.stringify(template.configuration)); // Сохраняем конфигурацию как строку
+                    localStorage.setItem('templateId', JSON.stringify(template.id));
                     console.log(template.configuration);
                     window.location.href = 'configurator.html';
 

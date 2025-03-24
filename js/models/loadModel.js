@@ -9,6 +9,8 @@ import * as Visibility from "./setVisibilityManager.js";
 import * as Element from "./elementNames.js";
 import {setAllParameters} from 
     "../shareConfiguration/allParams.js";
+    import {setDesignProject} from 
+    "../shareConfiguration/mainParams.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -219,6 +221,7 @@ function init() {
                         document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
                         document.getElementById('configurator-container').style.visibility = 'visible'; 
                        console.log("Hi");
+
                 },
                 undefined,
                 (error) => {
@@ -241,10 +244,19 @@ function init() {
 
 async function loadConfiguration() {
 const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
+const templateId = JSON.parse(localStorage.getItem('templateId'));
 
 if (templateConfiguration) {
     console.log(JSON.parse(templateConfiguration));
-    await setAllParameters(JSON.parse(templateConfiguration));
+    try {
+        await setAllParameters(JSON.parse(templateConfiguration));
+    } catch (error) {
+        console.error('Ошибка при установке параметров:', error);
+        alert('Произошла ошибка при загрузке параметров.');
+        window.location.href = `index.html`;
+    }
+
+    setDesignProject(templateId);
 } else {
     window.location.href = `index.html`;
 }
@@ -282,6 +294,9 @@ const buttonView3D = document.getElementById('view3d');
 const buttonViewFront = document.getElementById('viewFront');
 const buttonViewUp = document.getElementById('viewUp');
 const buttonViewInside = document.getElementById('viewInside');
+const buttonHallViewInside = document.getElementById('hallViewInside');
+const buttonDoorOpen = document.getElementById('doorsOpen');
+const buttonDoorClose = document.getElementById('doorsClose');
 
 buttonView3D.onclick = function() {
     animateButton(buttonView3D);
@@ -331,3 +346,63 @@ buttonViewInside.onclick = function() {
     checkFrontVisibilityAndSet();
 };
 
+buttonHallViewInside.onclick = function() {
+    animateButton(buttonViewInside);
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1); 
+    controls.enableZoom = true;
+    controls.enableRotate = true;
+    controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
+    controls.maxDistance = GetExtremeZPoint() / 2 - 10;
+    controls.update(); 
+    checkCeilingVisibilityAndSet();
+    checkFrontVisibilityAndSet();
+};
+
+buttonDoorOpen.onclick = function() {
+
+}
+
+export async function loadHall() {
+    document.getElementById('loading').style.display = 'block'; // Скрыть индикатор загрузки
+    document.getElementById('configurator-container').style.visibility = 'hidden'; 
+
+    const fbxLoader = new FBXLoader();
+fbxLoader.load(
+    './hallModels/hallModel.fbx',
+    async (object) => {
+        object.position.set(0, 0, 0);
+        object.scale.set(0.4, 0.4, 0.4);
+        scene.add(object);
+        model = object;
+        window.hallModel = model;
+
+        object.traverse((child) => {
+            if (child.isMesh) {
+                child.geometry.computeVertexNormals(); // Пересчитать нормали
+            }
+        });
+
+        animate();
+
+        document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+        document.getElementById('configurator-container').style.visibility = 'visible'; 
+
+        camera.position.set(0, GetExtremeYPoint() / 2, 100);
+        
+        controls.target.set(0, GetExtremeYPoint() / 2, 200);
+        controls.maxDistance = 300;
+    },
+    undefined,
+    (error) => {
+        console.error('Ошибка загрузки FBX модели:', error);
+    }
+);
+}
+
+
+function animate() {
+    requestAnimationFrame(animate); // Запрашиваем следующий кадр анимации
+
+    renderer.render(scene, camera); // Рендерим сцену
+
+}

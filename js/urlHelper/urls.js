@@ -12,9 +12,10 @@ const host = "http://localhost:8090/api/v1/";
 
 export const urlTemplateGetIconsByType = `${host}icons/{}?page=0&size=100`;
 export const urlTemplateGetTextureByIconId = `${host}textures/icon/{}`;
-export const urlTemplateGetWordFile = `${host}documents/configurations/elevator`;
+export const urlTemplateGetWordFile = `${host}elevators/documents`;
 export const urlTemplateGetDesignProjects = `${host}design-projects?page=0&size=100`;
 export const urlTemplateGetPatternsByDesignProjectId = `${host}design-projects/{}/templates?page=0&size=40`;
+export const urlTemplateSendFile = `${host}elevators/documents/email?email={}`;
 
 export function getUrl(urlTemplate, parameter) {
     return urlTemplate.replace('{}', parameter);

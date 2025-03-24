@@ -15,7 +15,7 @@
     </script>
 </head>
 <body>
-    <div id="configurator-container" class="configurator-container">
+    <div id="configurator-container" class="configurator-container"">
         <div id="elevator-container" class="configurator-container__elevator-container elevator-container"> 
             <header class="elevator-container__header">
                 <div class="elevator-container__logo logo">
@@ -30,12 +30,24 @@
             <footer class="elevator-container__footer">
                 <button class="elevator-container__right-arrow-button right-arrow-button"></button>
                 
-                <div class="elevator-container__options-menu">
-                    <form class="elevator-container__form-container--transparent form-container--transparent">
+                <div id="elevatorBtns" class="elevator-container__options-menu">
+                    <form id="elevatorViewForm" class="elevator-container__form-container--transparent form-container--transparent">
                         <button id="view3d" class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Вид 3D</button>
                         <button id="viewFront"  class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Спереди</button>
                         <button id="viewUp" class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Сверху</button>
                         <button id="viewInside" class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Внутри</button>
+                    </form>
+                </div>
+
+                <div id="hallBtns" class="elevator-container__options-menu">
+                    <form id="hallViewForm" class="elevator-container__form-container--transparent form-container--transparent">
+                        <button id="hallView3d" class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Вид 3D</button>
+                        <button id="hallViewInside"  class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Внутри</button>
+                    </form>
+
+                    <form id="doorViewForm" class="elevator-container__form-container--transparent form-container--transparent">
+                        <button id="doorsOpen" class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Двери открыты</button>
+                        <button id="doorsClose"  class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Двери закрыты</button>
                     </form>
                 </div>
             </footer>
@@ -430,12 +442,79 @@
 
                 <div class="menu-container__options-menu-container-main">
                     <h3 class="additional-title">
-                        Холл:
+                        Лифтовой холл:
                     </h3>
 
-                    <div class="textures-container" name="bumperTextures">
-
+                    <div class="menu-container__form form-container--radio">
+                        <h3 class="form-container--radio__title">Цвет:</h3>
+                        <form class="form-container--radio__form form">
+                        <div class="colorPicker-container">
+                            <div class="color-picker" id="colorPickerWalls"></div>
+                            <input type="color" id="colorInputWalls" value="#ff0000">
+                            <p class="color-picker-text">Стены</p>
+                        </div>
+                    
+                        <div class="colorPicker-container">
+                            <div class="color-picker" id="colorPickerFloor"></div>
+                            <input type="color" id="colorInputFloor" value="#ff0000">
+                            <p class="color-picker-text">Пол</p>
+                        </div>
                     </div>
+                </form>
+
+                <hr class="menu-container_hr">
+
+                <div class="menu-container__form form-container--radio">
+                    <h3 class="form-container--radio__title">Обрамления у дверей:</h3>
+                    <form class="form-container--radio__form form">
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="availability_portal" class="form__form-element" value="have_portal" id="have_portal" checked>
+                            <label class="form_form-label" for="have_portal">Есть</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="availability_portal" class="form__form-element" value="no_portal" id="no_portal">
+                            <label class="form_form-label" for="no_portal">Нет</label>
+                        </div>
+                    </form>
+                </div>
+
+                <hr class="menu-container_hr">
+
+                <h3 class="additional-title">
+                    Материал обрамления:
+                </h3>
+
+                <div class="textures-container" name="portalTextures">
+                </div>
+
+                <hr class="menu-container_hr--textures">
+
+                <h3 class="additional-title">
+                    Материал дверей:
+                </h3>
+
+                <div class="textures-container" name="wallHallTextures">
+                </div>
+
+                <hr class="menu-container_hr--textures">
+
+                <h3 class="additional-title">
+                    Вызывные посты:
+                </h3>
+
+                <div class="textures-container" name="callPostsTextures">
+                </div>
+
+                <hr class="menu-container_hr--textures">
+
+                <h3 class="additional-title">
+                    Табло индикации:
+                </h3>
+
+                <div class="textures-container" name="indicatorBoardTextures">
+                </div>
+
+
                 </div>
             </div>
         </div>
@@ -466,6 +545,18 @@
         </div>
         </div>
     </div>
+    <div id="emailModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" id="closeModal">&times;</span>
+            <h2>Опросный лист будет выслан на Email</h2>
+            <input class="emailInput" type="email" id="emailInput" placeholder="Введите Email" required>
+
+            <div class="modal__footer">
+                <button id="confirmEmail" class="modal-button">Отправить</button>
+                <button id="cancelEmail" class="modal-button">Закрыть</button>
+            </div>
+        </div>
+    </div>
 
     <div id="loading">
         <div class="spinner"></div>
@@ -473,6 +564,7 @@
     </div>
 
     <script src="./js/animation/buttonFunctions.js"></script>
+    <script src="./js/animation/colorpicker.js"></script>
 
     <script type="module" src="./js/models/loadModel.js"></script>
     <script type="module" src="./js/animation/tabFunctions.js"></script>

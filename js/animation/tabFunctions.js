@@ -1,5 +1,7 @@
 import {handleTextureClick} from "../models/textureManager.js";
 import * as TextureStorage from "../textureService/textureStorage.js";
+import {loadHall} from "../models/loadModel.js";
+
 export let isImagesShowed = false;
 
 const tabImageMap = new Map([
@@ -54,6 +56,22 @@ export async function showTab(tabId) {
     const activeIcon = document.getElementById(iconId);
     if (activeIcon) {
         activeIcon.classList.add('active');
+    }
+
+    if(tabId === 'HallParametrsTab') {
+        const elevatorBtns = document.getElementById("elevatorBtns");
+        const hallBtns = document.getElementById("hallBtns");
+        loadHall();
+
+        elevatorBtns.style.display = "none";
+        hallBtns.style.display = "flex";
+    } else {
+        const elevatorBtns = document.getElementById("elevatorBtns");
+        const hallBtns = document.getElementById("hallBtns");
+
+
+        elevatorBtns.style.display = "flex";
+        hallBtns.style.display = "none";
     }
 }
 

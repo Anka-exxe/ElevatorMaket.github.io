@@ -16,7 +16,7 @@ import {getHandrailParams,
     setHandrailParamsActive} from './handrailParams.js';
 import {getAllBumperTextures,
     setActiveBumperParameters} from './otherParams.js';
-
+import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
 import {showTab} from "../animation/tabFunctions.js";
 
 
@@ -64,6 +64,10 @@ export function saveParametersToFile() {
 
 export function setAllParameters(parameters) {
     if (parameters && typeof parameters === 'object') {
+        if(!isImagesShowed) {
+            loadImagesForAllTabs();
+        }
+
         setMainActiveSelections(parameters.cabin); 
         setActiveWallParameters(parameters.wall);
         setDoorTextureActive(parameters.doors);

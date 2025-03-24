@@ -11,6 +11,7 @@ import {setAllParameters,
     getAllParameters} from 
     "../shareConfiguration/allParams.js";
 import {fetchTemplateById} from "../designProjectService/designProjectStorage.js";
+import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -183,7 +184,7 @@ function init() {
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
                 './liftModels/Model1Final.fbx',
-                (object) => {
+                async (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
                     model = object;
@@ -216,8 +217,8 @@ function init() {
                             if (child.isMesh) {
                             }
                         });}
-
-                        loadConfiguration();
+console.log("load conf");
+                        await loadConfiguration();
 
                         document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
                         document.getElementById('configurator-container').style.visibility = 'visible'; 
@@ -243,13 +244,17 @@ export let templateId;
 
 async function loadConfiguration() {
     const urlParams = new URLSearchParams(window.location.search);
-    const designProjectId = urlParams.get('designProject'); // Получаем ID проекта
-    const templateId = urlParams.get('templateId'); // Получаем ID шаблона
+    const templateId = urlParams.get('designProject'); // Получаем ID проекта
+    console.log("templateId" + templateId);
+
+    if(!isImagesShowed) {
+        await loadImagesForAllTabs();
+    }
 
     if (templateId) {
         try {
             const template = await fetchTemplateById(templateId); // Ожидаем результат
-
+            console.log(template);
             if (!template) {
                 throw new Error('Template not found');
             }
@@ -261,7 +266,7 @@ async function loadConfiguration() {
                 preview.innerHTML = `<img src="${template.previewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`;
             }
 
-            setAllParameters(JSON.parse(template.configuration));
+            setAllParameters(template.configuration);
         } catch (error) {
             alert('Ошибка при загрузке шаблона: ' + error.message); // Уведомляем пользователя об ошибке
         }

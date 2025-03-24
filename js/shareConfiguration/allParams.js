@@ -19,7 +19,9 @@ import {getAllBumperTextures,
 
 import {showTab} from "../animation/tabFunctions.js";
 import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
-import {urlTemplateGetWordFile} from "../urlHelper/urls.js"
+import {urlTemplateGetWordFile, 
+    urlTemplateSendFile,
+getUrl} from "../urlHelper/urls.js"
 
 const allParameters = {
     cabin: null,
@@ -140,13 +142,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+/*document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('questionNaireBtn');
     saveButton.addEventListener('click', () => {
-        getWordFileFromServer();
+        SendFile();
     });
+});*/
+
+document.getElementById('questionNaireBtn').addEventListener('click', function() {
+    document.getElementById('emailModal').style.display = 'block';
+    document.getElementById('emailInput').value = ''; // Очистка поля для нового проекта
 });
 
+// Закрытие модального окна
+document.getElementById('closeModal').addEventListener('click', function() {
+    document.getElementById('emailModal').style.display = 'none';
+});
+
+document.getElementById('cancelEmail').addEventListener('click', function() {
+    document.getElementById('emailModal').style.display = 'none';
+});
+
+document.getElementById('confirmEmail').addEventListener('click', async function() {
+    const email = document.getElementById('emailInput').value;
+    if (email) {
+        SendFile(email);
+        document.getElementById('emailModal').style.display = 'none';
+    } else {
+        alert('Пожалуйста, введите почту');
+    }
+});
 
 async function getWordFileFromServer() {
     getAllParameters();
@@ -181,6 +206,32 @@ async function getWordFileFromServer() {
         // Удаляем элемент <a>
         a.remove();
         window.URL.revokeObjectURL(url); // Освобождаем память
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+async function SendFile(email) {
+    // Предполагаем, что getAllParameters возвращает или инициализирует allParameters
+    getAllParameters(); // Убедитесь, что allParameters инициализирован
+
+    try {
+        const response = await fetch(getUrl(urlTemplateSendFile, email), {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(allParameters)
+        });
+
+        // Проверка статуса ответа
+        if (!response.ok) {
+            alert("Произошла ошибка"); // Теперь это будет выполнено
+            throw new Error('Network response was not ok');
+        } else {
+            alert("Опросный лист отправлен");
+        }
+
     } catch (error) {
         console.error('Error:', error);
     }

@@ -10,7 +10,7 @@ export function getMainSelectedParameters() {
         size: getCabinSizeParam(),
         type: getCabinTypeParam(),
         openingType: getOpeningTypeParam(),
-        designProject: getDesignProjectParam()
+        designProjectGroup: getDesignProjectParam()
     };
 
     //console.log(selectedParameters);
@@ -37,7 +37,7 @@ export function setMainActiveSelections(selectedParameters) {
     setActiveButtonByFormName('cabinSizeForm', selectedParameters.size);
     setActiveRadioByInputName("cabin_type", selectedParameters.type);
     setActiveRadioByInputName("opening_type", selectedParameters.openingType);
-    setButtonActiveById(selectedParameters.designProject);
+    setButtonActiveById(selectedParameters.designProjectGroup);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {

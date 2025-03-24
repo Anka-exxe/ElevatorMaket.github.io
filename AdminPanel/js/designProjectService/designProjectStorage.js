@@ -52,6 +52,7 @@ export async function fetchTemplates(projectId) {
 
 export async function fetchTemplateById(templateId) {
     const url = getUrl(urlGetTemplateById, templateId); // Формируем URL с ID шаблона
+    console.log('Fetching template from URL:', url); // Логируем URL
 
     try {
         const response = await fetch(url);
@@ -60,10 +61,22 @@ export async function fetchTemplateById(templateId) {
         }
 
         const data = await response.json();
-        if (!data.content) {
-            throw new Error('Template data is undefined');
+        console.log('Data received from server:', data); // Логируем данные
+
+        // Проверяем, что полученные данные содержат необходимые поля
+        if (!data.id || !data.name || !data.configuration) {
+            throw new Error('Template data is incomplete or undefined');
         }
-        return data.content; // Возвращаем информацию о шаблоне
+
+        // Если configuration — это строка, нужно ее распарсить
+        const configuration = JSON.parse(data.configuration);
+
+        return {
+            id: data.id,
+            name: data.name,
+            configuration: configuration,
+            previewImageUrl: data.previewImageUrl
+        }; // Возвращаем нужные данные
     } catch (error) {
         console.error('Error fetching template by ID:', error);
         throw error; // Пробрасываем ошибку дальше для обработки

@@ -55,11 +55,6 @@ export function showTab(tabId) {
     if (activeIcon) {
         activeIcon.classList.add('active');
     }
-
-    if(!isImagesShowed) {
-        loadImagesForAllTabs();
-        isImagesShowed = true;
-    }
 }
 
 export function getCategoryByTabId(tabId) {
