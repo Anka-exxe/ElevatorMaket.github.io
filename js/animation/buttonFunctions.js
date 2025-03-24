@@ -1,4 +1,3 @@
- 
  function selectWall(button) {
     selectParameterButton(button);
 }

@@ -180,7 +180,7 @@ function init() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/Model1Final.fbx',
+                './liftModels/Model1.fbx',
                 async (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
