@@ -23,6 +23,12 @@ export function getButtonParamByFormName(formName) {
 
 export function setActiveRadioByInputName(inputName, radioId) {
     const radios = document.querySelectorAll(`input[name="${inputName}"]`);
+
+    if(!radios) {
+        console.error(' radios not found.');
+        throw new Error('radios  not found.');
+    }
+
     radios.forEach(radio => {
         if (radio.id === radioId) {
             radio.click(); 
@@ -82,6 +88,11 @@ export async function setActiveTextureWithAllWalls(tabName, formName, textureCon
 
         button.classList.remove('active');
     });
+
+    const button = form.querySelector(`button[data-target=all]`);
+        if (button) {
+            button.classList.add('active');
+        }
 }
 
 export async function setActiveTextureByContainerName(tabName, textureContainerName, textureId) {
@@ -90,6 +101,8 @@ export async function setActiveTextureByContainerName(tabName, textureContainerN
     const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
     if (!texturesContainer) {
         console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+       
         return;
     }
 

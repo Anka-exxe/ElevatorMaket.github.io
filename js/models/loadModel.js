@@ -64,7 +64,7 @@ function init() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight.position.set(0, 60, 100);
     directionalLight.target.position.set(0, 30, 0);
     scene.add(directionalLight);
@@ -72,7 +72,7 @@ function init() {
      //let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
      //scene.add(directionalLightHelper);
 
-    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight1.position.set(100, 60, 0);
     directionalLight1.target.position.set(0, 30, 0);
     scene.add(directionalLight1);
@@ -80,7 +80,7 @@ function init() {
      //let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
      //scene.add(directionalLightHelper1);
 
-    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight2.position.set(-100, 60, 0);
     directionalLight2.target.position.set(0, 30, 0);
     scene.add(directionalLight2);
@@ -88,7 +88,7 @@ function init() {
      //let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
      //scene.add(directionalLightHelper2);
 
-    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight3.position.set(0, 60, -100);
     directionalLight3.target.position.set(0, 30, 0);
     scene.add(directionalLight3);
@@ -188,9 +188,7 @@ function init() {
                   // applyTextures();
                     DefaultSettings()
                     animate();
-
                   
-
                     /*let pointLight = new THREE.PointLight(0xffffff, 50, 80);
                     pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
                     scene.add(pointLight);
@@ -217,8 +215,7 @@ function init() {
 
                         document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
                         document.getElementById('configurator-container').style.visibility = 'visible'; 
-                       console.log("Hi");
-
+                        console.log("Hi");
                 },
                 undefined,
                 (error) => {
@@ -228,8 +225,6 @@ function init() {
         }
     );
 
-    camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2);
-
     window.addEventListener('resize', () => {
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
@@ -237,9 +232,11 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     });
+    controls.target.set(0, 50, 0);
+    camera.position.set(maxDistance - 2, 40, maxDistance - 2);
+    controls.update(); 
+    renderer.render(scene, camera);
 }
-
-
 
 async function loadConfiguration() {
 const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
@@ -432,9 +429,9 @@ export async function loadHall() {
         scene.add(pointLight);
     }
 
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 500);
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 300);
         
-    controls.target.set(0, GetExtremeYPoint() / 2, 200);
+    controls.target.set(0, GetExtremeYPoint() / 2, 210);
     controls.minPolarAngle = Math.PI / 4; // Минимальный угол по вертикали (в радианах)
     controls.maxPolarAngle = Math.PI / 1.7; // Максимальный угол по вертикали (в радианах)
     controls.minAzimuthAngle = -Math.PI / 2; // Минимальный угол по горизонтали (в радианах)

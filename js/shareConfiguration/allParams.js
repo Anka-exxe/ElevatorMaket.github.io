@@ -25,6 +25,8 @@ getUrl} from "../urlHelper/urls.js"
 
 import {GetImage} from "../models/loadModel.js";
 
+import {isDesignProjectsLoaded, populateForm} from "../animation/designProjectAnimation.js";
+
 const allParameters = {
     cabin: null,
     wall: null,
@@ -66,14 +68,18 @@ export function saveParametersToFile() {
 }
 
 export async function setAllParameters(parameters) {
-    console.log(parameters);
+    console.log(parameters); // Логирование параметров
+    
     if (parameters && typeof parameters === 'object') {
-        if(!isImagesShowed) {
-            await loadImagesForAllTabs();
+        if (!isImagesShowed) {
+            await loadImagesForAllTabs(); // Загружаем изображения только если они еще не загружены
+        }
+        if (!isDesignProjectsLoaded) {
+            await populateForm(); 
         }
 
+        // Настройка параметров для разных компонентов
         await setMainActiveSelections(parameters.cabin); 
-
         await setDoorTextureActive(parameters.doors);
         await setCeilingParamsActive(parameters.ceiling);
         await setFloorTextureActive(parameters.floor);
@@ -83,19 +89,15 @@ export async function setAllParameters(parameters) {
         await setActiveBumperParameters(parameters.bumpers);
         await setActiveWallParameters(parameters.wall);
 
-        //showTab('MainParametersTab');
-
+        // Проверка на существование элемента для имитации клика
         const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
-
-        // Проверка на существование элемента
         if (mainTabMenuTitle) {
-            // Имитируем клик
-            mainTabMenuTitle.click();
+            mainTabMenuTitle.click(); // Имитируем клик
         } else {
             console.error('Элемент с ID "MainTabMenuTitle" не найден.');
         }
-        
-        console.log('Параметры установлены:', allParameters);
+
+        console.log('Параметры установлены:', parameters); // Логируем установленные параметры
     } else {
         console.error('Неверный тип параметров. Ожидался объект.');
     }

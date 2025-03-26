@@ -7,7 +7,7 @@ import { showTab } from "./tabFunctions.js";
 import {setAllParameters} from "../shareConfiguration/allParams.js";
  
 let activeProjectId = null;
-let isDesignProjectsLoaded = false;
+export let isDesignProjectsLoaded = false;
 
 function selectDesignProjectButton(button) {
     selectParameterButton(button);
@@ -70,7 +70,7 @@ function displayTemplates(templates) {
     templatesList.appendChild(patternGrid);
 }
 
-async function populateForm() {
+export async function populateForm() {
     const projects = await fetchDesignProjects();
     const form = document.forms['designForm']; // Получаем форму по имени
 
@@ -85,6 +85,8 @@ async function populateForm() {
 
             // Добавляем кнопку в форму
             form.appendChild(button);
+
+            isDesignProjectsLoaded = true;
         });
     } else {
         console.log('Нет доступных групп дизайн проектов');
@@ -99,5 +101,3 @@ function selectParameterButton(button) {
     });
     button.classList.add('active'); 
 }
-
-document.addEventListener('DOMContentLoaded', populateForm);

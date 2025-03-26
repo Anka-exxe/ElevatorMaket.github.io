@@ -44,6 +44,7 @@ body {
     flex-direction: row;
     justify-content: stretch;
     align-items: stretch;
+    visibility: hidden;
     
     /* Добавляем масштаб */
     transform: scale(0.8);
@@ -243,11 +244,9 @@ body {
     margin-left: 10px;
     display: grid;
     justify-items: center;
-    column-gap: 5px;
-    row-gap: 10px;
+    gap: 10px; /* Создание одинаковых отступов между ячейками */
     grid-template-columns: repeat(10, auto);
-    grid-template-rows: repeat(2, 1fr);
-    grid-template-rows: minmax(50px, 1fr) minmax(50px, 1fr);
+    grid-template-rows: minmax(50px, 1fr) minmax(50px, 1fr); /* Одно определение для строк */
 }
 
 .menu-container__navigation--with-animation::-webkit-scrollbar {
