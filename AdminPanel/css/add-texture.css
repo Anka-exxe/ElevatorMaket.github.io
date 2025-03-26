@@ -2,7 +2,7 @@
 /*@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');*/
 
 :root {
-    --primary-color: #00406C; 
+    --primary-color: #00406C;
 }
 
 @font-face {
@@ -96,7 +96,8 @@ fieldset {
     border-radius: 4px;
 }
 
-legend, summary {
+legend,
+summary {
     cursor: pointer;
     margin-bottom: 10px;
     font-weight: 600;
