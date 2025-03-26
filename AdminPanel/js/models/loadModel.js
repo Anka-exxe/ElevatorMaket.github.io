@@ -62,7 +62,7 @@ function init() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight.position.set(0, 60, 100);
     directionalLight.target.position.set(0, 30, 0);
     scene.add(directionalLight);
@@ -70,7 +70,7 @@ function init() {
      //let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
      //scene.add(directionalLightHelper);
 
-    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
+    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight1.position.set(100, 60, 0);
     directionalLight1.target.position.set(0, 30, 0);
     scene.add(directionalLight1);
@@ -78,7 +78,7 @@ function init() {
      //let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
      //scene.add(directionalLightHelper1);
 
-    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
+    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight2.position.set(-100, 60, 0);
     directionalLight2.target.position.set(0, 30, 0);
     scene.add(directionalLight2);
@@ -86,7 +86,7 @@ function init() {
      //let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
      //scene.add(directionalLightHelper2);
 
-    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
+    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight3.position.set(0, 60, -100);
     directionalLight3.target.position.set(0, 30, 0);
     scene.add(directionalLight3);

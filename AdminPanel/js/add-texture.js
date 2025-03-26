@@ -1,12 +1,11 @@
 ﻿import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 
-
-// Предполагается, что textureId уже получен из URL
+// Получаем параметр id из URL – если он присутствует, находимся в режиме редактирования
 const urlParams = new URLSearchParams(window.location.search);
 const textureId = urlParams.get('id');
 
-// Если мы в режиме редактирования, назначаем обработчик для кнопки "Изменить название"
+// Если в режиме редактирования – добавляем обработчик для изменения только имени текстуры
 if (textureId) {
     document.getElementById('changeNameBtn').addEventListener('click', () => {
         const name = document.getElementById('name').value.trim();
@@ -14,25 +13,18 @@ if (textureId) {
             alert("Введите новое название текстуры");
             return;
         }
-        // Отправляем запрос на изменение названия текстуры
         fetch(`http://localhost:8090/api/v1/textures/${textureId}/name`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name: name })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`Ошибка ${response.status}: ${text}`);
-                    });
+                    return response.text().then(text => { throw new Error(`Ошибка ${response.status}: ${text}`); });
                 }
                 return response.json();
             })
-            .then(data => {
-                alert('Название текстуры успешно изменено!');
-            })
+            .then(() => alert('Название текстуры успешно изменено!'))
             .catch(err => {
                 console.error("Ошибка при изменении названия текстуры", err);
                 alert("Ошибка при изменении названия текстуры");
@@ -40,11 +32,11 @@ if (textureId) {
     });
 }
 
-// Глобальные объекты для хранения старых URL (или файлов) и флагов удаления
+// Глобальные объекты для хранения старых URL (при редактировании) и флагов удаления
 let oldMapValues = {};
-let removeFlags = {};  // например, { baseTexture: true, metalnessMap: true, ... }
+let removeFlags = {}; // Например: { baseTexture: true, metalnessMap: true, ... }
 
-// Маппинг для флагов удаления: для поля baseTexture флаг называется removeBaseTexture и т.д.
+// Маппинг для флагов удаления (ключи совпадают с именами, используемыми на сервере)
 const removeMapping = {
     baseTexture: "removeBaseTexture",
     alphaMap: "removeAlphaMap",
@@ -53,11 +45,12 @@ const removeMapping = {
     metalnessMap: "removeMetalnessMap",
     roughnessMap: "removeRoughnessMap",
     aoMap: "removeAoMap",
-    displacementMap: "removeDisplacementMap"
+    displacementMap: "removeDisplacementMap",
+    icon: "removeIcon"
 };
 
 (function() {
-    // Создаем сцену предпросмотра
+    // Создаем сцену предпросмотра через Three.js
     const previewContainer = document.getElementById('preview');
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xf0f0f0);
@@ -74,15 +67,12 @@ const removeMapping = {
     renderer.setSize(previewContainer.clientWidth, previewContainer.clientHeight);
     previewContainer.appendChild(renderer.domElement);
 
-    // Настройка OrbitControls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enableZoom = true;
 
-    // Источники света
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(5, 5, 5);
     scene.add(directionalLight);
@@ -90,7 +80,6 @@ const removeMapping = {
     topLight.position.set(0, 10, 0);
     scene.add(topLight);
 
-    // Создаем материал и базовую геометрию
     let material = new THREE.MeshStandardMaterial({ color: 0xffffff });
     let geometry = new THREE.BoxGeometry(1, 1, 1);
     let mesh = new THREE.Mesh(geometry, material);
@@ -103,7 +92,7 @@ const removeMapping = {
     }
     animate();
 
-    // Функция обновления превью картинки для конкретного поля
+    // Функция обновления предпросмотра файла для конкретного поля
     function updateFilePreview(inputId, url) {
         const previewDiv = document.getElementById("preview-" + inputId);
         if (previewDiv) {
@@ -111,14 +100,13 @@ const removeMapping = {
         }
     }
 
-    // Функция обновления текстуры материала по файловому input.
-    // После загрузки файла вызывается updateFilePreview и сохраняется URL в oldMapValues.
+    // Функция обновления текстуры материала по файловому input
     function updateMaterialMap(inputId, mapType, oldKey) {
         const input = document.getElementById(inputId);
         if (input.files && input.files[0]) {
-            // Если пользователь выбирает новый файл, сбрасываем флаг удаления
-            removeFlags[oldKey] = false;
+            removeFlags[oldKey] = false; // сбрасываем флаг удаления
             const file = input.files[0];
+            // Для предпросмотра создаем URL объекта
             const url = URL.createObjectURL(file);
             const loader = new THREE.TextureLoader();
             loader.load(url, (texture) => {
@@ -151,7 +139,8 @@ const removeMapping = {
                     case 'bumpMap':
                         material.bumpMap = texture;
                         break;
-                    case 'icon': // Для иконки обновляем только превью
+                    case 'icon':
+                        // Для иконки обновляем только превью
                         break;
                     default:
                         break;
@@ -165,7 +154,7 @@ const removeMapping = {
         }
     }
 
-    // Массив файловых инпутов с типами и ключами (oldKey соответствует ключу, который используется в oldMapValues и на сервере)
+    // Массив файловых инпутов с типами и ключами (oldKey – ключ для хранения старого URL)
     const fileInputs = [
         { id: 'icon.icon', type: 'icon', oldKey: 'icon' },
         { id: 'baseTexture', type: 'baseTexture', oldKey: 'baseTexture' },
@@ -278,7 +267,6 @@ const removeMapping = {
             if (mapKey) {
                 material.needsUpdate = true;
                 oldMapValues[mapKey] = null;
-                // Устанавливаем флаг удаления для этого поля
                 removeFlags[mapKey] = true;
             }
             const previewDiv = document.getElementById("preview-" + targetId);
@@ -286,15 +274,10 @@ const removeMapping = {
         });
     });
 
-    // Режим редактирования: если есть параметр id в URL, заполняем форму и сохраняем старые URL в oldMapValues
-    const urlParams = new URLSearchParams(window.location.search);
-    const textureId = urlParams.get('id');
-    const pageTitle = document.getElementById('pageTitle');
-    const submitButton = document.querySelector('button[type="submit"]');
-
+    // Режим редактирования: если textureId присутствует, заполняем форму и сохраняем старые URL
     if (textureId) {
-        pageTitle.textContent = "Редактирование текстуры";
-        submitButton.textContent = "Сохранить изменения";
+        document.getElementById('pageTitle').textContent = "Редактирование текстуры";
+        document.querySelector('button[type="submit"]').textContent = "Сохранить изменения";
         // Для иконки убираем обязательность
         document.getElementById('icon.icon').removeAttribute('required');
         fetch(`http://localhost:8090/api/v1/textures/${textureId}`)
@@ -310,17 +293,28 @@ const removeMapping = {
                 document.getElementById('metalness').value = data.properties.metalness;
                 document.getElementById('roughness').value = data.properties.roughness;
                 document.getElementById('emissiveIntensity').value = data.properties.emissiveIntensity;
-                document.getElementById('icon.type').value = data.icon.type;
-                document.getElementById('icon.name').value = data.icon.name;
+                // Заполняем multi-select для icon.type, устанавливая выбранные опции по булевым флагам
+                if (data.icon) {
+                    const iconSelect = document.getElementById('icon.type');
+                    Array.from(iconSelect.options).forEach(option => option.selected = false);
+                    if (data.icon.isDoor) iconSelect.querySelector('option[value="DOOR"]').selected = true;
+                    if (data.icon.isWall) iconSelect.querySelector('option[value="WALL"]').selected = true;
+                    if (data.icon.isFloor) iconSelect.querySelector('option[value="FLOOR"]').selected = true;
+                    if (data.icon.isCeilingMaterial) iconSelect.querySelector('option[value="CEILING_MATERIAL"]').selected = true;
+                    if (data.icon.isCeiling) iconSelect.querySelector('option[value="CEILING"]').selected = true;
+                    if (data.icon.isControlPanel) iconSelect.querySelector('option[value="CONTROL_PANEL"]').selected = true;
+                    if (data.icon.isIndicationBoard) iconSelect.querySelector('option[value="INDICATION_BOARD"]').selected = true;
+                    if (data.icon.isHandrail) iconSelect.querySelector('option[value="HANDRAIL"]').selected = true;
+                    if (data.icon.isBumper) iconSelect.querySelector('option[value="BUMPER"]').selected = true;
+                    document.getElementById('icon.name').value = data.icon.name;
+                }
                 if (data.baseColor) {
                     let baseColor = data.baseColor;
-                    if (!baseColor.startsWith("#")) {
-                        baseColor = "#" + baseColor;
-                    }
+                    if (!baseColor.startsWith("#")) baseColor = "#" + baseColor;
                     document.getElementById('baseColor').value = baseColor;
                     material.color = new THREE.Color(baseColor);
                 }
-                // Сохраняем старые URL для карт в oldMapValues, включая иконку
+                // Сохраняем старые URL для текстур и иконки
                 oldMapValues = {
                     baseTexture: data.baseTextureUrl,
                     aoMap: data.aoMapUrl,
@@ -330,10 +324,9 @@ const removeMapping = {
                     roughnessMap: data.roughnessMapUrl,
                     alphaMap: data.alphaMapUrl,
                     bumpMap: data.bumpMapUrl,
-                    icon: data.icon.icon  // URL для иконки
+                    icon: data.icon ? data.icon.icon : null
                 };
 
-                // Функция для загрузки текстуры и назначения свойству материала
                 function loadTexture(url, assignFn) {
                     new THREE.TextureLoader().load(url, (tex) => {
                         tex.needsUpdate = true;
@@ -342,7 +335,6 @@ const removeMapping = {
                     });
                 }
 
-                // Загружаем и применяем текстурные карты, если URL присутствует
                 if (oldMapValues.baseTexture) {
                     loadTexture(oldMapValues.baseTexture, (tex) => {
                         tex.encoding = THREE.sRGBEncoding;
@@ -382,7 +374,6 @@ const removeMapping = {
                     loadTexture(oldMapValues.bumpMap, (tex) => { material.bumpMap = tex; });
                     updateFilePreview('bumpMap', oldMapValues.bumpMap);
                 }
-                // Для иконки – обновляем только превью, материал не меняем
                 if (oldMapValues.icon) {
                     updateFilePreview('icon.icon', oldMapValues.icon);
                 }
@@ -393,18 +384,16 @@ const removeMapping = {
             });
     }
 
-
-    // Обработчик отправки формы – асинхронный, чтобы для опциональных полей, если новый файл не выбран, загрузить файл по старому URL,
-    // а если пользователь удалил файл (removeFlags установлен), добавить соответствующий флаг.
-    document.getElementById('textureForm').addEventListener('submit', async (e) => {
+    // Обработчик отправки формы – собираем данные формы и отправляем FormData
+    document.getElementById('textureForm').addEventListener('submit', (e) => {
         e.preventDefault();
-        const formData = new FormData(e.target);
 
-        // Для отладки: выводим все пары key/value
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
+        // Формируем FormData из формы
+        const form = document.getElementById('textureForm');
+        const formData = new FormData(form);
 
+        // Обработка пустых файловых полей: если файл не выбран,
+        // добавляем флаг удаления (если он установлен) и удаляем поле из FormData
         const optionalKeys = [
             'baseTexture',
             'aoMap',
@@ -418,35 +407,45 @@ const removeMapping = {
 
         for (const key of optionalKeys) {
             const file = formData.get(key);
-            // Если пользователь не выбрал новый файл (поле пустое)
             if (!file || (file instanceof File && file.size === 0)) {
-                // Если пользователь удалил файл – добавляем флаг удаления
                 if (removeFlags[key]) {
                     const flagName = removeMapping[key];
                     formData.append(flagName, "true");
                 }
-                // Если поле не заполнено, просто удаляем его – на сервере его отсутствие можно трактовать как null.
                 formData.delete(key);
             }
         }
+
+        // Обработка полей для иконки (булевы флаги принадлежности)
+        const iconSelect = document.getElementById('icon.type');
+        const selectedTypes = Array.from(iconSelect.selectedOptions).map(option => option.value);
+
+        formData.append('icon.isDoor', selectedTypes.includes('DOOR'));
+        formData.append('icon.isWall', selectedTypes.includes('WALL'));
+        formData.append('icon.isFloor', selectedTypes.includes('FLOOR'));
+        formData.append('icon.isCeiling', selectedTypes.includes('CEILING'));
+        formData.append('icon.isCeilingMaterial', selectedTypes.includes('CEILING_MATERIAL'));
+        formData.append('icon.isControlPanel', selectedTypes.includes('CONTROL_PANEL'));
+        formData.append('icon.isHandrail', selectedTypes.includes('HANDRAIL'));
+        formData.append('icon.isBumper', selectedTypes.includes('BUMPER'));
+        formData.append('icon.isIndicationBoard', selectedTypes.includes('INDICATION_BOARD'));
 
         const url = textureId
             ? `http://localhost:8090/api/v1/textures/${textureId}`
             : 'http://localhost:8090/api/v1/textures';
         const method = textureId ? 'PUT' : 'POST';
+
         fetch(url, {
             method: method,
             body: formData
         })
             .then(response => {
                 if (!response.ok) {
-                    return response.text().then(text => {
-                        throw new Error(`Ошибка ${response.status}: ${text}`);
-                    });
+                    return response.text().then(text => { throw new Error(`Ошибка ${response.status}: ${text}`); });
                 }
                 return response.json();
             })
-            .then(data => {
+            .then(() => {
                 alert(textureId ? 'Текстура успешно обновлена!' : 'Текстура успешно добавлена!');
             })
             .catch(err => {

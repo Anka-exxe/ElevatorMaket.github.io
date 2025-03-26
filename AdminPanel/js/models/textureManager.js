@@ -81,6 +81,11 @@ export function applyTextureToElement(model,
                 } else {
                     alphaMap.repeat.set(1, 1);
                 }
+
+                if (elementNamesArr.includes('Lamp')) {
+                    alphaMap.center = new THREE.Vector2(0.5, 0.5);
+                    alphaMap.rotation = Math.PI / 2;
+                }
             }
             if (bump) {
                 bump.wrapS = THREE.RepeatWrapping;
@@ -158,10 +163,14 @@ export function applyTextureToElement(model,
                         normalMap: normalMap,
                         roughnessMap: roughnessMap,
                         transparent: alphaMap ? true : false,
-                        metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
-                        roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
+                        metalness: (materialOptions.metalness !== undefined && materialOptions.metalness !== null && materialOptions.metalness !== "null")
+                            ? parseFloat(materialOptions.metalness)
+                            : 0.5,
+                        roughness: (materialOptions.roughness !== undefined && materialOptions.roughness !== null && materialOptions.roughness !== "null")
+                            ? parseFloat(materialOptions.roughness)
+                            : 0.8,
                         emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffee),
-                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? materialOptions.emissiveIntensity : 0
+                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? parseFloat(materialOptions.emissiveIntensity) : 0
                     });
                     newMaterial.needsUpdate = true;
                     child.material = newMaterial;

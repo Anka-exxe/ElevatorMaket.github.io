@@ -1,17 +1,4 @@
-﻿// Маппинг id вкладок к типам, используемым в API
-const tabTypeMapping = {
-    door: 'DOOR',
-    walls: 'WALL',
-    floor: 'FLOOR',
-    bumper: 'BUMPER',
-    ceilingPattern: 'CEILING',
-    ceiling: 'CEILING_MATERIAL',
-    controlPanel: 'CONTROL_PANEL',
-    indicationBoard: 'INDICATION_BOARD',
-    handrails: 'HANDRAIL'
-};
-
-document.getElementById('addTextureBtn').addEventListener('click', () => {
+﻿document.getElementById('addTextureBtn').addEventListener('click', () => {
     window.location.href = "add-texture.html";
 });
 
@@ -74,7 +61,19 @@ function showTextureModal(textureData, iconElement) {
     html += `<h3>Иконка</h3>`;
     if (textureData.icon) {
         html += `<p><strong>Название иконки:</strong> ${textureData.icon.name || 'Нет'}</p>`;
-        html += `<p><strong>Тип:</strong> ${textureData.icon.type || 'Нет'}</p>`;
+        // Вычисляем тип(ы) иконки по булевым полям
+        let iconTypes = [];
+        if (textureData.icon.isDoor) iconTypes.push('Door');
+        if (textureData.icon.isWall) iconTypes.push('Wall');
+        if (textureData.icon.isFloor) iconTypes.push('Floor');
+        if (textureData.icon.isCeiling) iconTypes.push('Ceiling');
+        if (textureData.icon.isCeilingMaterial) iconTypes.push('Ceiling Material');
+        if (textureData.icon.isControlPanel) iconTypes.push('Control Panel');
+        if (textureData.icon.isHandrail) iconTypes.push('Handrail');
+        if (textureData.icon.isBumper) iconTypes.push('Bumper');
+        if (textureData.icon.isIndicationBoard) iconTypes.push('Indication Board');
+        let iconTypesStr = iconTypes.join(', ') || 'Нет';
+        html += `<p><strong>Тип:</strong> ${iconTypesStr}</p>`;
         html += mapSection("Файл иконки", textureData.icon.icon);
     } else {
         html += `<p>Нет иконки</p>`;
@@ -83,7 +82,6 @@ function showTextureModal(textureData, iconElement) {
     detailsDiv.innerHTML = html;
     modal.style.display = 'block';
 }
-
 
 // Функция закрытия модального окна
 function closeModal() {
@@ -114,7 +112,6 @@ document.getElementById('deleteTextureBtn').addEventListener('click', () => {
             method: 'DELETE'
         })
             .then(response => {
-                // Если сервер возвращает 204 или 200, считаем операцию успешной
                 if (response.status === 200 || response.status === 204) {
                     return response;
                 } else {
@@ -123,7 +120,6 @@ document.getElementById('deleteTextureBtn').addEventListener('click', () => {
             })
             .then(() => {
                 alert('Текстура успешно удалена');
-                // Удаляем элемент иконки из UI
                 if (currentIconElement) {
                     currentIconElement.remove();
                 }
@@ -136,48 +132,69 @@ document.getElementById('deleteTextureBtn').addEventListener('click', () => {
     }
 });
 
+// Функция фильтрации иконок по типу (на основе булевых флагов)
+function iconMatchesTab(icon, tabId) {
+    switch(tabId) {
+        case 'door': return icon.isDoor;
+        case 'walls': return icon.isWall;
+        case 'floor': return icon.isFloor;
+        case 'bumper': return icon.isBumper;
+        case 'ceilingPattern': return icon.isCeiling;
+        case 'ceiling': return icon.isCeilingMaterial;
+        case 'controlPanel': return icon.isControlPanel;
+        case 'indicationBoard': return icon.isIndicationBoard;
+        case 'handrails': return icon.isHandrail;
+        default: return false;
+    }
+}
 
 // Функция загрузки иконок для заданного tabId
 function loadIconsForTab(tabId) {
     const tabElement = document.getElementById(tabId);
     if (tabElement.dataset.loaded === "true") return;
 
-    const apiType = tabTypeMapping[tabId];
     const grid = tabElement.querySelector('.texture-grid');
     grid.innerHTML = 'Загрузка...';
 
-    fetch(`http://localhost:8090/api/v1/icons/${apiType}?page=0&size=10`)
+    // Запрашиваем все иконки и затем фильтруем их по нужному флагу
+    fetch(`http://localhost:8090/api/v1/icons?page=0&size=100`)
         .then(response => response.json())
         .then(data => {
             grid.innerHTML = '';
             if (data.content && data.content.length > 0) {
-                data.content.forEach(icon => {
-                    const iconDiv = document.createElement('div');
-                    iconDiv.className = 'texture-item';
+                const filteredIcons = data.content.filter(icon => iconMatchesTab(icon, tabId));
 
-                    const img = document.createElement('img');
-                    img.src = icon.url;
-                    img.alt = icon.name;
-                    iconDiv.appendChild(img);
+                if (filteredIcons.length > 0) {
+                    filteredIcons.forEach(icon => {
+                        const iconDiv = document.createElement('div');
+                        iconDiv.className = 'texture-item';
 
-                    const p = document.createElement('p');
-                    p.textContent = icon.name;
-                    iconDiv.appendChild(p);
+                        const img = document.createElement('img');
+                        img.src = icon.url;
+                        img.alt = icon.name;
+                        iconDiv.appendChild(img);
 
-                    // При клике на иконку запрашиваем детали текстуры и отображаем модальное окно
-                    iconDiv.addEventListener('click', () => {
-                        fetch(`http://localhost:8090/api/v1/textures/icon/${icon.id}`)
-                            .then(response => response.json())
-                            .then(textureData => {
-                                showTextureModal(textureData, iconDiv);
-                            })
-                            .catch(err => {
-                                console.error('Ошибка загрузки деталей текстуры', err);
-                            });
+                        const p = document.createElement('p');
+                        p.textContent = icon.name;
+                        iconDiv.appendChild(p);
+
+                        // При клике на иконку загружаем детали текстуры и показываем модальное окно
+                        iconDiv.addEventListener('click', () => {
+                            fetch(`http://localhost:8090/api/v1/textures/icon/${icon.id}`)
+                                .then(response => response.json())
+                                .then(textureData => {
+                                    showTextureModal(textureData, iconDiv);
+                                })
+                                .catch(err => {
+                                    console.error('Ошибка загрузки деталей текстуры', err);
+                                });
+                        });
+
+                        grid.appendChild(iconDiv);
                     });
-
-                    grid.appendChild(iconDiv);
-                });
+                } else {
+                    grid.innerHTML = 'Нет иконок для отображения';
+                }
             } else {
                 grid.innerHTML = 'Нет иконок для отображения';
             }
@@ -194,19 +211,14 @@ document.querySelectorAll('.tab-link').forEach(button => {
     button.addEventListener('click', () => {
         const tabId = button.getAttribute('data-tab');
 
-        // Убираем активный класс у всех кнопок и блоков
         document.querySelectorAll('.tab-link').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
         button.classList.add('active');
         document.getElementById(tabId).classList.add('active');
 
-        // Загружаем иконки для выбранной вкладки, если они ещё не загружены
-
-        if(tabId != 'patterns') {
+        if(tabId !== 'patterns') {
             loadIconsForTab(tabId);
-        } else {
-            //alert("Hi");
         }
     });
 });
@@ -222,9 +234,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (activeTab) {
         const tabButton = document.querySelector(`.tab-link[data-tab="${activeTab}"]`);
         if (tabButton) {
-            tabButton.click(); // Симулируем клик на кнопке
+            tabButton.click();
         }
-        // Удаляем значение из localStorage, чтобы не возвращаться к этой вкладке при следующей загрузке
         localStorage.removeItem('activeTab');
     }
 });
