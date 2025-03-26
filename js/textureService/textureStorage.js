@@ -1,5 +1,8 @@
 import * as UrlHelper from "../urlHelper/urls.js";
 
+export let allTextures = null; 
+let iconsLoadedPromise = null;
+
 export const texturePattern = {
     "id": "",
     "icon": "",
@@ -61,80 +64,68 @@ const images = {
     }
 };
 
-export async function getWalls() {
-    if (images.isWallsEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.WALL);
-        images.walls.push(...texturePatterns);
+async function loadTextures(imageArray, filterFn) {
+    if (imageArray.length === 0) {
+        await getAllIcons(); // Ждём завершения загрузки иконок
+        console.log('All textures before filtering:', allTextures); // Лог всех текстур
+
+        const filteredTextures = allTextures.filter(filterFn);
+        console.log('Filtered textures:', filteredTextures); // Лог отфильтрованных текстур
+
+        imageArray.push(...filteredTextures);
+        console.log('Updated imageArray:', imageArray); // Лог обновлённого массива
     }
-    return images.walls;
+    return imageArray;
+}
+
+export async function getWalls() {
+    return await loadTextures(images.walls, texture => texture.isWall);
 }
 
 export async function getBumper() {
-    if (images.isBumperEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.BUMPER);
-        images.bumper.push(...texturePatterns);
-    }
-    return images.bumper;
+    return await loadTextures(images.bumper, texture => texture.isBumper);
 }
 
 export async function getCeilingPlafon() {
-    if (images.isCeilingPlafonEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.CEILING);
-        images.ceilingPlafon.push(...texturePatterns);
-    }
-    return images.ceilingPlafon;
+    return await loadTextures(images.ceilingPlafon, texture => texture.isCeiling);
 }
 
 export async function getCeilingMaterial() {
-    if (images.isCeilingMaterialEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.CEILING_MATERIAL);
-        images.ceilingMaterial.push(...texturePatterns);
-    }
-    return images.ceilingMaterial;
+    return await loadTextures(images.ceilingMaterial, texture => texture.isCeilingMaterial);
 }
 
 export async function getHandrail() {
-    if (images.isHandrailEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.HANDRAIL);
-        images.handrail.push(...texturePatterns);
-    }
-    return images.handrail;
+    return await loadTextures(images.handrail, texture => texture.isHandrail);
 }
 
 export async function getFloor() {
-    if (images.isFloorEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.FLOOR);
-        images.floor.push(...texturePatterns);
-    }
-    return images.floor;
+    return await loadTextures(images.floor, texture => texture.isFloor);
 }
 
 export async function getBoard() {
-    if (images.isBoardEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.INDICATION_BOARD);
-        images.board.push(...texturePatterns);
-    }
-    return images.board;
+    return await loadTextures(images.board, texture => texture.isIndicationBoard);
 }
 
 export async function getBoardColor() {
-    if (images.isBoardColorEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.CONTROL_PANEL);
-        images.board_color.push(...texturePatterns);
-    }
-    return images.board_color;
+    return await loadTextures(images.board_color, texture => texture.isControlPanel);
 }
 
 export async function getDoor() {
-    if (images.isDoorEmpty()) {
-        let texturePatterns = await fetchIcons(UrlHelper.DOOR);
-        images.door.push(...texturePatterns);
-    }
-    return images.door;
+    return await loadTextures(images.door, texture => texture.isDoor);
 }
 
-async function fetchIcons(elementType) {
-    const url = UrlHelper.getUrl(UrlHelper.urlTemplateGetIconsByType, elementType);
+export async function getAllIcons() {
+    if (!iconsLoadedPromise) { // Если загрузка ещё не начата
+        iconsLoadedPromise = fetchIcons().then(textures => {
+            allTextures = textures;
+            console.log(allTextures);
+        });
+    }
+    return iconsLoadedPromise; // Возвращаем Promise загрузки
+}
+
+async function fetchIcons() {
+    const url = UrlHelper.urlTemplateGetIcons;
 
     try {
         const response = await fetch(url); 
@@ -142,17 +133,21 @@ async function fetchIcons(elementType) {
             throw new Error(`HTTP error! статус: ${response.status}`);
         }
         const data = await response.json();
-      //  console.log(data);
     
-        // Извлекаем нужные значения
         const icons = data.content.map(item => ({
             id: item.id,
-            url: item.url
+            url: item.url,
+            isDoor: item.isDoor,
+            isWall: item.isWall,
+            isFloor: item.isFloor,
+            isCeiling: item.isCeiling,
+            isCeilingMaterial: item.isCeilingMaterial,
+            isControlPanel: item.isControlPanel,
+            isHandrail: item.isHandrail,
+            isBumper: item.isBumper,
+            isIndicationBoard: item.isIndicationBoard,
         }));
     
-       // console.log(icons); // Выводим массив объектов с id и url
-    
-        // Получаем информацию о текстурах для каждой иконки
         const texturePromises = icons.map(icon => 
             fetch(UrlHelper.getUrl(UrlHelper.urlTemplateGetTextureByIconId, icon.id))
                 .then(response => {
@@ -164,12 +159,19 @@ async function fetchIcons(elementType) {
         );
     
         const textures = await Promise.all(texturePromises);
-       // console.log(textures); // Массив объектов с текстурами
     
-        // Собираем данные в нужный шаблон
-        const texturePatterns = textures.map(texture => ({
+        return textures.map(texture => ({
             id: texture.id,
             icon: texture.icon.url,
+            isDoor: texture.icon.isDoor,
+            isWall: texture.icon.isWall,
+            isFloor: texture.icon.isFloor,
+            isCeiling: texture.icon.isCeiling,
+            isCeilingMaterial: texture.icon.isCeilingMaterial,
+            isControlPanel: texture.icon.isControlPanel,
+            isHandrail: texture.icon.isHandrail,
+            isBumper: texture.icon.isBumper,
+            isIndicationBoard: texture.icon.isIndicationBoard,
             texture: texture.baseTextureUrl,
             alpha: texture.alphaMapUrl || "",
             bump: texture.bumpMapUrl || "",
@@ -183,12 +185,11 @@ async function fetchIcons(elementType) {
                 metalness: texture.properties.metalness,
                 roughness: texture.properties.roughness,
                 emissiveIntensity: texture.properties.emissiveIntensity,
-                color: texture.baseColor // Установите нужный цвет, если нужно
+                color: texture.baseColor
             }
         }));
-    
-        return texturePatterns;
     } catch (error) {
         console.error('Ошибка при получении данных:', error);
+        return []; // Возвращаем пустой массив при ошибке
     }
 }

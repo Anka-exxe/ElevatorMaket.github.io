@@ -44,8 +44,14 @@ body {
     flex-direction: row;
     justify-content: stretch;
     align-items: stretch;
-    visibility: hidden;
+    
+    /* Добавляем масштаб */
+    transform: scale(0.8);
+    transform-origin: top left; /* Устанавливаем точку масштабирования */
+    width: 125%; /* Увеличиваем ширину, чтобы избежать обрезки */
+    height: 125%; /* Увеличиваем высоту, чтобы избежать обрезки */
 }
+
 .configurator-container__elevator-container {
     flex-grow: 2;
     width: 100%;
@@ -69,6 +75,34 @@ body {
     width: 200px;
     height: 200px;
     position: relative;
+}
+
+@media(max-width: 3000px) {
+    .elevator-container__logo {
+        width: 270px;
+        height: 270px;
+    }
+}
+
+@media(max-width: 2700px) {
+    .elevator-container__logo {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+@media(max-width: 2500px) {
+    .elevator-container__logo {
+        width: 230px;
+        height: 230px;
+    }
+}
+
+@media(max-width: 2200px) {
+    .elevator-container__logo {
+        width: 200px;
+        height: 200px;
+    }
 }
 
 @media(max-width: 1800px) {
@@ -112,30 +146,54 @@ body {
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    width: 1100px;
+    width: 1200px;
+}
+
+@media(max-width: 3000px) {
+    .elevator-container__footer {
+        width: 1800px;
+    }
+}
+
+@media(max-width: 2900px) {
+    .elevator-container__footer {
+        width: 1600px;
+    }
+}
+
+@media(max-width: 2700px) {
+    .elevator-container__footer {
+        width: 1400px;
+    }
+}
+
+@media(max-width: 2450px) {
+    .elevator-container__footer {
+        width: 1200px;
+    }
 }
 
 @media(max-width: 1900px) {
     .elevator-container__footer {
-        width: 740px;
+        width: 1000px;
     }
 }
 
 @media(max-width: 1700px) {
     .elevator-container__footer {
-        width: 640px;
+        width: 850px;
     }
 }
 
 @media(max-width: 1500px) {
     .elevator-container__footer {
-        width: 540px;
+        width: 700px;
     }
 }
 
 @media(max-width: 1200px) {
     .elevator-container__footer {
-        width: 490px;
+        width: 650px;
     }
 }
 

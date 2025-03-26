@@ -10,7 +10,7 @@ export const BUMPER = 'BUMPER';
 
 const host = "http://localhost:8090/api/v1/";
 
-export const urlTemplateGetIconsByType = `${host}icons/{}?page=0&size=100`;
+export const urlTemplateGetIcons = `${host}icons?page=0&size=1000`;
 export const urlTemplateGetTextureByIconId = `${host}textures/icon/{}`;
 export const urlTemplateGetWordFile = `${host}elevators/documents`;
 export const urlTemplateGetDesignProjects = `${host}design-projects?page=0&size=100`;

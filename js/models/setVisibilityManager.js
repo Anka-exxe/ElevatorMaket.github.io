@@ -93,3 +93,13 @@ export function setWallVisible(
         handrail.visible = isGroupVisible;
     }
 }
+
+export function setDoorVisible(isVisible) {
+    const doorGroup = window.model.getObjectByName(Element.doorGroup);
+    doorGroup.visible = isVisible;
+}
+
+export function setPortalVisible(isVisible) {
+    const portalGroup = window.hallModel.getObjectByName(Element.portalGroup);
+    portalGroup.visible = isVisible;
+}

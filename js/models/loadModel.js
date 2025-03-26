@@ -15,6 +15,8 @@ import {setAllParameters} from
 let model;
 let scene, camera, renderer, controls;
 const maxDistance = 160;
+var strDownloadMime = "image/octet-stream";
+let isHallModelLoaded = false;
 
 function init() {
     const canvas = document.getElementById('elevatorCanvas');
@@ -23,7 +25,10 @@ function init() {
         return;
     }
 
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer = new THREE.WebGLRenderer({ canvas, 
+        antialias: true, 
+        preserveDrawingBuffer: true }
+        );
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     //renderer.outputColorSpace = THREE.SRGBColorSpace;
     //renderer.gammaOutput = true;
@@ -99,15 +104,7 @@ function init() {
     let directionalLightHelper4 = new THREE.DirectionalLightHelper(directionalLight4, 10);
     scene.add(directionalLightHelper4);*/
 
-
-    controls = new OrbitControls(camera, renderer.domElement);
-
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
-    controls.target.set(0, 50, 0);
-
-    controls.maxDistance = maxDistance;
+    InitialOrbitControls();
 
     function GetDistanceToWall(groupWallName) {
         const group = window.model.getObjectByName(groupWallName);
@@ -242,6 +239,8 @@ function init() {
     });
 }
 
+
+
 async function loadConfiguration() {
 const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
 const templateId = JSON.parse(localStorage.getItem('templateId'));
@@ -288,6 +287,16 @@ function checkFrontVisibilityAndSet() {
     }
 }
 
+export function InitialOrbitControls() {
+    controls = new OrbitControls(camera, renderer.domElement);
+
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
+    controls.target.set(0, 50, 0);
+
+    controls.maxDistance = maxDistance;
+}
 
 // Логика для разных ракурсов для кнопок
 const buttonView3D = document.getElementById('view3d');
@@ -297,6 +306,18 @@ const buttonViewInside = document.getElementById('viewInside');
 const buttonHallViewInside = document.getElementById('hallViewInside');
 const buttonDoorOpen = document.getElementById('doorsOpen');
 const buttonDoorClose = document.getElementById('doorsClose');
+
+ // Получаем все радиокнопки с именем 'availability_portal'
+ const radioButtons = document.querySelectorAll('input[name="availability_portal"]');
+
+ // Добавляем обработчик события 'change' для каждой радиокнопки
+ radioButtons.forEach(radio => {
+     radio.addEventListener('change', () => {
+         if (radio.checked) {
+            Visibility.setPortalVisible(radio.value === "have_portal");
+         }
+     });
+ });
 
 buttonView3D.onclick = function() {
     animateButton(buttonView3D);
@@ -314,7 +335,7 @@ buttonViewUp.onclick = function() {
     animateButton(buttonViewUp);
     controls.maxDistance = maxDistance;
     camera.position.set(0, maxDistance, 0); 
-    controls.enableZoom = false;
+    controls.enableZoom = true;
     controls.enableRotate = false;
     controls.target.set(0, GetExtremeYPoint() - 10, 0);
     controls.update();  
@@ -326,7 +347,7 @@ buttonViewFront.onclick = function() {
     animateButton(buttonViewFront);
     controls.maxDistance = maxDistance;
     camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance); 
-    controls.enableZoom = false;
+    controls.enableZoom = true;
     controls.target.set(0, GetExtremeYPoint() / 2, 0);
     controls.enableRotate = false;
     controls.update(); 
@@ -359,50 +380,117 @@ buttonHallViewInside.onclick = function() {
 };
 
 buttonDoorOpen.onclick = function() {
+    Visibility.setDoorVisible(false);
+}
 
+buttonDoorClose.onclick = function() {
+    Visibility.setDoorVisible(true);
 }
 
 export async function loadHall() {
     document.getElementById('loading').style.display = 'block'; // Скрыть индикатор загрузки
     document.getElementById('configurator-container').style.visibility = 'hidden'; 
 
-    const fbxLoader = new FBXLoader();
-fbxLoader.load(
-    './hallModels/hallModel.fbx',
-    async (object) => {
-        object.position.set(0, 0, 0);
-        object.scale.set(0.4, 0.4, 0.4);
-        scene.add(object);
-        model = object;
-        window.hallModel = model;
-
-        object.traverse((child) => {
-            if (child.isMesh) {
-                child.geometry.computeVertexNormals(); // Пересчитать нормали
-            }
-        });
-
-        animate();
-
+    if(isHallModelLoaded) {
+        window.hallModel.visible = true;
         document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
         document.getElementById('configurator-container').style.visibility = 'visible'; 
-
-        camera.position.set(0, GetExtremeYPoint() / 2, 100);
+    } else {
+        const fbxLoader = new FBXLoader();
+        fbxLoader.load(
+            './hallModels/model18.fbx',
+            async (object) => {
+                object.position.set(0, 0, 0);
+                object.scale.set(0.4, 0.4, 0.4);
+                scene.add(object);
+                model = object;
+                window.hallModel = model;
         
-        controls.target.set(0, GetExtremeYPoint() / 2, 200);
-        controls.maxDistance = 300;
-    },
-    undefined,
-    (error) => {
-        console.error('Ошибка загрузки FBX модели:', error);
+                object.traverse((child) => {
+                    if (child.isMesh) {
+                        child.geometry.computeVertexNormals(); // Пересчитать нормали
+                    }
+                });
+        
+                animate();
+        
+                document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+                document.getElementById('configurator-container').style.visibility = 'visible'; 
+        
+               
+                isHallModelLoaded= true;
+            },
+            undefined,
+            (error) => {
+                alert("Ошибка загрузки холла");
+                console.error('Ошибка загрузки FBX модели:', error);
+            }
+        );
+        
+        const pointLight = new THREE.PointLight(0xffffff, 100, 1000);
+        pointLight.position.set(0, 80, 200);
+        scene.add(pointLight);
     }
-);
-}
 
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 500);
+        
+    controls.target.set(0, GetExtremeYPoint() / 2, 200);
+    controls.minPolarAngle = Math.PI / 4; // Минимальный угол по вертикали (в радианах)
+    controls.maxPolarAngle = Math.PI / 1.7; // Максимальный угол по вертикали (в радианах)
+    controls.minAzimuthAngle = -Math.PI / 2; // Минимальный угол по горизонтали (в радианах)
+    controls.maxAzimuthAngle = Math.PI / 2; // Максимальный угол по горизонтали (в радианах)
+    controls.maxDistance = 100;
+}
 
 function animate() {
     requestAnimationFrame(animate); // Запрашиваем следующий кадр анимации
 
     renderer.render(scene, camera); // Рендерим сцену
+}
 
+export async function GetImage() {
+    try {
+        const strMime = "image/jpeg";
+
+        const originalPosition = camera.position.clone();
+        const originalTarget = controls.target.clone(); // Сохраняем исходное положение target
+        const originalMaxDistance = controls.maxDistance; // Сохраняем исходное значение maxDistance
+
+        // Устанавливаем maxDistance и позицию камеры
+        controls.maxDistance = maxDistance; // Устанавливаем maxDistance для скриншота
+        camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2);
+        controls.target.set(0, 50, 0);
+        controls.update(); // Обновляем управление
+
+        // Рендерим сцену
+        renderer.render(scene, camera);
+
+        // Задержка, чтобы гарантировать завершение рендеринга
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        // Получаем данные изображения в формате DataURL
+        const imgData = renderer.domElement.toDataURL(strMime);
+
+        // Проверяем, получаем ли мы корректные данные
+        if (!imgData || imgData === "data:,") {
+            console.error("Ошибка: не удалось получить данные изображения.");
+            return null;
+        }
+
+        // Восстанавливаем исходные значения
+        camera.position.copy(originalPosition); // Возвращаем камеру в оригинальное положение
+        controls.target.copy(originalTarget); // Возвращаем target в оригинальное положение
+        controls.maxDistance = originalMaxDistance; // Восстанавливаем maxDistance
+        controls.update(); // Обновляем управление
+
+        // Преобразуем DataURL в Blob
+        const response = await fetch(imgData);
+        const blob = await response.blob();
+
+        return blob; // Возвращаем Blob
+
+    } catch (error) {
+        console.error('Error while getting image:', error);
+        return null; // Возвращаем null в случае ошибки
+    }
 }

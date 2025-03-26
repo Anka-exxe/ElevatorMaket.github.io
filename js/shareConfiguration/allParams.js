@@ -23,6 +23,8 @@ import {urlTemplateGetWordFile,
     urlTemplateSendFile,
 getUrl} from "../urlHelper/urls.js"
 
+import {GetImage} from "../models/loadModel.js";
+
 const allParameters = {
     cabin: null,
     wall: null,
@@ -142,12 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/*document.addEventListener('DOMContentLoaded', () => {
-    const saveButton = document.getElementById('questionNaireBtn');
-    saveButton.addEventListener('click', () => {
-        SendFile();
-    });
-});*/
+//document.getElementById("saveButton").addEventListener('click', GetImage);
 
 document.getElementById('questionNaireBtn').addEventListener('click', function() {
     document.getElementById('emailModal').style.display = 'block';
@@ -166,7 +163,7 @@ document.getElementById('cancelEmail').addEventListener('click', function() {
 document.getElementById('confirmEmail').addEventListener('click', async function() {
     const email = document.getElementById('emailInput').value;
     if (email) {
-        SendFile(email);
+        await SendFile(email); // Добавлено await для корректного вызова
         document.getElementById('emailModal').style.display = 'none';
     } else {
         alert('Пожалуйста, введите почту');
@@ -211,22 +208,62 @@ async function getWordFileFromServer() {
     }
 }
 
-async function SendFile(email) {
+async function SendFile(email) {  
+    if (!email) {
+        console.error('Email не может быть undefined или пустым');
+        alert('Пожалуйста, укажите действительный адрес электронной почты.');
+        return; // Выход из функции, если email некорректен
+    }
+
     // Предполагаем, что getAllParameters возвращает или инициализирует allParameters
     getAllParameters(); // Убедитесь, что allParameters инициализирован
+
+    // Получаем изображение в виде Blob
+    const imageBlob = await GetImage();
+
+    if (imageBlob) {
+        // Здесь вы можете использовать imageBlob, например, сохранить его или отправить на сервер
+        const url = URL.createObjectURL(imageBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'screenshot.jpg'; // Имя файла для скачивания
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url); // Освобождаем URL
+    } else {
+        console.error("Не удалось получить изображение.");
+    }
+    
+    // Создаем новый объект FormData
+    const formData = new FormData();
+    
+    // Добавляем параметры в FormData
+    for (const key in allParameters) {
+        formData.append(key, allParameters[key]);
+    }
+
+    // Добавляем параметр request
+    formData.append('request', JSON.stringify(allParameters)); // Добавлено для примера
+    
+    // Проверяем, что изображение успешно получено
+    if (imageBlob) {
+        // Добавляем изображение в FormData
+        formData.append('file', imageBlob, 'screenshot.jpg'); // Укажите имя файла
+    } else {
+        console.error('Не удалось получить изображение.');
+        return; // Выход из функции, если изображение не удалось получить
+    }
 
     try {
         const response = await fetch(getUrl(urlTemplateSendFile, email), {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(allParameters)
+            body: formData // Отправляем FormData
         });
 
         // Проверка статуса ответа
         if (!response.ok) {
-            alert("Произошла ошибка"); // Теперь это будет выполнено
+            alert("Произошла ошибка");
             throw new Error('Network response was not ok');
         } else {
             alert("Опросный лист отправлен");
