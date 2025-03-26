@@ -63,17 +63,14 @@ export function applyTextureToElement(model,
                    roughnessMap
                ]) => {
             if (texture) {
-                texture.minFilter = THREE.LinearMipMapLinearFilter;
-                texture.magFilter = THREE.LinearFilter;
-
-                // texture.wrapS = THREE.RepeatWrapping;
-                // texture.wrapT = THREE.RepeatWrapping;
-                // texture.colorSpace = THREE.SRGBColorSpace;
-                // if (materialOptions.repeat) {
-                //     texture.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                // } else {
-                //     texture.repeat.set(1, 1);
-                // }
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.colorSpace = THREE.SRGBColorSpace;
+                if (materialOptions.repeat) {
+                    texture.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
+                } else {
+                    texture.repeat.set(1, 1);
+                }
             }
             if (alphaMap) {
                 alphaMap.wrapS = THREE.RepeatWrapping;
@@ -83,6 +80,12 @@ export function applyTextureToElement(model,
                     alphaMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
                     alphaMap.repeat.set(1, 1);
+                }
+
+                if (elementNamesArr.includes('Lamp')) {
+                    alphaMap.center = new THREE.Vector2(0.5, 0.5);
+                    alphaMap.rotation = Math.PI / 2;
+                    console.log('Texture for Lamp rotated to:', alphaMap.rotation);
                 }
             }
             if (bump) {
@@ -161,10 +164,14 @@ export function applyTextureToElement(model,
                         normalMap: normalMap,
                         roughnessMap: roughnessMap,
                         transparent: !!alphaMap,
-                        metalness: materialOptions.metalness !== undefined ? materialOptions.metalness : 0.5,
-                        roughness: materialOptions.roughness !== undefined ? materialOptions.roughness : 0.8,
+                        metalness: (materialOptions.metalness !== undefined && materialOptions.metalness !== null && materialOptions.metalness !== "null")
+                            ? parseFloat(materialOptions.metalness)
+                            : 0.5,
+                        roughness: (materialOptions.roughness !== undefined && materialOptions.roughness !== null && materialOptions.roughness !== "null")
+                            ? parseFloat(materialOptions.roughness)
+                            : 0.8,
                         emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffff),
-                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? materialOptions.emissiveIntensity : 0
+                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? parseFloat(materialOptions.emissiveIntensity) : 0
                     });
                     newMaterial.needsUpdate = true;
                     child.material = newMaterial;

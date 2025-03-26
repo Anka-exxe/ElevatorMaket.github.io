@@ -250,7 +250,7 @@ function updateOpenType(openingType) {
             door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
         }
     }
-    window.model.getObjectByName("DisplayHorisontal").visible = false;
+    //window.model.getObjectByName("DisplayHorisontal").visible = false;
     updateControlPanelPlacement();
 }
 
@@ -508,7 +508,7 @@ function updateControlPanelPlacement() {
     } else {
         console.warn(`Группа панели ${groupName} не найдена`);
     }
-    window.model.getObjectByName("DisplayHorisontal").visible = false;
+    //window.model.getObjectByName("DisplayHorisontal").visible = false;
 
     const handrailButtons = document.querySelectorAll('button[name="railing_position"]');
 

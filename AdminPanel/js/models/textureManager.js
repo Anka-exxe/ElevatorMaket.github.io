@@ -308,6 +308,7 @@ console.log(tabId)
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
         break;
         case 'HandrailParametrsTab':
+            elementNames = ['HandrailUnified','HandrailComposite'];
             setHandrailTexture(textureId);
              break;
         default:

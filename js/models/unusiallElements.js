@@ -23,15 +23,6 @@
         });
     });
 
-    const lightOrientationRadios = document.querySelectorAll('input[name="light_orientation_type"]');
-    lightOrientationRadios.forEach(radio => {
-        radio.addEventListener('change', (event) => {
-            const selectedOrientation = event.target.value;
-            console.log("Выбрана ориентация света:", selectedOrientation);
-            updateLampRotation(selectedOrientation);
-        });
-    });
-
     const cabinOpeningTypeRadios = document.querySelectorAll('input[name="opening_type"]');
     cabinOpeningTypeRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
@@ -101,10 +92,7 @@ export function DefaultSettings(){
         updateOpenType(selectedOpeningTypeRadio.value);
     }
 
-    const selectedLightRadio = document.querySelector('input[name="light_orientation_type"]:checked');
-    if (selectedLightRadio) {
-        updateLampRotation(selectedLightRadio.value);
-    }
+        updateLampRotation();
 
     const selectedHandrailAvabilityRadio = document.querySelector('input[name="handrail_availability"]:checked');
     if (selectedHandrailAvabilityRadio) {
@@ -130,8 +118,48 @@ function updateCabinView(cabinType) {
         return;
     }
 
-    const model = window.model;
+    // Обновляем доступность кнопок для зеркал
+    const backMirrorButton = document.getElementById("backMirror");
+    const rightMirrorButton = document.getElementById("rightMirror");
+    const leftMirrorButton = document.getElementById("leftMirror");
 
+    if (cabinType === "not_walk_through_cabin") {
+        // Непроходная: запрещаем зеркала на боковых стенах (справа и слева)
+        if (rightMirrorButton) {
+            rightMirrorButton.disabled = true;
+            rightMirrorButton.classList.remove('active');
+            rightMirrorButton.classList.add('disabled');
+        }
+        if (leftMirrorButton) {
+            leftMirrorButton.disabled = true;
+            leftMirrorButton.classList.remove('active');
+            leftMirrorButton.classList.add('disabled');
+        }
+        // Для непроходной кабины заднее зеркало можно использовать
+        if (backMirrorButton) {
+            backMirrorButton.disabled = false;
+            backMirrorButton.classList.remove('disabled');
+        }
+    } else if (cabinType === "walk_through_cabin") {
+        // Проходная: запрещаем размещать зеркало на задней стене
+        if (backMirrorButton) {
+            backMirrorButton.disabled = true;
+            backMirrorButton.classList.remove('active');
+            backMirrorButton.classList.add('disabled');
+        }
+        // Боковые зеркала доступны
+        if (rightMirrorButton) {
+            rightMirrorButton.disabled = false;
+            rightMirrorButton.classList.remove('disabled');
+        }
+        if (leftMirrorButton) {
+            leftMirrorButton.disabled = false;
+            leftMirrorButton.classList.remove('disabled');
+        }
+    }
+
+    // Далее обновляем видимость групп в модели
+    const model = window.model;
     model.traverse(child => {
         if (child.type === 'Group') {
             if (child.name === "WalkThroughGroup") {
@@ -173,7 +201,7 @@ function updateCabinView(cabinType) {
             backHandrailButton.classList.remove('active');
         } else {
             backHandrailButton.disabled = false;
-            updateHandrailPosition()
+            updateHandrailPosition();
         }
     }
 
@@ -259,7 +287,7 @@ function updateOpenType(openingType) {
     updateControlPanelPlacement();
 }
 
-function updateLampRotation(orientation) {
+function updateLampRotation() {
     const lampGroup = model.getObjectByName("Lamp");
     if (!lampGroup) {
         console.error("Группа Lamp не найдена");
@@ -271,7 +299,7 @@ function updateLampRotation(orientation) {
             const updateMap = (mat) => {
                 if (mat.map) {
                     mat.map.center.set(0.5, 0.5);
-                    mat.map.rotation = (orientation === "vertical") ? Math.PI / 2 : 0;
+                    mat.map.rotation = Math.PI / 2;
                     mat.map.needsUpdate = true;
                 }
             };
@@ -552,7 +580,41 @@ function updateMirrorPlacement() {
         return;
     }
 
-    // 1. Скрываем все зеркала сразу (как полные, так и "half" варианты)
+    // Получаем тип кабины: "walk_through_cabin" или "not_walk_through_cabin"
+    const cabinTypeRadio = document.querySelector('input[name="cabin_type"]:checked');
+    const cabinType = cabinTypeRadio ? cabinTypeRadio.value : null;
+
+    // Получаем кнопки зеркал
+    const backButton = document.getElementById("backMirror");
+    const rightButton = document.getElementById("rightMirror");
+    const leftButton = document.getElementById("leftMirror");
+
+    // Если кабина непроходная, отключаем кнопки для боковых зеркал
+    if (cabinType === "not_walk_through_cabin") {
+        if (rightButton) {
+            rightButton.disabled = true;
+            rightButton.classList.remove('active');
+            rightButton.classList.add('disabled'); // для оформления неактивного состояния
+        }
+        if (leftButton) {
+            leftButton.disabled = true;
+            leftButton.classList.remove('active');
+            leftButton.classList.add('disabled');
+        }
+    } else {
+        // Если кабина проходная – убедимся, что кнопки активны
+        if (rightButton) {
+            rightButton.disabled = false;
+            rightButton.classList.remove('disabled');
+        }
+        if (leftButton) {
+            leftButton.disabled = false;
+            leftButton.classList.remove('disabled');
+        }
+    }
+
+    // Далее – логика обновления видимости зеркал
+    // 1. Скрываем все зеркала (полные и "half" варианты)
     const allMirrorNames = [
         "MirrorBack", "MirrorRight", "MirrorLeft",
         "MirrorBackHalf", "MirrorRightHalf", "MirrorLeftHalf"
@@ -573,16 +635,17 @@ function updateMirrorPlacement() {
         const wall = window.model.getObjectByName(name);
         if (wall) wall.visible = true;
     });
-    // 3. Проверяем, включены ли зеркала
+
+    // Если зеркала не включены – дальше обновлять не нужно
     const availabilityRadio = document.querySelector('input[name="mirror_availability"]:checked');
     const isMirrorEnabled = (availabilityRadio && availabilityRadio.value === "yes");
     if (!isMirrorEnabled) return;
 
-    // 4. Определяем выбранный тип зеркал
+    // 3. Определяем выбранный тип зеркал
     const mirrorTypeRadio = document.querySelector('input[name="mirror_type"]:checked');
     const mirrorType = mirrorTypeRadio ? mirrorTypeRadio.value : null;
 
-    // 5. Выбираем объекты зеркал в зависимости от выбранного типа
+    // 4. Выбираем объекты зеркал в зависимости от типа
     let mirrorBack, mirrorRight, mirrorLeft;
     if (mirrorType === "to_rail") {
         mirrorBack = window.model.getObjectByName("MirrorBackHalf");
@@ -594,44 +657,47 @@ function updateMirrorPlacement() {
         mirrorLeft = window.model.getObjectByName("MirrorLeft");
     }
 
-    // 6. Получаем кнопки, управляющие зеркалами
-    const backButton = document.getElementById("backMirror");
-    const rightButton = document.getElementById("rightMirror");
-    const leftButton = document.getElementById("leftMirror");
-
-    // 7. Обновляем состояние зеркал
+    // 5. Обновляем видимость зеркала "Сзади"
     if (mirrorBack) {
         if (backButton.classList.contains('active')) {
             mirrorBack.visible = true;
-            // Для типов, отличных от "до поручня", скрываем стеновое зеркало
             if (mirrorType !== "to_rail") {
                 const mirrorWall = window.model.getObjectByName("BackWallMirror");
                 if (mirrorWall) mirrorWall.visible = false;
             }
         }
     }
-    if (mirrorRight) {
-        if (rightButton.classList.contains('active')) {
-            mirrorRight.visible = true;
-            if (mirrorType !== "to_rail") {
-                const mirrorWall = window.model.getObjectByName("RightWallMirror");
-                const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
-                if (mirrorWall) mirrorWall.visible = false;
-                if (mirrorWall1) mirrorWall1.visible = false;
+
+    // 6. Для боковых зеркал обновляем видимость только если кабина проходная
+    if (cabinType === "walk_through_cabin") {
+        if (mirrorRight) {
+            if (rightButton.classList.contains('active')) {
+                mirrorRight.visible = true;
+                if (mirrorType !== "to_rail") {
+                    const mirrorWall = window.model.getObjectByName("RightWallMirror");
+                    const mirrorWall1 = window.model.getObjectByName("RightWallMirror1");
+                    if (mirrorWall) mirrorWall.visible = false;
+                    if (mirrorWall1) mirrorWall1.visible = false;
+                }
             }
         }
-    }
-    if (mirrorLeft) {
-        if (leftButton.classList.contains('active')) {
-            mirrorLeft.visible = true;
-            if (mirrorType !== "to_rail") {
-                const mirrorWall = window.model.getObjectByName("LeftWallMirror");
-                const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
-                if (mirrorWall) mirrorWall.visible = false;
-                if (mirrorWall1) mirrorWall1.visible = false;
+        if (mirrorLeft) {
+            if (leftButton.classList.contains('active')) {
+                mirrorLeft.visible = true;
+                if (mirrorType !== "to_rail") {
+                    const mirrorWall = window.model.getObjectByName("LeftWallMirror");
+                    const mirrorWall1 = window.model.getObjectByName("LeftWallMirror1");
+                    if (mirrorWall) mirrorWall.visible = false;
+                    if (mirrorWall1) mirrorWall1.visible = false;
+                }
             }
         }
+    } else {
+        // Для непроходной кабины боковые зеркала гарантированно скрыты
+        if (mirrorRight) mirrorRight.visible = false;
+        if (mirrorLeft) mirrorLeft.visible = false;
     }
+
     console.log("Mirror placement updated:",
         "Back:", mirrorBack ? mirrorBack.visible : "not found",
         "Right:", mirrorRight ? mirrorRight.visible : "not found",
