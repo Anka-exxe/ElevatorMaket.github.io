@@ -11,6 +11,7 @@ import {setAllParameters} from
     "../shareConfiguration/allParams.js";
     import {setDesignProject} from 
     "../shareConfiguration/mainParams.js";
+//import {isHallClicked} from "../animation/tabFunctions.js";
 
 let model;
 let scene, camera, renderer, controls;
@@ -232,6 +233,7 @@ function init() {
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     });
+
     controls.target.set(0, 50, 0);
     camera.position.set(maxDistance - 2, 40, maxDistance - 2);
     controls.update(); 
@@ -286,13 +288,13 @@ function checkFrontVisibilityAndSet() {
 
 export function InitialOrbitControls() {
     controls = new OrbitControls(camera, renderer.domElement);
-
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
     controls.enableZoom = true;
+    controls.enableRotate = true;
     controls.target.set(0, 50, 0);
-
     controls.maxDistance = maxDistance;
+    controls.update(); 
 }
 
 // Логика для разных ракурсов для кнопок
@@ -303,6 +305,39 @@ const buttonViewInside = document.getElementById('viewInside');
 const buttonHallViewInside = document.getElementById('hallViewInside');
 const buttonDoorOpen = document.getElementById('doorsOpen');
 const buttonDoorClose = document.getElementById('doorsClose');
+
+
+export function SetSettingsBackFromHallToElevetor() {
+    window.hallModel.visible = false;
+    camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2); 
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
+    controls.enableZoom = true;
+    controls.enableRotate = true;
+    controls.target.set(0, 50, 0);
+    controls.maxDistance = 160;
+
+    controls.minPolarAngle = -Infinity; // Убираем минимальный угол по вертикали
+    controls.maxPolarAngle = Infinity; // Убираем максимальный угол по вертикали
+    controls.minAzimuthAngle = -Infinity; // Убираем минимальный угол по горизонтали
+    controls.maxAzimuthAngle = Infinity; // Убираем максимальный угол по горизонтали
+    controls.update();
+    renderer.render(scene, camera);
+
+const buttons = [buttonView3D, buttonViewFront, buttonViewUp, buttonViewInside];
+
+// Удаляем класс 'active' у всех кнопок
+buttons.forEach(button => {
+    if (button) {
+        button.classList.remove('active');
+    }
+});
+
+// Добавляем класс 'active' только к кнопке buttonView3D
+if (buttonView3D) {
+    buttonView3D.classList.add('active');
+}
+}
 
  // Получаем все радиокнопки с именем 'availability_portal'
  const radioButtons = document.querySelectorAll('input[name="availability_portal"]');
@@ -319,8 +354,6 @@ const buttonDoorClose = document.getElementById('doorsClose');
 buttonView3D.onclick = function() {
     animateButton(buttonView3D);
     camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2); 
-    controls.enableZoom = true;
-    controls.enableRotate = true;
     controls.target.set(0, 50, 0);
     controls.maxDistance = 160;
     controls.update(); 
@@ -332,9 +365,7 @@ buttonViewUp.onclick = function() {
     animateButton(buttonViewUp);
     controls.maxDistance = maxDistance;
     camera.position.set(0, maxDistance, 0); 
-    controls.enableZoom = true;
-    controls.enableRotate = false;
-    controls.target.set(0, GetExtremeYPoint() - 10, 0);
+    controls.target.set(0, GetExtremeYPoint() / 2, 0);
     controls.update();  
     Visibility.setCeilingVisibility(false);
     checkFrontVisibilityAndSet();
@@ -344,9 +375,7 @@ buttonViewFront.onclick = function() {
     animateButton(buttonViewFront);
     controls.maxDistance = maxDistance;
     camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance); 
-    controls.enableZoom = true;
     controls.target.set(0, GetExtremeYPoint() / 2, 0);
-    controls.enableRotate = false;
     controls.update(); 
     Visibility.setFrontVisible(false);
     checkCeilingVisibilityAndSet();
@@ -354,10 +383,8 @@ buttonViewFront.onclick = function() {
 
 buttonViewInside.onclick = function() {
     animateButton(buttonViewInside);
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1); 
-    controls.enableZoom = true;
-    controls.enableRotate = true;
-    controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, -1); 
+    controls.target.set(0, (GetExtremeYPoint() / 2) + 10, 0);
     controls.maxDistance = GetExtremeZPoint() / 2 - 10;
     controls.update(); 
     checkCeilingVisibilityAndSet();
@@ -437,6 +464,7 @@ export async function loadHall() {
     controls.minAzimuthAngle = -Math.PI / 2; // Минимальный угол по горизонтали (в радианах)
     controls.maxAzimuthAngle = Math.PI / 2; // Максимальный угол по горизонтали (в радианах)
     controls.maxDistance = 100;
+    controls.update();
 }
 
 function animate() {
@@ -479,6 +507,7 @@ export async function GetImage() {
         controls.target.copy(originalTarget); // Возвращаем target в оригинальное положение
         controls.maxDistance = originalMaxDistance; // Восстанавливаем maxDistance
         controls.update(); // Обновляем управление
+
 
         // Преобразуем DataURL в Blob
         const response = await fetch(imgData);

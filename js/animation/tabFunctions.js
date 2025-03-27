@@ -1,8 +1,10 @@
 import {handleTextureClick} from "../models/textureManager.js";
 import * as TextureStorage from "../textureService/textureStorage.js";
 import {loadHall} from "../models/loadModel.js";
+import {SetSettingsBackFromHallToElevetor} from "../models/loadModel.js"
 
 export let isImagesShowed = false;
+export let isHallClicked = false;
 
 const tabImageMap = new Map([
     ['MainParametersTab', 'main_parameters_icon'],
@@ -58,10 +60,17 @@ export async function showTab(tabId) {
         activeIcon.classList.add('active');
     }
 
+    if(isHallClicked) {
+        SetSettingsBackFromHallToElevetor();
+        isHallClicked = false;
+    }
+
     if(tabId === 'HallParametrsTab') {
         const elevatorBtns = document.getElementById("elevatorBtns");
         const hallBtns = document.getElementById("hallBtns");
         loadHall();
+
+        isHallClicked = true;
 
         elevatorBtns.style.display = "none";
         hallBtns.style.display = "flex";
