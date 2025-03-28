@@ -46,18 +46,57 @@ function init() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
-    function onWindowResize() { // Чтобы менялся размер на норм, когдп делаешь полноэкранный или режим разраба
-        const element = document.getElementById('elevator-container');
-        const width = element.clientWidth;
-        const height = element.clientHeight;
+    const menuContainer = document.getElementById('menu-container');
+    const optionMenuVisibilityBtn = document.getElementById('optionMenuVisibilityBtn');
+    //const canvas = document.getElementById('elevatorCanvas'); // Получаем элемент canvas
 
+    const originalWidth = canvas.clientWidth;
+const originalHeight = canvas.clientHeight;
+    
+    optionMenuVisibilityBtn.addEventListener('click', () => {
+        menuContainer.classList.toggle('hidden'); // Переключаем класс для анимации
+        onMenuHiden(); // Обновляем размер canvas после изменения меню
+
+        optionMenuVisibilityBtn.classList.toggle('rotate');
+    });
+
+
+function onMenuHiden() {
+    const element = document.getElementById('elevator-container');
+    const width = element.clientWidth;
+    const height = element.clientHeight;
+
+    // Если меню скрыто, возвращаем исходные размеры
+    if (!menuContainer.classList.contains('hidden')) {
+        canvas.style.width = `${originalWidth}px`;
+        canvas.style.height = `${originalHeight}px`;
+        renderer.setSize(originalWidth, originalHeight);
+        onWindowResize();
+    } else {
+        // Устанавливаем размеры в зависимости от контейнера
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
         renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-        camera.aspect = canvas.clientWidth / canvas.clientHeight;
-        camera.updateProjectionMatrix();
     }
+
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+}    
+
+// Функция изменения размера
+function onWindowResize() {
+    const element = document.getElementById('elevator-container');
+    const width = element.clientWidth;
+    const height = element.clientHeight;
+
+        // Устанавливаем размеры в зависимости от контейнера
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+}
 
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('fullscreenchange', onWindowResize);
@@ -412,7 +451,7 @@ buttonDoorClose.onclick = function() {
 }
 
 export async function loadHall() {
-    document.getElementById('loading').style.display = 'block'; // Скрыть индикатор загрузки
+    document.getElementById('loading').style.display = 'flex'; // Скрыть индикатор загрузки
     document.getElementById('configurator-container').style.visibility = 'hidden'; 
 
     if(isHallModelLoaded) {

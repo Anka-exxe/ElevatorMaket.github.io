@@ -15,9 +15,12 @@ function selectManyParameterButton(button) {
     button.classList.toggle('active');
 }
 
-const menuContainer = document.getElementById('menuTabs');
+const navContainer = document.getElementById('menuTabs');
 
-    menuContainer.addEventListener('wheel', (event) => {
+navContainer.addEventListener('wheel', (event) => {
         event.preventDefault(); // Предотвращаем стандартную вертикальную прокрутку
-        menuContainer.scrollLeft += event.deltaY; // Изменяем scrollLeft
+        navContainer.scrollLeft += event.deltaY; // Изменяем scrollLeft
     });
+
+
+   
