@@ -11,14 +11,59 @@ import {setAllParameters} from
     "../shareConfiguration/allParams.js";
     import {setDesignProject} from 
     "../shareConfiguration/mainParams.js";
+
+let currentModel = null;
+
+export async function loadModelBySize(idToSizeElement) {
+    const loader = new FBXLoader();
+    const modelPaths = {
+        wide: './liftModels/wideModel.fbx',
+        square: './liftModels/squareModel.fbx',
+        deep: './liftModels/deepModel.fbx',
+    };
+
+    const path = modelPaths[idToSizeElement];
+    if (!path) return;
+
+    document.getElementById('loading').style.display = 'flex';
+
+    try {
+        const object = await loader.loadAsync(path);
+
+        if (currentModel) {
+            scene.remove(currentModel);
+        }
+
+        object.position.set(0, 0, 0);
+        object.traverse(child => {
+            if (child.isMesh) {
+                child.material = new THREE.MeshStandardMaterial({
+                    color: 0xffffff,
+                    roughness: 0.5,
+                    metalness: 0.5
+                });
+            }
+        });
+
+        scene.add(object);
+        currentModel = object;
+        window.model = object;
+
+        document.getElementById('loading').style.display = 'none';
+    } catch (err) {
+        console.error('Ошибка при загрузке модели:', err);
+        alert('Не удалось загрузить модель.');
+        document.getElementById('loading').style.display = 'none';
+    }
+}
 //import {isHallClicked} from "../animation/tabFunctions.js";
 
 let model;
-let scene, camera, renderer, controls;
+let camera, renderer, controls;
 const maxDistance = 160;
 var strDownloadMime = "image/octet-stream";
 let isHallModelLoaded = false;
-
+export let scene;
 function init() {
     const canvas = document.getElementById('elevatorCanvas');
     if (!canvas) {
@@ -217,7 +262,7 @@ function onWindowResize() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/Model1.fbx',
+                './liftModels/squareModel.fbx',
                 async (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
@@ -277,6 +322,88 @@ function onWindowResize() {
     camera.position.set(maxDistance - 2, 40, maxDistance - 2);
     controls.update(); 
     renderer.render(scene, camera);
+
+    const buttonView3D = document.getElementById('view3d');
+    const buttonViewFront = document.getElementById('viewFront');
+    const buttonViewUp = document.getElementById('viewUp');
+    const buttonViewInside = document.getElementById('viewInside');
+    const buttonHallViewInside = document.getElementById('hallViewInside');
+    const buttonDoorOpen = document.getElementById('doorsOpen');
+    const buttonDoorClose = document.getElementById('doorsClose');
+
+    if (buttonView3D) {
+        buttonView3D.onclick = function () {
+            animateButton(buttonView3D);
+            camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2);
+            controls.target.set(0, 50, 0);
+            controls.maxDistance = 160;
+            controls.update();
+            checkCeilingVisibilityAndSet();
+            checkFrontVisibilityAndSet();
+        };
+    }
+
+    if (buttonViewUp) {
+        buttonViewUp.onclick = function () {
+            animateButton(buttonViewUp);
+            controls.maxDistance = maxDistance;
+            camera.position.set(0, maxDistance, 0);
+            controls.target.set(0, GetExtremeYPoint() / 2, 0);
+            controls.update();
+            Visibility.setCeilingVisibility(false);
+            checkFrontVisibilityAndSet();
+        };
+    }
+
+    if (buttonViewFront) {
+        buttonViewFront.onclick = function () {
+            animateButton(buttonViewFront);
+            controls.maxDistance = maxDistance;
+            camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance);
+            controls.target.set(0, GetExtremeYPoint() / 2, 0);
+            controls.update();
+            Visibility.setFrontVisible(false);
+            checkCeilingVisibilityAndSet();
+        };
+    }
+
+    if (buttonViewInside) {
+        buttonViewInside.onclick = function () {
+            animateButton(buttonViewInside);
+            camera.position.set(0, (GetExtremeYPoint() / 2) + 10, -1);
+            controls.target.set(0, (GetExtremeYPoint() / 2) + 10, 0);
+            controls.maxDistance = GetExtremeZPoint() / 2 - 10;
+            controls.update();
+            checkCeilingVisibilityAndSet();
+            checkFrontVisibilityAndSet();
+        };
+    }
+
+    if (buttonHallViewInside) {
+        buttonHallViewInside.onclick = function () {
+            animateButton(buttonViewInside);
+            camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1);
+            controls.enableZoom = true;
+            controls.enableRotate = true;
+            controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
+            controls.maxDistance = GetExtremeZPoint() / 2 - 10;
+            controls.update();
+            checkCeilingVisibilityAndSet();
+            checkFrontVisibilityAndSet();
+        };
+    }
+
+    if (buttonDoorOpen) {
+        buttonDoorOpen.onclick = function () {
+            Visibility.setDoorVisible(false);
+        };
+    }
+
+    if (buttonDoorClose) {
+        buttonDoorClose.onclick = function () {
+            Visibility.setDoorVisible(true);
+        };
+    }
 }
 
 async function loadConfiguration() {
@@ -337,13 +464,13 @@ export function InitialOrbitControls() {
 }
 
 // Логика для разных ракурсов для кнопок
-const buttonView3D = document.getElementById('view3d');
-const buttonViewFront = document.getElementById('viewFront');
-const buttonViewUp = document.getElementById('viewUp');
-const buttonViewInside = document.getElementById('viewInside');
-const buttonHallViewInside = document.getElementById('hallViewInside');
-const buttonDoorOpen = document.getElementById('doorsOpen');
-const buttonDoorClose = document.getElementById('doorsClose');
+// const buttonView3D = document.getElementById('view3d');
+// const buttonViewFront = document.getElementById('viewFront');
+// const buttonViewUp = document.getElementById('viewUp');
+// const buttonViewInside = document.getElementById('viewInside');
+// const buttonHallViewInside = document.getElementById('hallViewInside');
+// const buttonDoorOpen = document.getElementById('doorsOpen');
+// const buttonDoorClose = document.getElementById('doorsClose');
 
 
 export function SetSettingsBackFromHallToElevetor() {
@@ -390,65 +517,6 @@ if (buttonView3D) {
      });
  });
 
-buttonView3D.onclick = function() {
-    animateButton(buttonView3D);
-    camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2); 
-    controls.target.set(0, 50, 0);
-    controls.maxDistance = 160;
-    controls.update(); 
-    checkCeilingVisibilityAndSet();
-    checkFrontVisibilityAndSet();
-};
-
-buttonViewUp.onclick = function() {
-    animateButton(buttonViewUp);
-    controls.maxDistance = maxDistance;
-    camera.position.set(0, maxDistance, 0); 
-    controls.target.set(0, GetExtremeYPoint() / 2, 0);
-    controls.update();  
-    Visibility.setCeilingVisibility(false);
-    checkFrontVisibilityAndSet();
-}
-
-buttonViewFront.onclick = function() {
-    animateButton(buttonViewFront);
-    controls.maxDistance = maxDistance;
-    camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance); 
-    controls.target.set(0, GetExtremeYPoint() / 2, 0);
-    controls.update(); 
-    Visibility.setFrontVisible(false);
-    checkCeilingVisibilityAndSet();
-};
-
-buttonViewInside.onclick = function() {
-    animateButton(buttonViewInside);
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, -1); 
-    controls.target.set(0, (GetExtremeYPoint() / 2) + 10, 0);
-    controls.maxDistance = GetExtremeZPoint() / 2 - 10;
-    controls.update(); 
-    checkCeilingVisibilityAndSet();
-    checkFrontVisibilityAndSet();
-};
-
-buttonHallViewInside.onclick = function() {
-    animateButton(buttonViewInside);
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1); 
-    controls.enableZoom = true;
-    controls.enableRotate = true;
-    controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
-    controls.maxDistance = GetExtremeZPoint() / 2 - 10;
-    controls.update(); 
-    checkCeilingVisibilityAndSet();
-    checkFrontVisibilityAndSet();
-};
-
-buttonDoorOpen.onclick = function() {
-    Visibility.setDoorVisible(false);
-}
-
-buttonDoorClose.onclick = function() {
-    Visibility.setDoorVisible(true);
-}
 
 export async function loadHall() {
     document.getElementById('loading').style.display = 'flex'; // Скрыть индикатор загрузки
