@@ -1,8 +1,6 @@
 ﻿import * as THREE from 'three';
-import { GLTFLoader } from 'jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-import {applyDefaultElevatorTextures} from './textureManager.js'
 import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
@@ -27,33 +25,98 @@ export async function loadModelBySize(idToSizeElement) {
 
     document.getElementById('loading').style.display = 'flex';
 
-    try {
-        const object = await loader.loadAsync(path);
+    loader.load(
+        path,
+        async (object) => {
+            object.position.set(0, 0, 0);
+            scene.add(object);
+            model = object;
+            window.model = model;
 
-        if (currentModel) {
-            scene.remove(currentModel);
-        }
-
-        object.position.set(0, 0, 0);
-        object.traverse(child => {
-            if (child.isMesh) {
-                child.material = new THREE.MeshStandardMaterial({
-                    color: 0xffffff,
-                    roughness: 0.5,
-                    metalness: 0.5
-                });
+            if (currentModel) {
+                scene.remove(currentModel);
             }
-        });
+            currentModel = object;
+            getObjectNames(object);
+            DefaultSettings()
+            animate();
 
-        scene.add(object);
-        currentModel = object;
-        window.model = object;
+            function getObjectNames(obj) {
+                const names = [];
+                obj.traverse((child) => {
 
-        document.getElementById('loading').style.display = 'none';
-    } catch (err) {
-        console.error('Ошибка при загрузке модели:', err);
-        alert('Не удалось загрузить модель.');
-        document.getElementById('loading').style.display = 'none';
+                    child.material = new THREE.MeshStandardMaterial({
+                        color: 0xffffff, // Задайте нужный цвет
+                        roughness: 0.5,  // Настройте шероховатость
+                        metalness: 0.5   // Настройте металлическость
+                    });
+                });}
+
+            await loadConfiguration();
+
+            console.log("Загружено")
+
+            document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+            document.getElementById('configurator-container').style.visibility = 'visible';
+        },
+        undefined,
+        (error) => {
+            console.error('Ошибка загрузки FBX модели:', error);
+        }
+    );
+
+    function GetDistanceToWall(groupWallName) {
+        const group = window.model.getObjectByName(groupWallName);
+        if (!group) {
+            console.warn(`Group "${groupWallName}" not found.`);
+            return Infinity; // or some default value
+        }
+        const box = new THREE.Box3().setFromObject(group);
+        const center = box.getCenter(new THREE.Vector3());
+
+        return camera.position.distanceTo(center);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+
+        for (let element of Element.groupNames) {
+            let distance = GetDistanceToWall(element);
+
+            let  group = window.model.getObjectByName(element);
+            let unvisibleDistance =  camera.position.distanceTo(controls.target) - 0.5;
+
+            if(camera.position.x >= -GetExtremeXPoint() &&  camera.position.x <= GetExtremeXPoint()  &&
+                camera.position.z <= GetExtremeZPoint() &&  camera.position.z >= -GetExtremeZPoint() &&
+                camera.position.y < 0) {
+                Visibility.setWallVisibleByGroupName(Element.floorGroup, false);
+                Visibility.setWallVisibleByGroupName(Element.leftGroup, true);
+                Visibility.setWallVisibleByGroupName(Element.rightGroup, true);
+                Visibility.setWallVisibleByGroupName(Element.backGroup, true);
+                Visibility.setWallVisibleByGroupName(Element.frontGroup, true);
+                continue;
+            }
+
+            if(distance < unvisibleDistance) {
+                if (element === Element.ceilingGroup) {
+                    Visibility.setCeilingVisibility(false);
+                } else if (element === Element.floorGroup) {
+                    group.visible = false;
+                } else {
+                    Visibility.setWallVisibleByGroupName(element, false);
+                }
+
+            } else {
+                if (element === Element.ceilingGroup) {
+                    Visibility.setCeilingVisibility(true);
+                } else if (element === Element.floorGroup) {
+                    group.visible = true;
+                } else {
+                    Visibility.setWallVisibleByGroupName(element, true);
+                }
+            }
+        }
     }
 }
 //import {isHallClicked} from "../animation/tabFunctions.js";
@@ -65,6 +128,7 @@ var strDownloadMime = "image/octet-stream";
 let isHallModelLoaded = false;
 export let scene;
 function init() {
+    console.log('init');
     const canvas = document.getElementById('elevatorCanvas');
     if (!canvas) {
         console.error('Canvas элемент не найден');
@@ -96,7 +160,7 @@ function init() {
     //const canvas = document.getElementById('elevatorCanvas'); // Получаем элемент canvas
 
     const originalWidth = canvas.clientWidth;
-const originalHeight = canvas.clientHeight;
+    const originalHeight = canvas.clientHeight;
     
     optionMenuVisibilityBtn.addEventListener('click', () => {
         menuContainer.classList.toggle('hidden'); // Переключаем класс для анимации
@@ -244,8 +308,9 @@ function onWindowResize() {
             }
         }  
     }
+    loadModelBySize('square')
 
-    const gltfLoader = new GLTFLoader();
+    /*const gltfLoader = new GLTFLoader();
     gltfLoader.load(
         './liftModels/LiftModel.fbx',
         (gltf) => {
@@ -269,18 +334,16 @@ function onWindowResize() {
                     model = object;
                     window.model = model;
                     getObjectNames(object);
-                    applyDefaultElevatorTextures();
-                  // applyTextures();
                     DefaultSettings()
                     animate();
                   
-                    /*let pointLight = new THREE.PointLight(0xffffff, 50, 80);
-                    pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
-                    scene.add(pointLight);
+                    //let pointLight = new THREE.PointLight(0xffffff, 50, 80);
+                    //pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
+                    //scene.add(pointLight);
                     
-                    pointLight = new THREE.PointLight(0xffffff, 100, 80);
-                    pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
-                    scene.add(pointLight);*/
+                    //pointLight = new THREE.PointLight(0xffffff, 100, 80);
+                    //pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
+                    //scene.add(pointLight);
 
                     function getObjectNames(obj) {
                         const names = [];
@@ -308,7 +371,7 @@ function onWindowResize() {
                 }
             );
         }
-    );
+    );*/
 
     window.addEventListener('resize', () => {
         const width = canvas.clientWidth;
@@ -425,7 +488,7 @@ if (templateConfiguration) {
     window.location.href = `index.html`;
 }
 
-localStorage.removeItem('templateConfiguration');
+//localStorage.removeItem('templateConfiguration');
 }
 
 
