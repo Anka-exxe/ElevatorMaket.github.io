@@ -1,10 +1,14 @@
-﻿window.markParameterButton = function(button) {
+﻿//import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
+import {setCabinSize} from "../shareConfiguration/mainParams.js";
+
+window.markParameterButton = function(button) {
     //Если кнопка уже активна — выходим
     if (button.classList.contains('active')) {
         console.log('Кнопка уже активна, действие не требуется:', button.id);
         return;
     }
 
+    setCabinSize(button.id);
     const container = button.parentNode;
     const buttons = container.querySelectorAll('button');
     buttons.forEach(btn => btn.classList.remove('active'));
@@ -20,9 +24,11 @@
 
     if (idToSize[button.id]) {
         import('../models/loadModel.js').then(module => {
-            module.loadModelBySize(idToSize[button.id]);
+            module.loadModelBySize(idToSize[button.id], true);
         });
     }
+
+    //reloadParamsForNewModel();
 };
 
 

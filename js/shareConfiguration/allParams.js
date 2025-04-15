@@ -67,6 +67,21 @@ export function saveParametersToFile() {
     URL.revokeObjectURL(url); // Освобождаем память, удаляя объект URL
 }
 
+export async function reloadParamsForNewModel() {
+    getAllParameters();
+
+    console.log(allParameters); // Логирование параметров
+    
+    await setAllParameters(allParameters);
+}
+
+export function getCabinSize(parameters) {
+    console.log(parameters);
+    console.log(parameters.cabin);
+    console.log(parameters.cabin.size);
+    return parameters.cabin.size;
+}
+
 export async function setAllParameters(parameters) {
     console.log(parameters); // Логирование параметров
     

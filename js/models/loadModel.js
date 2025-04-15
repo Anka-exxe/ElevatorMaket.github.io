@@ -5,14 +5,15 @@ import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
 import * as Element from "./elementNames.js";
-import {setAllParameters} from 
+import {setAllParameters, getCabinSize} from 
     "../shareConfiguration/allParams.js";
     import {setDesignProject} from 
     "../shareConfiguration/mainParams.js";
+import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 
 let currentModel = null;
 
-export async function loadModelBySize(idToSizeElement) {
+export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
     const modelPaths = {
         wide: './liftModels/wideModel.fbx',
@@ -52,7 +53,7 @@ export async function loadModelBySize(idToSizeElement) {
                     });
                 });}
 
-            await loadConfiguration();
+            isReloaded ? reloadParamsForNewModel() : loadConfiguration();
 
             console.log("Загружено")
 
@@ -308,7 +309,14 @@ function onWindowResize() {
             }
         }  
     }
-    loadModelBySize('square')
+
+    const idToSize = {
+        wideSize: 'wide',
+        squareSize: 'square',
+        deepSize: 'deep'
+    };
+
+    loadModelBySize(idToSize[getCabinSizeFromConfiguration()]);
 
     /*const gltfLoader = new GLTFLoader();
     gltfLoader.load(
@@ -469,6 +477,17 @@ function onWindowResize() {
     }
 }
 
+function getCabinSizeFromConfiguration() {
+    const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
+
+    if (templateConfiguration) {
+        return getCabinSize(JSON.parse(templateConfiguration));
+    }
+
+    return null;
+}
+
+
 async function loadConfiguration() {
 const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
 const templateId = JSON.parse(localStorage.getItem('templateId'));
@@ -488,7 +507,11 @@ if (templateConfiguration) {
     window.location.href = `index.html`;
 }
 
-//localStorage.removeItem('templateConfiguration');
+localStorage.removeItem('templateConfiguration');
+}
+
+async function reloadConfiguration() {
+    reloadParamsForNewModel();
 }
 
 

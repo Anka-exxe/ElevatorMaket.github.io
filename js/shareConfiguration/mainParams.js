@@ -43,7 +43,11 @@ export function setDesignProject(designProjectId) {
     selectedParameters.designProject = designProjectId;
 }
 
-export async  function setMainActiveSelections(parameters) {
+export function setCabinSize(cabinSize) {
+    selectedParameters.size = cabinSize;
+}
+
+export async function setMainActiveSelections(parameters) {
     setActiveButtonByFormName('cabinSizeForm', parameters.size);
     setActiveRadioByInputName("cabin_type", parameters.type);
     setActiveRadioByInputName("opening_type", parameters.openingType);
