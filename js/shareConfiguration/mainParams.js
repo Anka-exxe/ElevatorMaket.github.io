@@ -1,5 +1,5 @@
 import { getRadioParamByInputName, 
-    getButtonParamByFormName } 
+    getButtonParamByFormName, setActiveCabinSizeByFormName } 
     from './findElementsHelper.js';
 import { setActiveRadioByInputName, 
     setActiveButtonByFormName, setButtonActiveById } 
@@ -48,7 +48,7 @@ export function setCabinSize(cabinSize) {
 }
 
 export async function setMainActiveSelections(parameters) {
-    setActiveButtonByFormName('cabinSizeForm', parameters.size);
+    setActiveCabinSizeByFormName('cabinSizeForm', parameters.size);
     setActiveRadioByInputName("cabin_type", parameters.type);
     setActiveRadioByInputName("opening_type", parameters.openingType);
     setButtonActiveById(parameters.designProjectGroup);

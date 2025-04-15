@@ -4,7 +4,9 @@ import {projectsCache, templatesCache,
 
 import { showTab } from "./tabFunctions.js";
 
-import {setAllParameters} from "../shareConfiguration/allParams.js";
+import {setAllParameters, getCabinSize} from "../shareConfiguration/allParams.js";
+
+import {loadModelBySize} from "../models/loadModel.js";
  
 let activeProjectId = null;
 export let isDesignProjectsLoaded = false;
@@ -51,7 +53,18 @@ function displayTemplates(templates) {
                 try {
                     const jsonObject = JSON.parse(template.configuration);
                     //const parameters = JSON.parse(jsonObject);
-                    setAllParameters(jsonObject);
+                    const idToSize = {
+                        wideSize: 'wide',
+                        squareSize: 'square',
+                        deepSize: 'deep'
+                    };
+
+                    localStorage.setItem('templateConfiguration', JSON.stringify(template.configuration)); // Сохраняем конфигурацию как строку
+                    localStorage.setItem('templateId', JSON.stringify(template.id));
+
+                    loadModelBySize(idToSize[getCabinSize(jsonObject)]);
+
+                    //setAllParameters(jsonObject);
                 } catch (error) {
                     console.error('Ошибка при парсинге JSON:', error);
                 }

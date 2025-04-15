@@ -44,6 +44,22 @@ export function setActiveButtonByFormName(formName, buttonId) {
     activeButton.click();
 }
 
+export function setActiveCabinSizeByFormName(formName, buttonId) {
+    const form = document.forms[formName];
+    const activeButton = form.querySelector(`.form__form-element#${buttonId}`);
+    
+    // Убираем класс .active у всех элементов формы
+    const allButtons = form.querySelectorAll('.form__form-element');
+    allButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Добавляем класс .active к активной кнопке
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
+}
+
 export async function setActiveTextureWithAllWalls(tabName, formName, textureContainerName, parameters) {
     await showTab(tabName);
 

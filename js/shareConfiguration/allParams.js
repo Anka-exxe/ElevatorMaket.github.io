@@ -27,6 +27,9 @@ import {GetImage} from "../models/loadModel.js";
 
 import {isDesignProjectsLoaded, populateForm} from "../animation/designProjectAnimation.js";
 
+import {loadModelBySize} from "../models/loadModel.js";
+ 
+
 const allParameters = {
     cabin: null,
     wall: null,
@@ -119,27 +122,44 @@ export async function setAllParameters(parameters) {
 }
 
 export function loadParametersFromFile() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json'; // Ограничиваем выбор только JSON-файла
+    (async () => {
+        try {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json'; // Ограничиваем выбор только JSON-файла
 
-    input.onchange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const parameters = JSON.parse(e.target.result); // Преобразуем содержимое файла в объект
-                    setAllParameters(parameters); // Вызываем метод с загруженными параметрами
-                } catch (error) {
-                    console.error("Ошибка при загрузке параметров:", error);
+            input.onchange = async (event) => { // Сделайте этот обработчик асинхронным
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => { // Сделайте этот обработчик тоже асинхронным
+                        try {
+                            const parameters = JSON.parse(e.target.result); // Преобразуем содержимое файла в объект
+                            localStorage.setItem('templateConfiguration', JSON.stringify(e.target.result)); // Сохраняем конфигурацию как строку
+                            localStorage.setItem('templateId', JSON.stringify(JSON.stringify(parameters.cabin.designProjectGroup)));
+
+                            const idToSize = {
+                                wideSize: 'wide',
+                                squareSize: 'square',
+                                deepSize: 'deep'
+                            };
+
+                            // Используем await здесь
+                            await loadModelBySize(idToSize[getCabinSize(parameters)]);
+                            //await setAllParameters(parameters); // Вызываем метод с загруженными параметрами
+                        } catch (error) {
+                            console.error("Ошибка при загрузке параметров:", error);
+                        }
+                    };
+                    reader.readAsText(file); // Читаем файл как текст
                 }
             };
-            reader.readAsText(file); // Читаем файл как текст
-        }
-    };
 
-    input.click(); // Автоматически открываем диалог выбора файла
+            input.click(); // Автоматически открываем диалог выбора файла
+        } catch (error) {
+            console.error('Ошибка:', error);
+        }
+    })();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -240,14 +260,14 @@ async function SendFile(email) {
 
     if (imageBlob) {
         // Здесь вы можете использовать imageBlob, например, сохранить его или отправить на сервер
-        const url = URL.createObjectURL(imageBlob);
+        /*const url = URL.createObjectURL(imageBlob);
         const a = document.createElement('a');
         a.href = url;
         a.download = 'screenshot.jpg'; // Имя файла для скачивания
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(url); // Освобождаем URL
+        URL.revokeObjectURL(url); // Освобождаем URL*/
     } else {
         console.error("Не удалось получить изображение.");
     }
