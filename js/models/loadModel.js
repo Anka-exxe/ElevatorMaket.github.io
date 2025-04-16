@@ -12,6 +12,7 @@ import {setAllParameters, getCabinSize} from
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 
 let currentModel = null;
+export let currentCabinSize = null;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
@@ -23,6 +24,7 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
     const path = modelPaths[idToSizeElement];
     if (!path) return;
+    currentCabinSize = idToSizeElement;
 
     document.getElementById('loading').style.display = 'flex';
 

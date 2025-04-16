@@ -92,7 +92,6 @@ export function DefaultSettings(){
         updateOpenType(selectedOpeningTypeRadio.value);
     }
 
-        updateLampRotation();
 
     const selectedHandrailAvabilityRadio = document.querySelector('input[name="handrail_availability"]:checked');
     if (selectedHandrailAvabilityRadio) {
@@ -286,33 +285,6 @@ function updateOpenType(openingType) {
     //window.model.getObjectByName("DisplayHorisontal").visible = false;
     updateControlPanelPlacement();
 }
-
-function updateLampRotation() {
-    const lampGroup = model.getObjectByName("Lamp");
-    if (!lampGroup) {
-        console.error("Группа Lamp не найдена");
-        return;
-    }
-
-    lampGroup.traverse(child => {
-        if (child.isMesh && child.material) {
-            const updateMap = (mat) => {
-                if (mat.map) {
-                    mat.map.center.set(0.5, 0.5);
-                    mat.map.rotation = Math.PI / 2;
-                    mat.map.needsUpdate = true;
-                }
-            };
-
-            if (Array.isArray(child.material)) {
-                child.material.forEach(mat => updateMap(mat));
-            } else {
-                updateMap(child.material);
-            }
-        }
-    });
-}
-
 
 function updateHandrailVisibility(isVisible) {
     const handrailGroup = model.getObjectByName("HandrailsGroup");

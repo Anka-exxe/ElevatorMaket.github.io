@@ -6,6 +6,7 @@ import * as Ceiling from '../shareConfiguration/ceilingParams.js';
 import * as Panel from '../shareConfiguration/panelParams.js';
 import {setHandrailTexture} from '../shareConfiguration/handrailParams.js';
 import * as Bumper from '../shareConfiguration/otherParams.js';
+import {currentCabinSize} from "./loadModel.js";
 
 let currentCeilingTextureURL = null;
 export function applyTextureToElement(model,
@@ -83,9 +84,10 @@ export function applyTextureToElement(model,
                 }
 
                 if (elementNamesArr.includes('Lamp')) {
-                    alphaMap.center = new THREE.Vector2(0.5, 0.5);
-                    alphaMap.rotation = Math.PI / 2;
-                    console.log('Texture for Lamp rotated to:', alphaMap.rotation);
+                    if (currentCabinSize !== 'square') {
+                        alphaMap.center = new THREE.Vector2(0.5, 0.5);
+                        alphaMap.rotation = Math.PI / 2;
+                    }
                 }
             }
             if (bump) {
