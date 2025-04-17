@@ -205,12 +205,16 @@ function updateCabinView(cabinType) {
     }
 
     updateControlPanelPlacement();
-    updateOpenType();
+    const selectedRadio = document.querySelector('input[name="opening_type"]:checked');
+    if (selectedRadio) {
+        const openingType = selectedRadio.value;
+        updateOpenType(openingType);
+    }
 }
 
 function updateOpenType(openingType) {
     if (!window.model) {
-        console.error("Модель еще не загружена");
+        console.error("Модель ещё не загружена");
         return;
     }
 
@@ -221,68 +225,65 @@ function updateOpenType(openingType) {
         if (obj) obj.visible = visible;
     };
 
-    const cabinRadio = document.querySelector('input[name="cabin_type"]:checked');
-    const isWalkThrough = (cabinRadio && cabinRadio.value === "walk_through_cabin");
+    const isWalkThrough = document.querySelector('input[name="cabin_type"]:checked')?.value === "walk_through_cabin";
 
-    if (openingType === "central" || openingType === "Центральное") {
-        setVisibility("FrontWall", false);
-        setVisibility("Door", false);
-        setVisibility("Threshold", false);
+    // Скрываем все возможные группы
+    const allGroups = [
+        // Передняя часть
+        "FrontWall", "Door", "Threshold",
+        "FrontWallLeft", "DoorLeft", "ThresholdLeft",
+        "FrontWallСentral", "DoorCentral", "ThresholdCentral",
+        // Задняя часть
+        "BackWall1", "Door1", "Threshold1",
+        "BackWall1Left", "Door1Left", "Threshold1Left",
+        "BackWall1Central", "Door1Central", "Threshold1Central"
+    ];
 
-        setVisibility("FrontWallСentral", true);
-        setVisibility("DoorCentral", true);
-        setVisibility("ThresholdCentral", true);
+    allGroups.forEach(name => setVisibility(name, false));
 
-        if (isWalkThrough) {
-            setVisibility("BackWall1", false);
-            setVisibility("Threshold1", false);
-            setVisibility("Door1", false);
-
-            setVisibility("BackWall1Central", true);
-            setVisibility("Threshold1Central", true);
-            setVisibility("Door1Central", true);
-        } else {
-            setVisibility("BackWall1", true);
-            setVisibility("Threshold1", true);
-            setVisibility("Door1", true);
-            setVisibility("BackWall1Central", false);
-            setVisibility("Threshold1Central", false);
-            setVisibility("Door1Central", false);
-        }
-
-        const doorGroup = model.getObjectByName("Door");
-        if (doorGroup) doorGroup.rotation.y = 0;
-        console.log("Центральное");
-        console.log(model.getObjectByName("FrontWall").visible);
-    } else {
+    // Показываем нужные передние группы
+    if (openingType === "left") {
+        setVisibility("FrontWallLeft", true);
+        setVisibility("DoorLeft", true);
+        setVisibility("ThresholdLeft", true);
+    } else if (openingType === "right") {
         setVisibility("FrontWall", true);
         setVisibility("Door", true);
         setVisibility("Threshold", true);
+    } else if (openingType === "central" || openingType === "Центральное") {
+        setVisibility("FrontWallСentral", true);
+        setVisibility("DoorCentral", true);
+        setVisibility("ThresholdCentral", true);
+    }
 
-        setVisibility("FrontWallСentral", false);
-        setVisibility("DoorCentral", false);
-        setVisibility("ThresholdCentral", false);
-        if (isWalkThrough) {
+    // Показываем нужные задние группы, если кабина проходная
+    if (isWalkThrough) {
+        if (openingType === "left") {
+            setVisibility("BackWall1Left", true);
+            setVisibility("Door1Left", true);
+            setVisibility("Threshold1Left", true);
+        } else if (openingType === "right") {
             setVisibility("BackWall1", true);
-            setVisibility("Threshold1", true);
             setVisibility("Door1", true);
-
-            setVisibility("BackWall1Central", false);
-            setVisibility("Threshold1Central", false);
-            setVisibility("Door1Central", false);
-        }
-        console.log(" НЕ Центральное");
-        console.log(model.getObjectByName("FrontWallСentral").visible);
-        const doorGroup = model.getObjectByName("Door");
-        if (doorGroup) {
-            doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;
-        }
-        const door1Group = model.getObjectByName("Door1");
-        if (doorGroup) {
-            door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
+            setVisibility("Threshold1", true);
+        } else if (openingType === "central" || openingType === "Центральное") {
+            setVisibility("BackWall1Central", true);
+            setVisibility("Door1Central", true);
+            setVisibility("Threshold1Central", true);
         }
     }
-    //window.model.getObjectByName("DisplayHorisontal").visible = false;
+
+    // Поворот только для телескопического правого открывания
+    const doorGroup = model.getObjectByName("Door");
+    if (doorGroup) {
+        doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;
+    }
+
+    const door1Group = model.getObjectByName("Door1");
+    if (door1Group) {
+        door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
+    }
+
     updateControlPanelPlacement();
 }
 
