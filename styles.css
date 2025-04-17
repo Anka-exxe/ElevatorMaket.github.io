@@ -830,3 +830,13 @@ input[type="color"] {
     border-color: #0056b3;
     box-shadow: 0 0 3px black;
 }
+
+.consent-block {
+    margin: 15px 0;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.consent-block input[type="checkbox"] {
+    margin-right: 8px;
+}

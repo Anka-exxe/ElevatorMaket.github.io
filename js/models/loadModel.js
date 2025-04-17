@@ -318,7 +318,11 @@ function onWindowResize() {
         deepSize: 'deep'
     };
 
-    loadModelBySize(idToSize[getCabinSizeFromConfiguration()]);
+    if(getCabinSizeFromConfiguration()) {
+        loadModelBySize(idToSize[getCabinSizeFromConfiguration()]);
+    } else {
+        window.location.href = `index.html`;
+    }
 
     /*const gltfLoader = new GLTFLoader();
     gltfLoader.load(
@@ -617,25 +621,39 @@ export async function loadHall() {
     } else {
         const fbxLoader = new FBXLoader();
         fbxLoader.load(
-            './hallModels/model18.fbx',
+            './hallModels/шт10.fbx',
             async (object) => {
                 object.position.set(0, 0, 0);
-                object.scale.set(0.4, 0.4, 0.4);
+                //object.scale.set(0.4, 0.4, 0.4);
                 scene.add(object);
                 model = object;
                 window.hallModel = model;
         
                 object.traverse((child) => {
                     if (child.isMesh) {
-                        child.geometry.computeVertexNormals(); // Пересчитать нормали
+                        // Убираем текстуру
+                        if (child.material) {
+                            // Если у меша есть материал, меняем его цвет
+                            if (Array.isArray(child.material)) {
+                                // Если материал массив, меняем цвет каждому материалу
+                                child.material.forEach(material => {
+                                    material.color.set(0x808080); // Устанавливаем серый цвет
+                                });
+                            } else {
+                                // Если материал один, меняем его цвет
+                                child.material.color.set(0x808080); // Устанавливаем серый цвет
+                            }
+                        }
+                
+                        // Пересчитываем нормали
+                        child.geometry.computeVertexNormals();
                     }
                 });
-        
+               
                 animate();
         
                 document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
                 document.getElementById('configurator-container').style.visibility = 'visible'; 
-        
                
                 isHallModelLoaded= true;
             },
@@ -646,7 +664,7 @@ export async function loadHall() {
             }
         );
         
-        const pointLight = new THREE.PointLight(0xffffff, 100, 1000);
+        const pointLight = new THREE.PointLight(0xffffff, 1000, 1000);
         pointLight.position.set(0, 80, 200);
         scene.add(pointLight);
     }

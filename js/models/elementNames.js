@@ -7,6 +7,28 @@ export const rightGroup = 'AllRightWallGroup';
 export const floorGroup = 'FloorGroup';
 export const doorGroup = 'Door';
 export const portalGroup = 'Portal';
+export const rightHallWall = 'RightHallWall';
+export const leftHallWall = 'LeftHallWall';
+export const backHallWall = 'backHallWall';
+export const ceilingHall = 'CeilingHall';
+export const sofaHall = 'sofa';
+
+export const callPostsHall = [
+    'call_post_1',
+    'call_post_2',
+    'call_post_3',
+    'call_post_4',
+    'call_post_5',
+    'call_post_6',
+];
+
+export const indicationBoardHall = [
+    'ind_board_1',
+    'ind_board_2',
+    'ind_board_3',
+    'ind_board_4',
+    'ind_board_5'
+];
 
 export const groupNames = [
     ceilingGroup,
@@ -15,7 +37,7 @@ export const groupNames = [
     leftGroup,
     rightGroup,
     floorGroup
-]
+];
 
 export const backBumper = 'BackBumper';
 export const leftBumper = 'LeftBumper';

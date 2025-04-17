@@ -544,8 +544,17 @@
         <div class="modal-content">
             <span class="close-button" id="closeModal">&times;</span>
             <h2>Опросный лист будет выслан на Email</h2>
+            
             <input class="emailInput" type="email" id="emailInput" placeholder="Введите Email" required>
-
+            <div class="consent-block">
+                <input type="checkbox" id="consentCheckbox" required>
+                <label for="consentCheckbox">
+                    Нажимая кнопку «Отправить», я принимаю условия 
+                    пользовательского соглашения и даю согласие на обработку 
+                    моих персональных данных на условиях и для целей, определенных в 
+                    Согласии на обработку персональных данных
+                </label>
+            </div>
             <div class="modal__footer">
                 <button id="confirmEmail" class="modal-button">Отправить</button>
                 <button id="cancelEmail" class="modal-button">Закрыть</button>

@@ -199,11 +199,26 @@ document.getElementById('cancelEmail').addEventListener('click', function() {
 
 document.getElementById('confirmEmail').addEventListener('click', async function() {
     const email = document.getElementById('emailInput').value;
-    if (email) {
-        await SendFile(email); // Добавлено await для корректного вызова
-        document.getElementById('emailModal').style.display = 'none';
-    } else {
+    const isConsentChecked = document.getElementById('consentCheckbox').checked;
+    
+    if (!email) {
         alert('Пожалуйста, введите почту');
+        return;
+    }
+    
+    if (!isConsentChecked) {
+        alert('Для продолжения необходимо принять условия соглашения');
+        return;
+    }
+
+    document.getElementById('emailModal').style.display = 'none';
+    
+    try {
+        await SendFile(email);
+        document.getElementById('emailModal').style.display = 'none';
+    } catch (error) {
+        console.error('Ошибка при отправке:', error);
+        alert('Произошла ошибка при отправке. Пожалуйста, попробуйте позже.');
     }
 });
 
@@ -300,10 +315,10 @@ async function SendFile(email) {
 
         // Проверка статуса ответа
         if (!response.ok) {
-            alert("Произошла ошибка");
+            alert("Произошла ошибка отправки опросного листа");
             throw new Error('Network response was not ok');
         } else {
-            alert("Опросный лист отправлен");
+            //alert("Опросный лист отправлен");
         }
 
     } catch (error) {
