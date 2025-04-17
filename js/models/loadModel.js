@@ -10,9 +10,17 @@ import {setAllParameters, getCabinSize} from
     import {setDesignProject} from 
     "../shareConfiguration/mainParams.js";
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
+import {applyColorToElements} from "./hallTextureManager.js";
 
 let currentModel = null;
 export let currentCabinSize = null;
+let buttonView3D;
+let buttonViewFront;
+let buttonViewUp;
+let buttonViewInside;
+let buttonHallViewInside;
+let buttonDoorOpen;
+let buttonDoorClose;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
@@ -400,13 +408,13 @@ function onWindowResize() {
     controls.update(); 
     renderer.render(scene, camera);
 
-    const buttonView3D = document.getElementById('view3d');
-    const buttonViewFront = document.getElementById('viewFront');
-    const buttonViewUp = document.getElementById('viewUp');
-    const buttonViewInside = document.getElementById('viewInside');
-    const buttonHallViewInside = document.getElementById('hallViewInside');
-    const buttonDoorOpen = document.getElementById('doorsOpen');
-    const buttonDoorClose = document.getElementById('doorsClose');
+    buttonView3D = document.getElementById('view3d');
+     buttonViewFront = document.getElementById('viewFront');
+     buttonViewUp = document.getElementById('viewUp');
+     buttonViewInside = document.getElementById('viewInside');
+     buttonHallViewInside = document.getElementById('hallViewInside');
+     buttonDoorOpen = document.getElementById('doorsOpen');
+     buttonDoorClose = document.getElementById('doorsClose');
 
     if (buttonView3D) {
         buttonView3D.onclick = function () {
@@ -621,7 +629,7 @@ export async function loadHall() {
     } else {
         const fbxLoader = new FBXLoader();
         fbxLoader.load(
-            './hallModels/шт10.fbx',
+            './hallModels/шт12.fbx',
             async (object) => {
                 object.position.set(0, 0, 0);
                 //object.scale.set(0.4, 0.4, 0.4);
@@ -649,6 +657,8 @@ export async function loadHall() {
                         child.geometry.computeVertexNormals();
                     }
                 });
+
+                applyColorToElements();
                
                 animate();
         

@@ -8,10 +8,31 @@ export const floorGroup = 'FloorGroup';
 export const doorGroup = 'Door';
 export const portalGroup = 'Portal';
 export const rightHallWall = 'RightHallWall';
-export const leftHallWall = 'LeftHallWall';
-export const backHallWall = 'backHallWall';
+export const leftHallWall = 'LeftHallGroup';
+export const backHallWall = 'BackHallWall';
+export const frontHallWall = 'FrontWallGroup';
 export const ceilingHall = 'CeilingHall';
-export const sofaHall = 'sofa';
+export const ceilingLampHall = 'CeilingLampGroup';
+export const sofaHall = 'Sofa';
+export const circleVaseHall = 'CircleVase';
+export const circleVaseTableHall = 'FlowerTable3';
+export const tableGlassHall = "TableGlass";
+export const sofaTableSupportHall = "SofaTableSupport";
+export const plintus = 'plinth';
+export const coverfrontPanel = 'CoverfrontPanel';
+
+export const squareVasesHall = [
+    'SquareVase1'
+];
+
+export const squareVasesTablesHall = [
+    'FlowerTable1'
+];
+
+export const leavesGroupsHall = [
+    'LeavesGroup3',
+    'LeavesGroup1'
+];
 
 export const callPostsHall = [
     'call_post_1',
