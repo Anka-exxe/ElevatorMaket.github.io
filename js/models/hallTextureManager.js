@@ -71,10 +71,22 @@ function applyTextures(objectName, color, albedoTextureURL  = null, normalTextur
 }
 
 export function applyColorToElements() {
+    const processGroup = (group, defaultColor, albedoTextureUrl = null,
+         normalTextureUrl = null, roughnessTexture = null, rough = null, metal = null) => 
+    group.map(name => ({
+        name,
+        color: defaultColor,
+        albedoTexture: albedoTextureUrl,
+        normalTexture: normalTextureUrl,
+        roughnessTextureURL: roughnessTexture,
+        roughness: rough,
+        metalness: metal
+    }));
+
     // Цвета для разных групп элементов
     const colorSettings = [
         // Одиночные объекты
-        { name: Element.portalGroup, color: 0xFFA500, albedoTexture: null, 
+        { name: Element.portalGroup, color: 0x808080, albedoTexture: null, 
             normalTexture: null, roughnessTextureURL: null,
         roughness: null, metallness: null },
         { name: Element.rightHallWall, color: 0x4682B4, albedoTexture: null,
@@ -89,25 +101,26 @@ export function applyColorToElements() {
             normalTexture: null, 
             roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
             roughness: 1, metallness: 0.8  },
-        { name: Element.backHallWall, color: 0x556B2F, albedoTexture: null,  normalTexture: "../../hallModels/hallTextures/WallPaint.jpg", 
-        roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
-        roughness: null, metallness: null },
+        { name: Element.backHallWall, color: 0x4682B4, albedoTexture: null,
+            normalTexture: null, 
+            roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
+            roughness: 1, metallness: 0.8 },
         { name: Element.ceilingHall, color: 0xF0F0F0, albedoTexture: null,
          normalTexture: null, roughnessTextureURL: "../../hallModels/hallTextures/sofa.png",
          roughness: null, metallness: null },
         { name: Element.sofaHall, color: 0xF5F5DC, albedoTexture: "../../hallModels/hallTextures/sofa.png",
         normalTexture: null, roughnessTextureURL: "../../hallModels/hallTextures/sofa.png",
-        roughness: null, metallness: null },
+        roughness: 1, metallness: 0.2 },
         { name: Element.circleVaseHall, color:  0x000000, albedoTexture: null, 
             normalTexture: null, roughnessTextureURL: null,
             roughness: 0.3, metallness: 0.8 },
-        { name: Element.circleVaseTableHall, color: 0x000000, albedoTexture: null,
+        { name: Element.circleVaseTableHall, color: 0x808080, albedoTexture: null,
              normalTexture: null, roughnessTextureURL: null,
              roughness: null, metallness: null },
-        { name: Element.tableGlassHall, color: 0xADD8E6, albedoTexture: null,
+        { name: Element.tableGlassHall, color: 0x808080, albedoTexture: null,
              normalTexture: null, roughnessTextureURL: null,
              roughness: null, metallness: null },
-        { name: Element.sofaTableSupportHall, color: 0x808080, albedoTexture: null,
+        { name: Element.sofaTableSupportHall, color: 0xffffff, albedoTexture: null,
              normalTexture: null, roughnessTextureURL: null,
              roughness: null, metallness: null },
         { name: Element.plintus, color: 0xffffff, albedoTexture: null,
@@ -116,12 +129,16 @@ export function applyColorToElements() {
         { name: Element.ceilingLampHall, color: 0xffffff,
              albedoTexture: null, normalTexture: null, roughnessTextureURL: null ,
              roughness: null, metallness: null},
-        { name: Element.coverfrontPanel, color: 0xffffff, albedoTexture: "../../hallModels/hallTextures/FrontCover.png",
+        { name: Element.coverFrontPanel, color: 0xffffff, albedoTexture: "../../hallModels/hallTextures/FrontCover.png",
          normalTexture: "../../hallModels/hallTextures/FrontCover.png",
           roughnessTextureURL: "../../hallModels/hallTextures/FrontCover.png",
           roughness: null, metallness: null },
-        
-        // Группы объектов
+          ...processGroup(Element.squareVasesHall, 0xffffff, "../../hallModels/hallTextures/Vazon.png"),
+          ...processGroup(Element.squareVasesTablesHall, 0x808080),
+          ...processGroup(Element.leavesGroupsHall, 0x556B2F),
+          ...processGroup(Element.callPostsHall, 0xB7B7B7, null, null, null, 0.4, 0.9),
+          ...processGroup(Element.indicationBoardHall, 0xB7B7B7, null, null, null, 0.4, 0.9),
+        // Группы объектов 0x808080
         /*{ names: Element.squareVasesHall, color: 0x9370DB },
         { names: Element.squareVasesTablesHall, color: 0xDEB887 },
         { names: Element.leavesGroupsHall, color: 0x2E8B57 },

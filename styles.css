@@ -124,8 +124,8 @@ body {
     object-fit: contain; 
     width: 100%;
     height: 100%;
-    position: absolute; /* Позволяет свободно позиционировать элемент */
-    top: 0;            /* Устанавливает верхнюю границу в 0 */
+    position: absolute; 
+    top: 0;            
     left: 0; 
 }
 

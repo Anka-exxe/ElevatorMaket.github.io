@@ -11,6 +11,7 @@ import {setAllParameters, getCabinSize} from
     "../shareConfiguration/mainParams.js";
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {applyColorToElements} from "./hallTextureManager.js";
+import {initCallPostsHandler, initIndicationBoardHandler} from "./hallCallPostsIndBoard.js";
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -629,7 +630,7 @@ export async function loadHall() {
     } else {
         const fbxLoader = new FBXLoader();
         fbxLoader.load(
-            './hallModels/шт12.fbx',
+            './hallModels/шт15.fbx',
             async (object) => {
                 object.position.set(0, 0, 0);
                 //object.scale.set(0.4, 0.4, 0.4);
@@ -659,7 +660,9 @@ export async function loadHall() {
                 });
 
                 applyColorToElements();
-               
+                initCallPostsHandler(window.hallModel);
+                initIndicationBoardHandler(window.hallModel);
+
                 animate();
         
                 document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
@@ -679,14 +682,14 @@ export async function loadHall() {
         scene.add(pointLight);
     }
 
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 300);
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 250);
         
-    controls.target.set(0, GetExtremeYPoint() / 2, 210);
-    controls.minPolarAngle = Math.PI / 4; // Минимальный угол по вертикали (в радианах)
-    controls.maxPolarAngle = Math.PI / 1.7; // Максимальный угол по вертикали (в радианах)
+    controls.target.set(0, GetExtremeYPoint() / 2, 170);
+    controls.minPolarAngle = Math.PI / 4.5; // Минимальный угол по вертикали (в радианах)
+    controls.maxPolarAngle = Math.PI / 2; // Максимальный угол по вертикали (в радианах)
     controls.minAzimuthAngle = -Math.PI / 2; // Минимальный угол по горизонтали (в радианах)
-    controls.maxAzimuthAngle = Math.PI / 2; // Максимальный угол по горизонтали (в радианах)
-    controls.maxDistance = 100;
+    controls.maxAzimuthAngle = Math.PI / 2.5; // Максимальный угол по горизонтали (в радианах)
+    controls.maxDistance = 95;
     controls.update();
 }
 

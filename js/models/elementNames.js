@@ -11,6 +11,7 @@ export const rightHallWall = 'RightHallWall';
 export const leftHallWall = 'LeftHallGroup';
 export const backHallWall = 'BackHallWall';
 export const frontHallWall = 'FrontWallGroup';
+export const floorHall = 'Floor';
 export const ceilingHall = 'CeilingHall';
 export const ceilingLampHall = 'CeilingLampGroup';
 export const sofaHall = 'Sofa';
@@ -19,19 +20,22 @@ export const circleVaseTableHall = 'FlowerTable3';
 export const tableGlassHall = "TableGlass";
 export const sofaTableSupportHall = "SofaTableSupport";
 export const plintus = 'plinth';
-export const coverfrontPanel = 'CoverfrontPanel';
+export const coverFrontPanel = 'CoverFrontPanel';
 
 export const squareVasesHall = [
-    'SquareVase1'
+    'SquareVase1',
+    'SquareVase2'
 ];
 
 export const squareVasesTablesHall = [
-    'FlowerTable1'
+    'FlowerTable1',
+    'FlowerTable2',
 ];
 
 export const leavesGroupsHall = [
-    'LeavesGroup3',
-    'LeavesGroup1'
+    'LeavesGroup1',
+    'LeavesGroup2',
+    'LeavesGroup3'
 ];
 
 export const callPostsHall = [
