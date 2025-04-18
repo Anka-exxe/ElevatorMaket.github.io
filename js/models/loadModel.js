@@ -278,7 +278,7 @@ function onWindowResize() {
         return camera.position.distanceTo(center);
     }
 
-    function animate() {
+    /*function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
 
@@ -318,7 +318,7 @@ function onWindowResize() {
                 }
             }
         }  
-    }
+    }*/
 
     const idToSize = {
         wideSize: 'wide',

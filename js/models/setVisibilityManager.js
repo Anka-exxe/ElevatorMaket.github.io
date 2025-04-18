@@ -1,4 +1,3 @@
-import * as THREE from 'three';
 import * as Element from "./elementNames.js";
 
 export function setCeilingVisibility(isVisible) {
