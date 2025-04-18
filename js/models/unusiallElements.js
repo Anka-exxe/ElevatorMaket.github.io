@@ -68,7 +68,6 @@
     const mirrorButtons = document.querySelectorAll('.mirror-location-button');
     mirrorButtons.forEach(button => {
         button.addEventListener('click', () => {
-            console.log("Mirror location clicked");
             button.classList.toggle('active');
             updateMirrorPlacement();
         });
