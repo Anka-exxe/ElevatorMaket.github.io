@@ -239,15 +239,15 @@ console.log(tabId)
                 const target = activeButton.getAttribute('data-target');
                 switch (target) {
                     case 'all':
-                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1','FrontWallСentral','BackWall1Central'];
+                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1','FrontWallСentral','BackWall1Central','FrontWallLeft','BackWall1Left'];
                         WallTextureChoice.setAllTextures(textureId);
                         break;
                     case 'front':
-                        elementNames = ['FrontWall','FrontWallСentral'];
+                        elementNames = ['FrontWall','FrontWallСentral','FrontWallLeft'];
                         WallTextureChoice.setFrontTexture(textureId);
                         break;
                     case 'back':
-                        elementNames = ['BackWall','BackWall1', 'BackWall1Central'];
+                        elementNames = ['BackWall','BackWall1', 'BackWall1Central','BackWall1Left'];
                         WallTextureChoice.setBackTexture(textureId);
                         break;
                     case 'left':
@@ -309,7 +309,7 @@ console.log(tabId)
             }
             break;
         case 'DoorParametrsTab':
-            elementNames = ['Door','DoorCentral','Door1','Door1Central'];
+            elementNames = ['Door','DoorCentral','DoorLeft','Door1','Door1Central','Door1Left'];
             setDoorTexture(textureId);
             break;
         case 'OtherParametrsTab':
