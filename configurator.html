@@ -40,11 +40,11 @@
                 </div>
 
                 <div id="hallBtns" class="elevator-container__options-menu">
-                    <form id="hallViewForm" class="elevator-container__form-container--transparent form-container--transparent">
+                    <!--<form id="hallViewForm" class="elevator-container__form-container--transparent form-container--transparent">
                         <button id="hallView3d" class="form__form-element--transparent active" type="button" onclick="selectParameterButton(this)">Вид 3D</button>
                         <button id="hallViewInside"  class="form__form-element--transparent" type="button" onclick="selectParameterButton(this)">Внутри</button>
-                    </form>
-                </div>
+                    </form>-->
+                </div> 
             </footer>
         </div>
 
@@ -491,24 +491,66 @@
                 <div class="textures-container" name="wallHallTextures">
                 </div>
 
+                <hr class="menu-container_hr--textures"> 
+
+                <div class="menu-containerr__form-container form-container--radio">
+                    <h3 class="form-container--radio__title">Вызывные посты:</h3>
+                    <form class="form-container--radio__form form">
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="call_post_type" class="form__form-element" value="case1" id="call_post_case1" checked>
+                            <label class="form_form-label" for="call_post_case1">вариант 1</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="call_post_type" class="form__form-element" value="case2" id="call_post_case2">
+                            <label class="form_form-label" for="call_post_case2">вариант 2</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="call_post_type" class="form__form-element" value="case3" id="call_post_case3">
+                            <label class="form_form-label" for="call_post_case3">вариант 3</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="call_post_type" class="form__form-element" value="case4" id="call_post_case4">
+                            <label class="form_form-label" for="call_post_case4">вариант 4</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="call_post_type" class="form__form-element" value="case5" id="call_post_case5" >
+                            <label class="form_form-label" for="call_post_case5">вариант 5</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="call_post_type" class="form__form-element" value="case6" id="call_post_case6" >
+                            <label class="form_form-label" for="call_post_case6">вариант 6</label>
+                        </div>
+                    </form>
+                </div>  
+
                 <hr class="menu-container_hr--textures">
 
-                <h3 class="additional-title">
-                    Вызывные посты:
-                </h3>
 
-                <div class="textures-container" name="callPostsTextures">
-                </div>
-
-                <hr class="menu-container_hr--textures">
-
-                <h3 class="additional-title">
-                    Табло индикации:
-                </h3>
-
-                <div class="textures-container" name="indicatorBoardTextures">
-                </div>
-
+                <div class="menu-containerr__form-container form-container--radio">
+                    <h3 class="form-container--radio__title">Табло индикации:</h3>
+                    <form class="form-container--radio__form form">
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_type" class="form__form-element" value="case1" id="ind_board_case1" checked>
+                            <label class="form_form-label" for="ind_board_case1">вариант 1</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_type" class="form__form-element" value="case2" id="ind_board_case2">
+                            <label class="form_form-label" for="ind_board_case2">вариант 2</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_type" class="form__form-element" value="case3" id="ind_board_case3">
+                            <label class="form_form-label" for="ind_board_case3">вариант 3</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_type" class="form__form-element" value="case4" id="ind_board_case4">
+                            <label class="form_form-label" for="ind_board_case4">вариант 4</label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_type" class="form__form-element" value="case5" id="ind_board_case5" >
+                            <label class="form_form-label" for="ind_board_case5">вариант 5</label>
+                        </div>
+                    </form>
+                </div>  
 
                 </div>
             </div>
@@ -520,21 +562,21 @@
                     <button id="saveButton" type="button" class="form__form-element--with-image additional-button">
                         <img class="form__button-image" src="./images/download_circle_icon.png">
                     </button>
-                    <span class="tooltip-text">Загрузить конфигурацию</span> <!-- Подсказка для кнопки сохранения -->
+                    <span class="tooltip-text">Загрузить конфигурацию</span> 
                 </div>
         
                 <div class="tooltip">
                     <button id="shareButton" type="button" class="form__form-element--with-image additional-button">
                         <img class="form__button-image" src="./images/share_icon.png">
                     </button>
-                    <span class="tooltip-text">Поделиться</span> <!-- Подсказка для кнопки поделиться -->
+                    <span class="tooltip-text">Поделиться</span> 
                 </div>
         
                 <div class="tooltip">
                     <button id="questionNaireBtn" type="button" class="form__form-element--with-image additional-button">
                         <img class="form__button-image" src="./images/file_icon.png">
                     </button>
-                    <span class="tooltip-text">Опросный лист</span> <!-- Подсказка для кнопки анкеты -->
+                    <span class="tooltip-text">Опросный лист</span> 
                 </div>
             </form>
         </div>
