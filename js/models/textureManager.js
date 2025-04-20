@@ -92,8 +92,7 @@ export function applyTextureToElement(model,
             }
             if (bump) {
                 bump.wrapS = THREE.RepeatWrapping;
-                bump.wrapT = THREE.RepeatWrapping;
-                //bump.colorSpace = THREE.SRGBColorSpace;
+                bump.wrapT = THREE.RepeatWrapping
                 if (materialOptions.repeat) {
                     bump.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -103,7 +102,6 @@ export function applyTextureToElement(model,
             if (aoMap) {
                 aoMap.wrapS = THREE.RepeatWrapping;
                 aoMap.wrapT = THREE.RepeatWrapping;
-                //aoMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     aoMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -113,7 +111,6 @@ export function applyTextureToElement(model,
             if (displacementMap) {
                 displacementMap.wrapS = THREE.RepeatWrapping;
                 displacementMap.wrapT = THREE.RepeatWrapping;
-                //displacementMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     displacementMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -123,7 +120,6 @@ export function applyTextureToElement(model,
             if (metalnessMap) {
                 metalnessMap.wrapS = THREE.RepeatWrapping;
                 metalnessMap.wrapT = THREE.RepeatWrapping;
-                //metalnessMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     metalnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -133,7 +129,6 @@ export function applyTextureToElement(model,
             if (normalMap) {
                 normalMap.wrapS = THREE.RepeatWrapping;
                 normalMap.wrapT = THREE.RepeatWrapping;
-                //normalMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     normalMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -143,7 +138,6 @@ export function applyTextureToElement(model,
             if (roughnessMap) {
                 roughnessMap.wrapS = THREE.RepeatWrapping;
                 roughnessMap.wrapT = THREE.RepeatWrapping;
-                //normalMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     roughnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -221,13 +215,11 @@ export function handleTextureClick(event) {
     let elementNames = [];
 
 
-    // Remove 'active' class from all images in the same container
     const allImages = texturesContainer.querySelectorAll('img');
     allImages.forEach(image => {
         image.classList.remove('active');
     });
 
-    // Add 'active' class to the clicked image
     img.classList.add('active');
 
 console.log(tabId)
@@ -313,8 +305,6 @@ console.log(tabId)
             setDoorTexture(textureId);
             break;
         case 'OtherParametrsTab':
-            var active = tabContainer.querySelector('.form__form-element.active');
-            //const target = active.getAttribute('data-target');
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
             Bumper.setAllTextures(textureId);
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
@@ -350,210 +340,3 @@ console.log(tabId)
             roughness: roughness,
         });
 }
-
-export function applyDefaultElevatorTextures() {
-    if (!model) {
-        console.error("Модель еще не загружена");
-        return;
-    }
-    const defaultTexturesMapping = [
-            {
-                elementNames: ['BackThreshold'],
-                texture: './Textures/base.jpg',
-                alpha: null,
-                bump:null,
-                aoMap: './Textures/ao.png',
-                displacementMap: './Textures/displacement.png',
-                metalnessMap: './Textures/metalic.png',
-                normalMap: './Textures/normal.png',
-                options: {
-                    metalness: 0.8,
-                    roughness: 0.4,
-                    color: 0x7C7C7C,
-                }
-            },
-        {
-            elementNames: ['FrontThreshold'],
-            texture: './Textures/base.jpg',
-            alpha: null,
-            bump:null,
-            aoMap: './Textures/ao.png',
-            displacementMap: './Textures/displacement.png',
-            metalnessMap: './Textures/metalic.png',
-            normalMap: './Textures/normal.png',
-            options: {
-                metalness: 0.8,
-                roughness: 0.4,
-                color: 0x7C7C7C,
-            }
-        },
-    ];
-    // const defaultTexturesMapping = [
-    //     {
-    //         elementNames: ['FrontWall'],
-    //         texture: './Стены/DL89E_diffuse.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['FrontWallСentral'],
-    //         texture: './Стены/DL89E_diffuse.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['BackWall'],
-    //         texture: './Стены/DL89E_diffuse.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['BackWall1'],
-    //         texture: './Стены/DL89E_diffuse.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['BackWall1Central'],
-    //         texture: './Стены/DL89E_diffuse.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['LeftWall'],
-    //         texture: './Textures/base.jpg',
-    //         alpha: null,
-    //         bump:null,
-    //         aoMap: './Textures/ao.png',
-    //         displacementMap: './Textures/displacement.png',
-    //         metalnessMap: './Textures/metalic.png',
-    //         normalMap: './Textures/normal.png',
-    //         options: {
-    //             metalness: 0.8,
-    //             roughness: 0.4,
-    //             color: 0x7C7C7C,
-    //         }
-    //     },
-    //     {
-    //         elementNames: ['RightWall'],
-    //         texture: './TextureWall/brushed.jpg',
-    //         alpha: null,
-    //         bump:null,
-    //         aoMap: './TextureWall/DisplacementMap1.png',
-    //         displacementMap:'./TextureWall/DisplacementMap1.png',
-    //         metalnessMap: './TextureWall/DisplacementMap2.png',
-    //         normalMap: './TextureWall/NormalMap.png',
-    //         options: { metalness: 0.6, roughness: 0.5, color: 0x7C7C7C}
-    //     },
-    //     {
-    //         elementNames: ['Floor'],
-    //         texture: './Пол_Текстура/nero marquina.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0.2, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['Threshold'],
-    //         texture: './Пол_Текстура/nero marquina.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0.2, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['ThresholdCentral'],
-    //         texture: './Пол_Текстура/nero marquina.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0.2, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['Threshold1'],
-    //         texture: './Пол_Текстура/nero marquina.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0.2, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['Threshold1Central'],
-    //         texture: './Пол_Текстура/nero marquina.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0.2, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['Ceiling'],
-    //         texture: './Потолок/RAL-7035-Svetlo-serii.png',
-    //         alpha: null,
-    //         options: { metalness: 0, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['Lamp'],
-    //         texture: './Потолок/RAL-7035-Svetlo-serii.png',
-    //         alpha: './Потолок_Текстуры/Р04.png',
-    //         options: {
-    //             metalness: 0,
-    //             roughness: 0.8,
-    //             emissive: new THREE.Color(0xffffee),
-    //             emissiveIntensity: 1
-    //         }
-    //     },
-    //     {
-    //         elementNames: ['Door'],
-    //         texture: './Двери/RAL-7035-Svetlo-serii.png',
-    //         alpha: null,
-    //         options: { metalness: 0.8, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['Door1'],
-    //         texture: './Двери/RAL-7035-Svetlo-serii.png',
-    //         alpha: null,
-    //         options: { metalness: 0.8, roughness: 0.8 }
-    //     },
-    //     {
-    //         elementNames: ['ControlPanel'],
-    //         texture: './Двери/RAL-7035-Svetlo-serii.png',
-    //         alpha: null,
-    //         options: { metalness: 0.3, roughness: 0.7 }
-    //     },
-    //     {
-    //         elementNames: ['DisplayVertical'],
-    //         texture: './Табло/TL-D70.png',
-    //         alpha: null,
-    //         options: { metalness: 0.3, roughness: 0.7 }
-    //     },
-    //     {
-    //         elementNames: ['buttons(ControlPanel)'],
-    //         texture: './Стены_Текстуры/DL89E_glossiness.jpg',
-    //         alpha: null,
-    //         options: { metalness: 0.3, roughness: 0.7 }
-    //     },
-    //     {
-    //         elementNames: ['HandrailsGroup'],
-    //         texture: './Стены/шлифованная нержавейка.jpg',
-    //         alpha: null,
-    //         options: { metalness: 1, roughness: 0.7 }
-    //     },
-    //     {
-    //         elementNames: ['BumperGroup'],
-    //         texture: './Стены/шлифованная нержавейка.jpg',
-    //         alpha: null,
-    //         options: { metalness: 1, roughness: 0.7 }
-    //     },
-    // ];
-
-    // // Для каждого набора настроек применяем текстуру к соответствующим объектам
-    defaultTexturesMapping.forEach(mapping => {
-        applyTextureToElement(model,
-            mapping.elementNames,
-            mapping.options.color,
-            mapping.texture,
-            mapping.alpha,
-            mapping.bump,
-            mapping.aoMap,
-            mapping.displacementMap,
-            mapping.metalnessMap,
-            mapping.normalMap,
-            mapping.roughnessMap,
-            mapping.options);
-    });
-}
-
-
-
-
-

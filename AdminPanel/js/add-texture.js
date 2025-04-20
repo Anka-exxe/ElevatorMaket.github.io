@@ -1,36 +1,67 @@
 ﻿import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 
-// Получаем параметр id из URL – если он присутствует, находимся в режиме редактирования
-const urlParams = new URLSearchParams(window.location.search);
-const textureId = urlParams.get('id');
+// В самом верху add-texture.js
+const urlParams     = new URLSearchParams(window.location.search);
+const textureId     = urlParams.get('id');
+const nameInput     = document.getElementById('name');
+const changeNameBtn = document.getElementById('changeNameBtn');
 
-// Если в режиме редактирования – добавляем обработчик для изменения только имени текстуры
 if (textureId) {
-    document.getElementById('changeNameBtn').addEventListener('click', () => {
-        const name = document.getElementById('name').value.trim();
-        if (!name) {
-            alert("Введите новое название текстуры");
+    // Сразу делаем поле readOnly и переводим кнопку в режим "edit"
+    nameInput.readOnly = true;
+    changeNameBtn.textContent = 'Изменить название';
+    changeNameBtn.dataset.mode = 'edit';
+
+    changeNameBtn.addEventListener('click', async () => {
+        if (changeNameBtn.dataset.mode === 'edit') {
+            // Переключаемся в режим редактирования
+            nameInput.readOnly = false;
+            nameInput.focus();
+            changeNameBtn.textContent = 'Сохранить';
+            changeNameBtn.dataset.mode = 'save';
             return;
         }
-        fetch(`http://localhost:8090/api/v1/textures/${textureId}/name`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name })
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(`Ошибка ${response.status}: ${text}`); });
+
+        // === режим save ===
+        const newName = nameInput.value.trim();
+        if (!newName) {
+            alert('Введите новое название текстуры');
+            return;
+        }
+
+        // Снова делаем поле только для чтения
+        nameInput.readOnly = true;
+        changeNameBtn.textContent = 'Изменить название';
+        changeNameBtn.dataset.mode = 'edit';
+
+        // Формируем multipart/form-data
+        const formData = new FormData();
+        formData.append('name', newName);
+
+        try {
+            const res = await fetch(
+                `http://localhost:8090/api/v1/textures/${textureId}/name`,
+                {
+                    method: 'PUT',
+                    body: formData
                 }
-                return response.json();
-            })
-            .then(() => alert('Название текстуры успешно изменено!'))
-            .catch(err => {
-                console.error("Ошибка при изменении названия текстуры", err);
-                alert("Ошибка при изменении названия текстуры");
-            });
+            );
+            if (!res.ok) {
+                // Читаем тело ошибки (JSON или текст)
+                let errBody;
+                try { errBody = await res.json(); }
+                catch { errBody = await res.text(); }
+                throw new Error(`Ошибка ${res.status}: ${JSON.stringify(errBody)}`);
+            }
+            alert('Название текстуры успешно изменено!');
+        } catch (err) {
+            console.error('Ошибка при изменении названия текстуры', err);
+            alert(err.message);
+        }
     });
 }
+
 
 // Глобальные объекты для хранения старых URL (при редактировании) и флагов удаления
 let oldMapValues = {};
@@ -384,16 +415,23 @@ const removeMapping = {
             });
     }
 
-    // Обработчик отправки формы – собираем данные формы и отправляем FormData
     document.getElementById('textureForm').addEventListener('submit', (e) => {
         e.preventDefault();
 
-        // Формируем FormData из формы
         const form = document.getElementById('textureForm');
         const formData = new FormData(form);
 
-        // Обработка пустых файловых полей: если файл не выбран,
-        // добавляем флаг удаления (если он установлен) и удаляем поле из FormData
+        const iconField = formData.get('icon.icon');
+        if (!iconField || (iconField instanceof File && iconField.size === 0)) {
+            // удаляем пустое поле
+            formData.delete('icon.icon');
+            // если кликнули "Удалить файл" — подставим флаг removeIcon
+            if (removeFlags.icon) {
+                formData.append('removeIcon', 'true');
+            }
+        }
+
+
         const optionalKeys = [
             'baseTexture',
             'aoMap',
@@ -409,17 +447,14 @@ const removeMapping = {
             const file = formData.get(key);
             if (!file || (file instanceof File && file.size === 0)) {
                 if (removeFlags[key]) {
-                    const flagName = removeMapping[key];
-                    formData.append(flagName, "true");
+                    formData.append(removeMapping[key], 'true');
                 }
                 formData.delete(key);
             }
         }
 
-        // Обработка полей для иконки (булевы флаги принадлежности)
         const iconSelect = document.getElementById('icon.type');
-        const selectedTypes = Array.from(iconSelect.selectedOptions).map(option => option.value);
-
+        const selectedTypes = Array.from(iconSelect.selectedOptions).map(o => o.value);
         formData.append('icon.isDoor', selectedTypes.includes('DOOR'));
         formData.append('icon.isWall', selectedTypes.includes('WALL'));
         formData.append('icon.isFloor', selectedTypes.includes('FLOOR'));
@@ -436,21 +471,17 @@ const removeMapping = {
         const method = textureId ? 'PUT' : 'POST';
 
         fetch(url, {
-            method: method,
+            method,
             body: formData
         })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(`Ошибка ${response.status}: ${text}`); });
-                }
-                return response.json();
+            .then(res => {
+                if (!res.ok) return res.text().then(t => { throw new Error(`Ошибка ${res.status}: ${t}`); });
+                return res.json();
             })
-            .then(() => {
-                alert(textureId ? 'Текстура успешно обновлена!' : 'Текстура успешно добавлена!');
-            })
+            .then(() => alert(textureId ? 'Текстура успешно обновлена!' : 'Текстура успешно добавлена!'))
             .catch(err => {
-                console.error("Ошибка при сохранении текстуры", err);
-                alert("Ошибка при сохранении текстуры");
+                console.error('Ошибка при сохранении текстуры', err);
+                alert(err.message);
             });
     });
 })();
