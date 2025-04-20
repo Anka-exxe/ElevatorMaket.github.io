@@ -630,7 +630,7 @@ export async function loadHall() {
     } else {
         const fbxLoader = new FBXLoader();
         fbxLoader.load(
-            './hallModels/шт15.fbx',
+            './hallModels/шт16.fbx',
             async (object) => {
                 object.position.set(0, 0, 0);
                 //object.scale.set(0.4, 0.4, 0.4);
