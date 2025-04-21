@@ -6,6 +6,7 @@ import * as Ceiling from '../shareConfiguration/ceilingParams.js';
 import * as Panel from '../shareConfiguration/panelParams.js';
 import {setHandrailTexture} from '../shareConfiguration/handrailParams.js';
 import * as Bumper from '../shareConfiguration/otherParams.js';
+import {currentCabinSize} from "./loadModel.js";
 
 let currentCeilingTextureURL = null;
 export function applyTextureToElement(model,
@@ -29,7 +30,7 @@ export function applyTextureToElement(model,
                 textureLoader.load(
                     input,
                     (tex) => {
-                        tex.encoding = THREE.sRGBEncoding;
+                        tex.colorSpace = THREE.SRGBColorSpace;
                         resolve(tex);
                     },
                     undefined,
@@ -83,14 +84,15 @@ export function applyTextureToElement(model,
                 }
 
                 if (elementNamesArr.includes('Lamp')) {
-                    alphaMap.center = new THREE.Vector2(0.5, 0.5);
-                    alphaMap.rotation = Math.PI / 2;
+                    if (currentCabinSize !== 'square') {
+                        alphaMap.center = new THREE.Vector2(0.5, 0.5);
+                        alphaMap.rotation = Math.PI / 2;
+                    }
                 }
             }
             if (bump) {
                 bump.wrapS = THREE.RepeatWrapping;
-                bump.wrapT = THREE.RepeatWrapping;
-                //bump.colorSpace = THREE.SRGBColorSpace;
+                bump.wrapT = THREE.RepeatWrapping
                 if (materialOptions.repeat) {
                     bump.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -100,7 +102,6 @@ export function applyTextureToElement(model,
             if (aoMap) {
                 aoMap.wrapS = THREE.RepeatWrapping;
                 aoMap.wrapT = THREE.RepeatWrapping;
-                //aoMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     aoMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -110,7 +111,6 @@ export function applyTextureToElement(model,
             if (displacementMap) {
                 displacementMap.wrapS = THREE.RepeatWrapping;
                 displacementMap.wrapT = THREE.RepeatWrapping;
-                //displacementMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     displacementMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -120,7 +120,6 @@ export function applyTextureToElement(model,
             if (metalnessMap) {
                 metalnessMap.wrapS = THREE.RepeatWrapping;
                 metalnessMap.wrapT = THREE.RepeatWrapping;
-                //metalnessMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     metalnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -130,7 +129,6 @@ export function applyTextureToElement(model,
             if (normalMap) {
                 normalMap.wrapS = THREE.RepeatWrapping;
                 normalMap.wrapT = THREE.RepeatWrapping;
-                //normalMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     normalMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -140,7 +138,6 @@ export function applyTextureToElement(model,
             if (roughnessMap) {
                 roughnessMap.wrapS = THREE.RepeatWrapping;
                 roughnessMap.wrapT = THREE.RepeatWrapping;
-                //normalMap.colorSpace = THREE.SRGBColorSpace;
                 if (materialOptions.repeat) {
                     roughnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
                 } else {
@@ -162,14 +159,14 @@ export function applyTextureToElement(model,
                         metalnessMap: metalnessMap,
                         normalMap: normalMap,
                         roughnessMap: roughnessMap,
-                        transparent: alphaMap ? true : false,
+                        transparent: !!alphaMap,
                         metalness: (materialOptions.metalness !== undefined && materialOptions.metalness !== null && materialOptions.metalness !== "null")
                             ? parseFloat(materialOptions.metalness)
                             : 0.5,
                         roughness: (materialOptions.roughness !== undefined && materialOptions.roughness !== null && materialOptions.roughness !== "null")
                             ? parseFloat(materialOptions.roughness)
                             : 0.8,
-                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffee),
+                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffff),
                         emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? parseFloat(materialOptions.emissiveIntensity) : 0
                     });
                     newMaterial.needsUpdate = true;
@@ -218,13 +215,11 @@ export function handleTextureClick(event) {
     let elementNames = [];
 
 
-    // Remove 'active' class from all images in the same container
     const allImages = texturesContainer.querySelectorAll('img');
     allImages.forEach(image => {
         image.classList.remove('active');
     });
 
-    // Add 'active' class to the clicked image
     img.classList.add('active');
 
 console.log(tabId)
@@ -236,15 +231,15 @@ console.log(tabId)
                 const target = activeButton.getAttribute('data-target');
                 switch (target) {
                     case 'all':
-                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1','FrontWallСentral','BackWall1Central'];
+                        elementNames = ['FrontWall', 'BackWall', 'LeftWall', 'RightWall','BackWall1','FrontWallСentral','BackWall1Central','FrontWallLeft','BackWall1Left'];
                         WallTextureChoice.setAllTextures(textureId);
                         break;
                     case 'front':
-                        elementNames = ['FrontWall','FrontWallСentral'];
+                        elementNames = ['FrontWall','FrontWallСentral','FrontWallLeft'];
                         WallTextureChoice.setFrontTexture(textureId);
                         break;
                     case 'back':
-                        elementNames = ['BackWall','BackWall1', 'BackWall1Central'];
+                        elementNames = ['BackWall','BackWall1', 'BackWall1Central','BackWall1Left'];
                         WallTextureChoice.setBackTexture(textureId);
                         break;
                     case 'left':
@@ -293,7 +288,7 @@ console.log(tabId)
             }
             break;
         case 'FloorParametrsTab':
-            elementNames = ['Floor','BackThreshold','FrontThreshold'];
+            elementNames = ['Floor'];
             setFloorTexture(textureId);
             break;
         case 'BoardParametrsTab':
@@ -306,12 +301,10 @@ console.log(tabId)
             }
             break;
         case 'DoorParametrsTab':
-            elementNames = ['Door','DoorCentral','Door1','Door1Central'];
+            elementNames = ['Door','DoorCentral','DoorLeft','Door1','Door1Central','Door1Left'];
             setDoorTexture(textureId);
             break;
         case 'OtherParametrsTab':
-            var active = tabContainer.querySelector('.form__form-element.active');
-            //const target = active.getAttribute('data-target');
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
             Bumper.setAllTextures(textureId);
             elementNames = ['RightBumper','LeftBumper','BackBumper'];
@@ -347,179 +340,3 @@ console.log(tabId)
             roughness: roughness,
         });
 }
-
-export function applyDefaultElevatorTextures() {
-    if (!model) {
-        console.error("Модель еще не загружена");
-        return;
-    }
-
-    const defaultTexturesMapping = [
-        {
-            elementNames: ['FrontWall'],
-            texture: './Стены/DL89E_diffuse.jpg',
-            alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
-        },
-        {
-            elementNames: ['FrontWallСentral'],
-            texture: './Стены/DL89E_diffuse.jpg',
-            alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
-        },
-        {
-            elementNames: ['BackWall'],
-            texture: './Стены/DL89E_diffuse.jpg',
-            alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
-        },
-        {
-            elementNames: ['BackWall1'],
-            texture: './Стены/DL89E_diffuse.jpg',
-            alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
-        },
-        {
-            elementNames: ['BackWall1Central'],
-            texture: './Стены/DL89E_diffuse.jpg',
-            alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
-        },
-        {
-            elementNames: ['LeftWall'],
-            texture: './Textures/base.jpg',
-            alpha: null,
-            bump:null,
-            aoMap: './Textures/ao.png',
-            displacementMap: './Textures/displacement.png',
-            metalnessMap: './Textures/metalic.png',
-            normalMap: './Textures/normal.png',
-            options: {
-                metalness: 0.8,
-                roughness: 0.4,
-                color: 0x7C7C7C,
-            }
-        },
-        {
-            elementNames: ['RightWall'],
-            texture: './TextureWall/brushed.jpg',
-            alpha: null,
-            bump:null,
-            aoMap: './TextureWall/DisplacementMap1.png',
-            displacementMap:'./TextureWall/DisplacementMap1.png',
-            metalnessMap: './TextureWall/DisplacementMap2.png',
-            normalMap: './TextureWall/NormalMap.png',
-            options: { metalness: 0.6, roughness: 0.5, color: 0x7C7C7C}
-        },
-        {
-            elementNames: ['Floor'],
-            texture: './Пол_Текстура/nero marquina.jpg',
-            alpha: null,
-            options: { metalness: 0.2, roughness: 0.8 }
-        },
-        {
-            elementNames: ['Threshold'],
-            texture: './Пол_Текстура/nero marquina.jpg',
-            alpha: null,
-            options: { metalness: 0.2, roughness: 0.8 }
-        },
-        {
-            elementNames: ['ThresholdCentral'],
-            texture: './Пол_Текстура/nero marquina.jpg',
-            alpha: null,
-            options: { metalness: 0.2, roughness: 0.8 }
-        },
-        {
-            elementNames: ['Threshold1'],
-            texture: './Пол_Текстура/nero marquina.jpg',
-            alpha: null,
-            options: { metalness: 0.2, roughness: 0.8 }
-        },
-        {
-            elementNames: ['Threshold1Central'],
-            texture: './Пол_Текстура/nero marquina.jpg',
-            alpha: null,
-            options: { metalness: 0.2, roughness: 0.8 }
-        },
-        {
-            elementNames: ['Ceiling'],
-            texture: './Потолок/RAL-7035-Svetlo-serii.png',
-            alpha: null,
-            options: { metalness: 0, roughness: 0.8 }
-        },
-        {
-            elementNames: ['Lamp'],
-            texture: './Потолок/RAL-7035-Svetlo-serii.png',
-            alpha: './Потолок_Текстуры/Р04.png',
-            options: {
-                metalness: 0,
-                roughness: 0.8,
-                emissive: new THREE.Color(0xffffee),
-                emissiveIntensity: 1
-            }
-        },
-        {
-            elementNames: ['Door'],
-            texture: './Двери/RAL-7035-Svetlo-serii.png',
-            alpha: null,
-            options: { metalness: 0.8, roughness: 0.8 }
-        },
-        {
-            elementNames: ['Door1'],
-            texture: './Двери/RAL-7035-Svetlo-serii.png',
-            alpha: null,
-            options: { metalness: 0.8, roughness: 0.8 }
-        },
-        {
-            elementNames: ['ControlPanel'],
-            texture: './Двери/RAL-7035-Svetlo-serii.png',
-            alpha: null,
-            options: { metalness: 0.3, roughness: 0.7 }
-        },
-        {
-            elementNames: ['DisplayVertical'],
-            texture: './Табло/TL-D70.png',
-            alpha: null,
-            options: { metalness: 0.3, roughness: 0.7 }
-        },
-        {
-            elementNames: ['buttons(ControlPanel)'],
-            texture: './Стены_Текстуры/DL89E_glossiness.jpg',
-            alpha: null,
-            options: { metalness: 0.3, roughness: 0.7 }
-        },
-        {
-            elementNames: ['HandrailsGroup'],
-            texture: './Стены/шлифованная нержавейка.jpg',
-            alpha: null,
-            options: { metalness: 1, roughness: 0.7 }
-        },
-        {
-            elementNames: ['BumperGroup'],
-            texture: './Стены/шлифованная нержавейка.jpg',
-            alpha: null,
-            options: { metalness: 1, roughness: 0.7 }
-        },
-    ];
-
-    // Для каждого набора настроек применяем текстуру к соответствующим объектам
-    defaultTexturesMapping.forEach(mapping => {
-        applyTextureToElement(model,
-            mapping.elementNames,
-            '#ffffff',
-            mapping.texture,
-            mapping.alpha,
-            mapping.bump,
-            mapping.aoMap,
-            mapping.displacementMap,
-            mapping.metalnessMap,
-            mapping.normalMap,
-            mapping.roughnessMap,
-            mapping.options);
-    });
-}
-
-
-
-
-

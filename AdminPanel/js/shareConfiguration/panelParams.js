@@ -7,13 +7,15 @@ const PanelState = {
     texture: null,
     side: null,
     location: null,
-    locationToWall: null
+    locationToWall: null,
+    type: null
 };
 
 export function getPanelState() {
     PanelState.side = getPanelSide(); 
     PanelState.location = getPanelLocation();
     PanelState.locationToWall = getPanelLocationToWall();
+    PanelState.type = getPanelType();
     return PanelState;
 }
 
@@ -27,6 +29,14 @@ export function getPanelLocation() {
 
 export function getPanelLocationToWall() {
     return getRadioParamByInputName("panel_wall_position");
+}
+
+export function getPanelType() {
+    if(getPanelLocation() == "centerPanelPosition") {
+        return "invoice";
+    } else {
+        return "mortise";
+    }
 }
 
 export function setBoard(textureId) {
@@ -45,21 +55,21 @@ export function setPanelLocationActive(radioId) {
     setActiveRadioByInputName("panel_location", radioId);
 }
 
-export function setPanelMaterialActive(textureId) {
-    setActiveTextureByContainerName('BoardParametrsTab', "panelMaterialTextureContainer", textureId);
+export async function setPanelMaterialActive(textureId) {
+    await setActiveTextureByContainerName('BoardParametrsTab', "panelMaterialTextureContainer", textureId);
 }
 
-export function setBoardActive(textureId) {
-    setActiveTextureByContainerName('BoardParametrsTab', "boardTextureContainer", textureId);
+export async function setBoardActive(textureId) {
+    await setActiveTextureByContainerName('BoardParametrsTab', "boardTextureContainer", textureId);
 }
 
 export function setPanelToWallLocationActive(radioId) {
     setActiveRadioByInputName("panel_wall_position", radioId);
 }
 
-export function setPanelParamsActive(parameters) {
-    setBoardActive(parameters.indicationBoard);
-    setPanelMaterialActive(parameters.texture);
+export async function setPanelParamsActive(parameters) {
+    await setBoardActive(parameters.indicationBoard);
+    await setPanelMaterialActive(parameters.texture);
     setPanelSideActive(parameters.side);
     setPanelLocationActive(parameters.location);
     setPanelToWallLocationActive(parameters.locationToWall);

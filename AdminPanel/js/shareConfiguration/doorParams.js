@@ -13,8 +13,8 @@ export function setDoorTexture(textureId) {
     DoorState.texture = textureId;
 }
 
-export function setDoorTextureActive(parameters) {
-    setActiveTextureByContainerName('DoorParametrsTab', "doorTextures", parameters.texture);
+export async  function setDoorTextureActive(parameters) {
+   await setActiveTextureByContainerName('DoorParametrsTab', "doorTextures", parameters.texture);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {

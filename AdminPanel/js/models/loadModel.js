@@ -2,35 +2,159 @@
 import { GLTFLoader } from 'jsm/loaders/GLTFLoader.js';
 import { FBXLoader } from 'jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-import {applyDefaultElevatorTextures} from './textureManager.js'
 import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
 import * as Element from "./elementNames.js";
 import {setAllParameters, 
-    getAllParameters} from 
+    getAllParameters, getCabinSize} from 
     "../shareConfiguration/allParams.js";
+    import {setDesignProject} from 
+    "../shareConfiguration/mainParams.js";
+    import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {fetchTemplateById} from "../designProjectService/designProjectStorage.js";
 import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
 
-let model;
-let scene, camera, renderer, controls;
-const maxDistance = 160;
+let currentModel = null;
+export let currentCabinSize = null;
+let buttonView3D;
+let buttonViewFront;
+let buttonViewUp;
+let buttonViewInside;
 
-function init() {
-    const canvas = document.querySelector('.elevator-container__elevator-observer');
+export async function loadModelBySize(idToSizeElement, isReloaded = false) {
+    console.log("loading by size");
+
+    const loader = new FBXLoader();
+    const modelPaths = {
+        wide: './liftModels/wideModel.fbx',
+        square: './liftModels/squareModel.fbx',
+        deep: './liftModels/deepModel.fbx',
+    };
+
+    const path = modelPaths[idToSizeElement];
+    if (!path) return;
+    currentCabinSize = idToSizeElement;
+
+    document.getElementById('loading').style.display = 'flex';
+
+    loader.load(
+        path,
+        async (object) => {
+            object.position.set(0, 0, 0);
+            scene.add(object);
+            model = object;
+            window.model = model;
+
+            if (currentModel) {
+                scene.remove(currentModel);
+            }
+            currentModel = object;
+            getObjectNames(object);
+            DefaultSettings()
+            animate();
+
+            function getObjectNames(obj) {
+                const names = [];
+                obj.traverse((child) => {
+
+                    child.material = new THREE.MeshStandardMaterial({
+                        color: 0xffffff, // Задайте нужный цвет
+                        roughness: 0.5,  // Настройте шероховатость
+                        metalness: 0.5   // Настройте металлическость
+                    });
+                });}
+
+            isReloaded ? reloadParamsForNewModel() : loadConfiguration();
+
+            console.log("Загружено")
+
+            document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+            document.getElementById('configurator-container').style.visibility = 'visible';
+        },
+        undefined,
+        (error) => {
+            console.error('Ошибка загрузки FBX модели:', error);
+        }
+    );
+
+    function GetDistanceToWall(groupWallName) {
+        const group = window.model.getObjectByName(groupWallName);
+        if (!group) {
+            console.warn(`Group "${groupWallName}" not found.`);
+            return Infinity; // or some default value
+        }
+        const box = new THREE.Box3().setFromObject(group);
+        const center = box.getCenter(new THREE.Vector3());
+
+        return camera.position.distanceTo(center);
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+
+        for (let element of Element.groupNames) {
+            let distance = GetDistanceToWall(element);
+
+            let  group = window.model.getObjectByName(element);
+            let unvisibleDistance =  camera.position.distanceTo(controls.target) - 0.5;
+
+            if(camera.position.x >= -GetExtremeXPoint() &&  camera.position.x <= GetExtremeXPoint()  &&
+                camera.position.z <= GetExtremeZPoint() &&  camera.position.z >= -GetExtremeZPoint() &&
+                camera.position.y < 0) {
+                Visibility.setWallVisibleByGroupName(Element.floorGroup, false);
+                Visibility.setWallVisibleByGroupName(Element.leftGroup, true);
+                Visibility.setWallVisibleByGroupName(Element.rightGroup, true);
+                Visibility.setWallVisibleByGroupName(Element.backGroup, true);
+                Visibility.setWallVisibleByGroupName(Element.frontGroup, true);
+                continue;
+            }
+
+            if(distance < unvisibleDistance) {
+                if (element === Element.ceilingGroup) {
+                    Visibility.setCeilingVisibility(false);
+                } else if (element === Element.floorGroup) {
+                    group.visible = false;
+                } else {
+                    Visibility.setWallVisibleByGroupName(element, false);
+                }
+
+            } else {
+                if (element === Element.ceilingGroup) {
+                    Visibility.setCeilingVisibility(true);
+                } else if (element === Element.floorGroup) {
+                    group.visible = true;
+                } else {
+                    Visibility.setWallVisibleByGroupName(element, true);
+                }
+            }
+        }
+    }
+}
+
+let model;
+let camera, renderer, controls;
+const maxDistance = 160;
+export let scene;
+
+async function init() {
+    console.log('init');
+    const canvas = document.getElementById('elevatorCanvas');
     if (!canvas) {
         console.error('Canvas элемент не найден');
         return;
     }
 
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    renderer = new THREE.WebGLRenderer({ canvas, 
+        antialias: true, 
+        preserveDrawingBuffer: true }
+        );
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
     //renderer.outputColorSpace = THREE.SRGBColorSpace;
     //renderer.gammaOutput = true;
     //renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
     //renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
-
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe0e0e0); 
@@ -42,19 +166,57 @@ function init() {
     const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
+    const menuContainer = document.getElementById('menu-container');
+    const optionMenuVisibilityBtn = document.getElementById('optionMenuVisibilityBtn');
+    //const canvas = document.getElementById('elevatorCanvas'); // Получаем элемент canvas
 
-    function onWindowResize() { // Чтобы менялся размер на норм, когдп делаешь полноэкранный или режим разраба
-        const element = document.getElementById('elevator-container');
-        const width = element.clientWidth;
-        const height = element.clientHeight;
+    const originalWidth = canvas.clientWidth;
+    const originalHeight = canvas.clientHeight;
+    
+    optionMenuVisibilityBtn.addEventListener('click', () => {
+        menuContainer.classList.toggle('hidden'); // Переключаем класс для анимации
+        onMenuHiden(); // Обновляем размер canvas после изменения меню
 
+        optionMenuVisibilityBtn.classList.toggle('rotate');
+    });
+
+
+function onMenuHiden() {
+    const element = document.getElementById('elevator-container');
+    const width = element.clientWidth;
+    const height = element.clientHeight;
+
+    // Если меню скрыто, возвращаем исходные размеры
+    if (!menuContainer.classList.contains('hidden')) {
+        canvas.style.width = `${originalWidth}px`;
+        canvas.style.height = `${originalHeight}px`;
+        renderer.setSize(originalWidth, originalHeight);
+        onWindowResize();
+    } else {
+        // Устанавливаем размеры в зависимости от контейнера
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
         renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-        camera.aspect = canvas.clientWidth / canvas.clientHeight;
-        camera.updateProjectionMatrix();
     }
+
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+}    
+
+// Функция изменения размера
+function onWindowResize() {
+    const element = document.getElementById('elevator-container');
+    const width = element.clientWidth;
+    const height = element.clientHeight;
+
+        // Устанавливаем размеры в зависимости от контейнера
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+    camera.aspect = canvas.clientWidth / canvas.clientHeight;
+    camera.updateProjectionMatrix();
+}
 
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('fullscreenchange', onWindowResize);
@@ -62,7 +224,7 @@ function init() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    let directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight.position.set(0, 60, 100);
     directionalLight.target.position.set(0, 30, 0);
     scene.add(directionalLight);
@@ -70,7 +232,7 @@ function init() {
      //let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
      //scene.add(directionalLightHelper);
 
-    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight1.position.set(100, 60, 0);
     directionalLight1.target.position.set(0, 30, 0);
     scene.add(directionalLight1);
@@ -78,7 +240,7 @@ function init() {
      //let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
      //scene.add(directionalLightHelper1);
 
-    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight2.position.set(-100, 60, 0);
     directionalLight2.target.position.set(0, 30, 0);
     scene.add(directionalLight2);
@@ -86,7 +248,7 @@ function init() {
      //let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
      //scene.add(directionalLightHelper2);
 
-    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.5);
+    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
     directionalLight3.position.set(0, 60, -100);
     directionalLight3.target.position.set(0, 30, 0);
     scene.add(directionalLight3);
@@ -102,15 +264,7 @@ function init() {
     let directionalLightHelper4 = new THREE.DirectionalLightHelper(directionalLight4, 10);
     scene.add(directionalLightHelper4);*/
 
-
-    controls = new OrbitControls(camera, renderer.domElement);
-
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.25;
-    controls.enableZoom = true;
-    controls.target.set(0, 50, 0);
-
-    controls.maxDistance = maxDistance;
+    InitialOrbitControls();
 
     function GetDistanceToWall(groupWallName) {
         const group = window.model.getObjectByName(groupWallName);
@@ -124,7 +278,7 @@ function init() {
         return camera.position.distanceTo(center);
     }
 
-    function animate() {
+    /*function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
 
@@ -132,7 +286,7 @@ function init() {
             let distance = GetDistanceToWall(element);
 
             let  group = window.model.getObjectByName(element);
-            let unvisibleDistance =  camera.position.distanceTo(controls.target) - 2;
+            let unvisibleDistance =  camera.position.distanceTo(controls.target) - 0.5;
 
             if(camera.position.x >= -GetExtremeXPoint() &&  camera.position.x <= GetExtremeXPoint()  &&
                 camera.position.z <= GetExtremeZPoint() &&  camera.position.z >= -GetExtremeZPoint() &&
@@ -164,9 +318,25 @@ function init() {
                 }
             }
         }  
+    }*/
+
+    const idToSize = {
+        wideSize: 'wide',
+        squareSize: 'square',
+        deepSize: 'deep'
+    };
+
+    let modelSize= await getCabinSizeFromConfiguration();
+
+    if(modelSize) {
+        loadModelBySize(idToSize[modelSize]);
+
+        console.log("loaded by size");
+    } else {
+        //window.location.href = `index.html`;
     }
 
-    const gltfLoader = new GLTFLoader();
+    /*const gltfLoader = new GLTFLoader();
     gltfLoader.load(
         './liftModels/LiftModel.fbx',
         (gltf) => {
@@ -183,26 +353,23 @@ function init() {
 
             const fbxLoader = new FBXLoader();
             fbxLoader.load(
-                './liftModels/Model1.fbx',
+                './liftModels/squareModel.fbx',
                 async (object) => {
                     object.position.set(0, 0, 0);
                     scene.add(object);
                     model = object;
                     window.model = model;
                     getObjectNames(object);
-                    applyDefaultElevatorTextures();
-                  // applyTextures();
                     DefaultSettings()
                     animate();
-
-                    let pointLight = new THREE.PointLight(0xffffff, 50, 80);
-                    pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
-                    scene.add(pointLight);
+                  
+                    //let pointLight = new THREE.PointLight(0xffffff, 50, 80);
+                    //pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
+                    //scene.add(pointLight);
                     
-                    pointLight = new THREE.PointLight(0xffffff, 100, 80);
-                    pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
-                    scene.add(pointLight);
-
+                    //pointLight = new THREE.PointLight(0xffffff, 100, 80);
+                    //pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
+                    //scene.add(pointLight);
 
                     function getObjectNames(obj) {
                         const names = [];
@@ -217,11 +384,12 @@ function init() {
                             if (child.isMesh) {
                             }
                         });}
-console.log("load conf");
+
                         await loadConfiguration();
 
                         document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
                         document.getElementById('configurator-container').style.visibility = 'visible'; 
+                        console.log("Hi");
                 },
                 undefined,
                 (error) => {
@@ -229,7 +397,7 @@ console.log("load conf");
                 }
             );
         }
-    );
+    );*/
 
     window.addEventListener('resize', () => {
         const width = canvas.clientWidth;
@@ -238,47 +406,116 @@ console.log("load conf");
         camera.updateProjectionMatrix();
         renderer.setSize(width, height);
     });
+
+    controls.target.set(0, 50, 0);
+    camera.position.set(maxDistance - 2, 40, maxDistance - 2);
+    controls.update(); 
+    renderer.render(scene, camera);
+
+    buttonView3D = document.getElementById('view3d');
+     buttonViewFront = document.getElementById('viewFront');
+     buttonViewUp = document.getElementById('viewUp');
+     buttonViewInside = document.getElementById('viewInside');
+
+    if (buttonView3D) {
+        buttonView3D.onclick = function () {
+            animateButton(buttonView3D);
+            camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2);
+            controls.target.set(0, 50, 0);
+            controls.maxDistance = 160;
+            controls.update();
+            checkCeilingVisibilityAndSet();
+            checkFrontVisibilityAndSet();
+        };
+    }
+
+    if (buttonViewUp) {
+        buttonViewUp.onclick = function () {
+            animateButton(buttonViewUp);
+            controls.maxDistance = maxDistance;
+            camera.position.set(0, maxDistance, 0);
+            controls.target.set(0, GetExtremeYPoint() / 2, 0);
+            controls.update();
+            Visibility.setCeilingVisibility(false);
+            checkFrontVisibilityAndSet();
+        };
+    }
+
+    if (buttonViewFront) {
+        buttonViewFront.onclick = function () {
+            animateButton(buttonViewFront);
+            controls.maxDistance = maxDistance;
+            camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance);
+            controls.target.set(0, GetExtremeYPoint() / 2, 0);
+            controls.update();
+            Visibility.setFrontVisible(false);
+            checkCeilingVisibilityAndSet();
+        };
+    }
+
+    if (buttonViewInside) {
+        buttonViewInside.onclick = function () {
+            animateButton(buttonViewInside);
+            camera.position.set(0, (GetExtremeYPoint() / 2) + 10, -1);
+            controls.target.set(0, (GetExtremeYPoint() / 2) + 10, 0);
+            controls.maxDistance = GetExtremeZPoint() / 2 - 10;
+            controls.update();
+            checkCeilingVisibilityAndSet();
+            checkFrontVisibilityAndSet();
+        };
+    }
 }
 
-export let templateId;
+async function getCabinSizeFromConfiguration() {
 
-async function loadConfiguration() {
     const urlParams = new URLSearchParams(window.location.search);
     const templateId = urlParams.get('designProject'); // Получаем ID проекта
     console.log("templateId" + templateId);
 
-    if(!isImagesShowed) {
-        await loadImagesForAllTabs();
-    }
-
     if (templateId) {
-        try {
-            const template = await fetchTemplateById(templateId); // Ожидаем результат
-            console.log(template);
-            if (!template) {
-                throw new Error('Template not found');
-            }
-
-            document.getElementById('projectTitle').value = template.name; // Используем имя шаблона
-
-            const preview = document.getElementById('preview-pattern');
-            if (preview) {
-                preview.innerHTML = `<img src="${template.previewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`;
-            }
-
-            setAllParameters(template.configuration);
-        } catch (error) {
-            alert('Ошибка при загрузке шаблона: ' + error.message); // Уведомляем пользователя об ошибке
+        const template = await fetchTemplateById(templateId); // Ожидаем результат
+        console.log(template);
+        if (!template) {
+            throw new Error('Template not found');
         }
-    } else {
-        // Очистка формы, если templateId не указан
-        document.getElementById('projectTitle').value = '';
-        const preview = document.getElementById('preview-pattern');
-        if (preview) {
-            preview.innerHTML = '';
+
+        const templateConfiguration = template.configuration;
+
+        if (templateConfiguration) {
+            return getCabinSize(templateConfiguration);
         }
     }
+
+    return "wideSize";
 }
+
+
+/*async function loadConfiguration() {
+const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
+const templateId = JSON.parse(localStorage.getItem('templateId'));
+
+if (templateConfiguration) {
+    console.log(JSON.parse(templateConfiguration));
+    try {
+        await setAllParameters(JSON.parse(templateConfiguration));
+    } catch (error) {
+        console.error('Ошибка при установке параметров:', error);
+        alert('Произошла ошибка при загрузке параметров.');
+        window.location.href = `index.html`;
+    }
+
+    setDesignProject(templateId);
+} else {
+    window.location.href = `index.html`;
+}
+
+localStorage.removeItem('templateConfiguration');
+}*/
+
+async function reloadConfiguration() {
+    reloadParamsForNewModel();
+}
+
 
 document.addEventListener('DOMContentLoaded', init);
 
@@ -303,58 +540,57 @@ function checkFrontVisibilityAndSet() {
     }
 }
 
-
-// Логика для разных ракурсов для кнопок
-const buttonView3D = document.getElementById('view3d');
-const buttonViewFront = document.getElementById('viewFront');
-const buttonViewUp = document.getElementById('viewUp');
-const buttonViewInside = document.getElementById('viewInside');
-
-buttonView3D.onclick = function() {
-    animateButton(buttonView3D);
-    camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2 + 10, maxDistance - 2); 
+export function InitialOrbitControls() {
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.25;
     controls.enableZoom = true;
     controls.enableRotate = true;
     controls.target.set(0, 50, 0);
-    controls.maxDistance = 160;
-    controls.update(); 
-    checkCeilingVisibilityAndSet();
-    checkFrontVisibilityAndSet();
-};
-
-buttonViewUp.onclick = function() {
-    animateButton(buttonViewUp);
     controls.maxDistance = maxDistance;
-    camera.position.set(0, maxDistance, 0); 
-    controls.enableZoom = false;
-    controls.enableRotate = false;
-    controls.target.set(0, GetExtremeYPoint() - 10, 0);
-    controls.update();  
-    Visibility.setCeilingVisibility(false);
-    checkFrontVisibilityAndSet();
+    controls.update(); 
 }
 
-buttonViewFront.onclick = function() {
-    animateButton(buttonViewFront);
-    controls.maxDistance = maxDistance;
-    camera.position.set(0, (GetExtremeYPoint() / 2) - 10, maxDistance); 
-    controls.enableZoom = false;
-    controls.target.set(0, GetExtremeYPoint() / 2, 0);
-    controls.enableRotate = false;
-    controls.update(); 
-    Visibility.setFrontVisible(false);
-    checkCeilingVisibilityAndSet();
-};
 
-buttonViewInside.onclick = function() {
-    animateButton(buttonViewInside);
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 5, -1); 
-    controls.enableZoom = true;
-    controls.enableRotate = true;
-    controls.target.set(0, (GetExtremeYPoint() / 2) + 5, 0);
-    controls.maxDistance = GetExtremeZPoint() / 2 - 10;
-    controls.update(); 
-    checkCeilingVisibilityAndSet();
-    checkFrontVisibilityAndSet();
-};
+export let templateId;
 
+async function loadConfiguration() {
+    console.log("loadConf");
+    const urlParams = new URLSearchParams(window.location.search);
+    const templateId = urlParams.get('designProject'); // Получаем ID проекта
+    console.log("templateId" + templateId);
+
+    if(!isImagesShowed) {
+        await loadImagesForAllTabs();
+    }
+
+    if (templateId) {
+        try {
+            const template = await fetchTemplateById(templateId); // Ожидаем результат
+            console.log("template");
+            console.log(template);
+            if (!template) {
+                throw new Error('Template not found');
+            }
+
+            document.getElementById('projectTitle').value = template.name; // Используем имя шаблона
+
+            const preview = document.getElementById('preview-pattern');
+            if (preview) {
+                preview.innerHTML = `<img src="${template.previewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`;
+            }
+
+            await setAllParameters(template.configuration);
+            setDesignProject(templateId);
+        } catch (error) {
+            alert('Ошибка при загрузке шаблона: ' + error.message); // Уведомляем пользователя об ошибке
+        }
+    } else {
+        // Очистка формы, если templateId не указан
+        document.getElementById('projectTitle').value = '';
+        const preview = document.getElementById('preview-pattern');
+        if (preview) {
+            preview.innerHTML = '';
+        }
+    }
+}

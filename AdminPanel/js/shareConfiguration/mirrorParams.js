@@ -59,7 +59,7 @@ export function setMirrorLocation(back, left, right) {
     }
 }
 
-export function setMirrorParamsActive(parameters) {
+export async function setMirrorParamsActive(parameters) {
     setMirrorExistenceActive(parameters.existence);
     setMirrorTypeActive(parameters.type);
     setMirrorLocation(parameters.back, parameters.left, parameters.right);

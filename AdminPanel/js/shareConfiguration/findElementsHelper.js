@@ -23,6 +23,12 @@ export function getButtonParamByFormName(formName) {
 
 export function setActiveRadioByInputName(inputName, radioId) {
     const radios = document.querySelectorAll(`input[name="${inputName}"]`);
+
+    if(!radios) {
+        console.error(' radios not found.');
+        throw new Error('radios  not found.');
+    }
+
     radios.forEach(radio => {
         if (radio.id === radioId) {
             radio.click(); 
@@ -36,6 +42,22 @@ export function setActiveButtonByFormName(formName, buttonId) {
     const form = document.forms[formName];
     const activeButton = form.querySelector(`.form__form-element#${buttonId}`);
     activeButton.click();
+}
+
+export function setActiveCabinSizeByFormName(formName, buttonId) {
+    const form = document.forms[formName];
+    const activeButton = form.querySelector(`.form__form-element#${buttonId}`);
+    
+    // Убираем класс .active у всех элементов формы
+    const allButtons = form.querySelectorAll('.form__form-element');
+    allButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Добавляем класс .active к активной кнопке
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
 }
 
 export async function setActiveTextureWithAllWalls(tabName, formName, textureContainerName, parameters) {
@@ -82,6 +104,11 @@ export async function setActiveTextureWithAllWalls(tabName, formName, textureCon
 
         button.classList.remove('active');
     });
+
+    const button = form.querySelector(`button[data-target=all]`);
+        if (button) {
+            button.classList.add('active');
+        }
 }
 
 export async function setActiveTextureByContainerName(tabName, textureContainerName, textureId) {
@@ -90,11 +117,14 @@ export async function setActiveTextureByContainerName(tabName, textureContainerN
     const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
     if (!texturesContainer) {
         console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+       
         return;
     }
 
     if (textureId) {
         const texture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
+        console.log(texture);
         texture.click();
     }
 }

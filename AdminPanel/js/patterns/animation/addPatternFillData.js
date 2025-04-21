@@ -1,4 +1,4 @@
-import {setAllParameters, 
+/*import {setAllParameters, 
     getAllParameters} from 
     "../../shareConfiguration/allParams.js";
 
@@ -47,7 +47,7 @@ import {setAllParameters,
        button.classList.add('active'); 
    }
    
-  await populateForm();
+  await populateForm();*/
 
 
 

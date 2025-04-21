@@ -13,8 +13,8 @@ export function setFloorTexture(textureId) {
     FloorState.texture = textureId;
 }
 
-export function setFloorTextureActive(parameters) {
-    setActiveTextureByContainerName('FloorParametrsTab', "floorTextureContainer", parameters.texture);
+export async  function setFloorTextureActive(parameters) {
+    await setActiveTextureByContainerName('FloorParametrsTab', "floorTextureContainer", parameters.texture);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {

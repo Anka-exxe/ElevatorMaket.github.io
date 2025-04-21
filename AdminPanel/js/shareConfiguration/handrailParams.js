@@ -68,15 +68,15 @@ export function setHandrailTexture(textureId) {
     handrailParameters.texture = textureId;
 }
 
-function setHandrailTextureActive(texture) {
-    setActiveTextureByContainerName('HandrailParametrsTab', "handrailTextureContainer", texture);
+async function setHandrailTextureActive(texture) {
+     await setActiveTextureByContainerName('HandrailParametrsTab', "handrailTextureContainer", texture);
 }
 
-export function setHandrailParamsActive(parameters) {
+export async  function setHandrailParamsActive(parameters) {
     setHandrailExistenceActive(parameters.existence);
     setHandrailTypeActive(parameters.type);
     setHandrailLocation(parameters.back, parameters.left, parameters.right);
-    setHandrailTextureActive(parameters.texture);
+    await setHandrailTextureActive(parameters.texture);
 }
 
 export function getHandrailParams() {

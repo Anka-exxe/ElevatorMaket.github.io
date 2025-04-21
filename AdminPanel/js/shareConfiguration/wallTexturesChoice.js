@@ -35,6 +35,6 @@ export function getAllWallTextures() {
     return WallTextureState;
 }
 
-export function setActiveWallParameters(wallParameters) {
-    setActiveTextureWithAllWalls('WallsParametersTab', 'wallSideWalls', "wallTextures", wallParameters);
+export async function setActiveWallParameters(wallParameters) {
+    await setActiveTextureWithAllWalls('WallsParametersTab', 'wallSideWalls', "wallTextures", wallParameters);
 }

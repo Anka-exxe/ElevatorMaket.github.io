@@ -18,7 +18,7 @@ import {getAllBumperTextures,
     setActiveBumperParameters} from './otherParams.js';
 import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
 import {showTab} from "../animation/tabFunctions.js";
-
+import {isDesignProjectsLoaded, populateForm} from "../animation/designProjectAnimation.js";
 
 const allParameters = {
     cabin: null,
@@ -47,6 +47,21 @@ export function getAllParameters() {
     //console.log(allParameters);
 }
 
+export async function reloadParamsForNewModel() {
+    getAllParameters();
+
+    console.log(allParameters); // Логирование параметров
+    
+    await setAllParametersReloadVersion(allParameters);
+}
+
+export function getCabinSize(parameters) {
+    console.log(parameters);
+    console.log(parameters.cabin);
+    console.log(parameters.cabin.size);
+    return parameters.cabin.size;
+}
+
 export function saveParametersToFile() {
     getAllParameters();
     const jsonContent = JSON.stringify(allParameters, null, 2); // Преобразуем объект в JSON строчку
@@ -62,35 +77,84 @@ export function saveParametersToFile() {
     URL.revokeObjectURL(url); // Освобождаем память, удаляя объект URL
 }
 
-export function setAllParameters(parameters) {
+export async function setAllParametersReloadVersion(parameters) {
+    console.log(parameters); // Логирование параметров
+    
     if (parameters && typeof parameters === 'object') {
-        if(!isImagesShowed) {
-            loadImagesForAllTabs();
+        if (!isImagesShowed) {
+            await loadImagesForAllTabs(); // Загружаем изображения только если они еще не загружены
+        }
+        if (!isDesignProjectsLoaded) {
+            await populateForm(); 
         }
 
-        setMainActiveSelections(parameters.cabin); 
-        setActiveWallParameters(parameters.wall);
-        setDoorTextureActive(parameters.doors);
-        setCeilingParamsActive(parameters.ceiling);
-        setFloorTextureActive(parameters.floor);
-        setPanelParamsActive(parameters.controlPanel);
-        setMirrorParamsActive(parameters.mirror);
-        setHandrailParamsActive(parameters.handrail);
-        setActiveBumperParameters(parameters.bumpers);
+        const operations = [
+            () => setMainActiveSelections(parameters.cabin),
+            () => setDoorTextureActive(parameters.doors),
+            () => setCeilingParamsActive(parameters.ceiling),
+            () => setFloorTextureActive(parameters.floor),
+            () => setPanelParamsActive(parameters.controlPanel),
+            () => setMirrorParamsActive(parameters.mirror),
+            () => setHandrailParamsActive(parameters.handrail),
+            () => setActiveBumperParameters(parameters.bumpers),
+            () => setActiveWallParameters(parameters.wall)
+        ];
+        
+        for (const operation of operations) {
+            try {
+                await operation();
+            } catch (e) {
+               // console.error(`Ошибка в ${operation.name}:`, e);
+                // Можно добавить дополнительную логику обработки ошибок
+            }
+        }
 
-        //showTab('MainParametersTab');
-
+        // Проверка на существование элемента для имитации клика
         const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
-
-        // Проверка на существование элемента
         if (mainTabMenuTitle) {
-            // Имитируем клик
-            mainTabMenuTitle.click();
+            mainTabMenuTitle.click(); // Имитируем клик
         } else {
             console.error('Элемент с ID "MainTabMenuTitle" не найден.');
         }
-        
-        console.log('Параметры установлены:', allParameters);
+
+        console.log('Параметры установлены:', parameters); // Логируем установленные параметры
+    } else {
+        console.error('Неверный тип параметров. Ожидался объект.');
+    }
+}
+
+
+export async function setAllParameters(parameters) {
+    console.log(parameters); // Логирование параметров
+    
+    if (parameters && typeof parameters === 'object') {
+        if (!isImagesShowed) {
+            await loadImagesForAllTabs(); // Загружаем изображения только если они еще не загружены
+        }
+        if (!isDesignProjectsLoaded) {
+            await populateForm(); 
+        }
+
+        // Настройка параметров для разных компонентов
+        await setMainActiveSelections(parameters.cabin); 
+        await setDoorTextureActive(parameters.doors);
+        await setCeilingParamsActive(parameters.ceiling);
+        await setFloorTextureActive(parameters.floor);
+        await setPanelParamsActive(parameters.controlPanel);
+        await setMirrorParamsActive(parameters.mirror);
+        await setHandrailParamsActive(parameters.handrail);
+        await setActiveBumperParameters(parameters.bumpers);
+        await setActiveWallParameters(parameters.wall);
+
+        // Проверка на существование элемента для имитации клика
+        const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
+        if (mainTabMenuTitle) {
+            mainTabMenuTitle.click(); // Имитируем клик
+        } else {
+            console.error('Элемент с ID "MainTabMenuTitle" не найден.');
+        }
+
+        console.log('Параметры установлены:', parameters); // Логируем установленные параметры
     } else {
         console.error('Неверный тип параметров. Ожидался объект.');
     }
@@ -122,13 +186,18 @@ export function loadParametersFromFile() {
 
 export function hasNullValues(obj) {
     for (let key in obj) {
+        console.log("key " + key);
+
         if (obj.hasOwnProperty(key)) {
             if (obj[key] === null) {
+                console.log("null for " + key);
+
                 return true; // Найдено null значение
             }
             // Если значение - объект, вызываем функцию рекурсивно
             if (typeof obj[key] === 'object' && obj[key] !== null) {
                 if (hasNullValues(obj[key])) {
+                    console.log("null for " + key);
                     return true; // Найдено null значение в вложенном объекте
                 }
             }

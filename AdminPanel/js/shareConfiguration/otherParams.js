@@ -16,6 +16,7 @@ export function getAllBumperTextures() {
 export async function setActiveBumperParameters(bumperParameters) {
     await setActiveTextureByContainerName('OtherParametrsTab', "bumperTextures", bumperParameters.texture);
 }
+
 /*document.addEventListener('DOMContentLoaded', () => {
     const saveButton = document.getElementById('saveButton');
     saveButton.addEventListener('click', () => {

@@ -29,7 +29,7 @@
             </canvas>
 
             <footer class="elevator-container__footer">
-                <button class="elevator-container__right-arrow-button right-arrow-button"></button>
+                <button id="optionMenuVisibilityBtn" class="elevator-container__right-arrow-button right-arrow-button"></button>
                 
                 <div class="elevator-container__options-menu">
                     <form class="elevator-container__form-container--transparent form-container--transparent">
@@ -44,7 +44,7 @@
 
         <div class="configurator-container__menu-container menu-container">
             <header class="menu-container__header">
-                <div class="menu-container__navigation--with-animation navigation--with-animation"> 
+                <div id="menuTabs" class="menu-container__navigation--with-animation navigation--with-animation"> 
                     <img id="main_parameters_icon" class="navigation--with-animation__animation-picture active" src="./images/main_parameters_icon.png">
                     <img id="wall_icon" class="navigation--with-animation__animation-picture" src="./images/wall_icon.png">
                     <img id="doors_icon" class="navigation--with-animation__animation-picture" src="./images/doors_icon.png">
@@ -95,7 +95,7 @@
                         <h3 class="form-container__title">Размер кабины:</h3>
                         <form class="form-container__form form" name="cabinSizeForm">
                             <button id="wideSize" class="form__form-element active" type="button" onclick="selectParameterButton(this)">Широкая</button>
-                            <button id="squereSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
+                            <button id="squareSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Квадрат</button>
                             <button id="deepSize" class="form__form-element" type="button" onclick="selectParameterButton(this)">Глубокая</button>
                         </form>
                     </div>
@@ -164,7 +164,7 @@
                         </form>
                     </div>
 
-                    <hr class="menu-container_hr">
+                    <hr class="menu-container_hr--textures">
 
                     <div class="textures-container" name="wallTextures">
 
@@ -197,8 +197,8 @@
                     </h3>
                     <div class="textures-container ceiling-pattern" data-texture-type="pattern"  name="ceilingPlafonTextureContainer">
                     </div>
-
-                    <hr class="menu-container_hr">
+                    
+                    <hr class="menu-container_hr--textures">
 
                     <h3 class="additional-title">
                         Материал плафона потолка:
@@ -236,7 +236,7 @@
                     <div class="textures-container post-orders" data-texture-type="panel" name="boardTextureContainer">
                     </div>
 
-                    <hr class="menu-container_hr">
+                    <hr class="menu-container_hr--textures">
 
                     <div class="menu-container__form form-container--radio">
                         <h3 class="form-container--radio__title">Материал панели:</h3>
@@ -338,9 +338,9 @@
 
                     <hr class="menu-container_hr">
 
-                    <div class="menu-container__form form-container--radio">
-                        <h3 class="form-container--radio__title">Расположение:</h3>
-                        <form class="form-container--radio__form form" name="mirror_location">
+                    <div class="menu-container__form form-container">
+                        <h3 class="form-container__title">Расположение:</h3>
+                        <form class="form-container__form form" name="mirror_location">
                             <button class="form__form-element mirror-location-button active" type="button" data-location="back" id="backMirror" >Сзади</button>
                             <button class="form__form-element mirror-location-button" type="button" data-location="right" id="rightMirror">Справа</button>
                             <button class="form__form-element mirror-location-button" type="button" data-location="left" id="leftMirror">Слева</button>
@@ -455,6 +455,7 @@
     <script type="module" src="./js/models/positionManager.js"></script>
     <script type="module" src="./js/shareConfiguration/allParams.js"></script>
     <script type="module" src="./js/patterns/animation/addPatternButton.js"></script>
+    <script type="module" src="./js/animation/globalFunctions.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

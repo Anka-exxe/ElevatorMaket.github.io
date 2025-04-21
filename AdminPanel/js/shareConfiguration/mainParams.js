@@ -1,18 +1,24 @@
 import { getRadioParamByInputName, 
-    getButtonParamByFormName } 
+    getButtonParamByFormName, setActiveCabinSizeByFormName } 
     from './findElementsHelper.js';
 import { setActiveRadioByInputName, 
     setActiveButtonByFormName, setButtonActiveById } 
     from './findElementsHelper.js';
 
-export function getMainSelectedParameters() {
-    const selectedParameters = {
-        size: getCabinSizeParam(),
-        type: getCabinTypeParam(),
-        openingType: getOpeningTypeParam(),
-        designProjectGroup: getDesignProjectParam()
+const selectedParameters = {
+        size: null,
+        type: null,
+        openingType: null,
+        designProjectGroup: null, 
+       // designProject: null,
     };
 
+export function getMainSelectedParameters() {
+    selectedParameters.size = getCabinSizeParam();
+    selectedParameters.type = getCabinTypeParam();
+    selectedParameters.openingType = getOpeningTypeParam();
+    selectedParameters.designProjectGroup = getDesignProjectParam(); 
+    
     //console.log(selectedParameters);
     return selectedParameters;
 }
@@ -33,11 +39,19 @@ function getDesignProjectParam() {
     return getButtonParamByFormName('designForm');
 }
 
-export function setMainActiveSelections(selectedParameters) {
-    setActiveButtonByFormName('cabinSizeForm', selectedParameters.size);
-    setActiveRadioByInputName("cabin_type", selectedParameters.type);
-    setActiveRadioByInputName("opening_type", selectedParameters.openingType);
-    setButtonActiveById(selectedParameters.designProjectGroup);
+export function setDesignProject(designProjectId) {
+    selectedParameters.designProject = designProjectId;
+}
+
+export function setCabinSize(cabinSize) {
+    selectedParameters.size = cabinSize;
+}
+
+export async function setMainActiveSelections(parameters) {
+    setActiveCabinSizeByFormName('cabinSizeForm', parameters.size);
+    setActiveRadioByInputName("cabin_type", parameters.type);
+    setActiveRadioByInputName("opening_type", parameters.openingType);
+    setButtonActiveById(parameters.designProjectGroup);
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {
