@@ -55,6 +55,55 @@ export const indicationBoardHall = [
     'ind_board_5'
 ];
 
+export const arrowsCallPosts = [
+    'call_post_1_arrow_up',
+    'call_post_1_arrow_down',
+'call_post_2_arrow',
+'call_post_3_arrow_up',
+    'call_post_3_arrow_down',
+    'call_post_4_arrow_up',
+    'call_post_4_arrow_down',
+];
+
+export const strokeCallPosts = [
+    'call_post_1_stroke_1',
+    'call_post_1_stroke_2',
+    'call_post_2_stroke',
+    'call_post_3_stroke_1',
+    'call_post_3_stroke_2',
+    'call_post_4_stroke_1',
+    'call_post_4_stroke_2',
+    'call_post_5_stroke_1',
+    'call_post_6_stroke_1',
+    'call_post_6_stroke_2',
+];
+
+export const callPostsDisplayFlorans = [
+    'call_post_3_display_1',
+    'call_post_4_display_1',
+    'call_post_4_display_2',
+];
+
+export const callPostsDisplayMovel = [
+    'call_post_5_display_1',
+    'call_post_6_display_1',
+];
+
+export const indBoardDisplay = [
+    'ind_board_1_display',
+    'ind_board_2_display',
+    'ind_board_3_display',
+    'ind_board_4_display',
+    'ind_board_5_display',
+];
+
+export const indBoardNails = [
+    'ind_board_5_nail_1',
+    'ind_board_5_nail_2',
+    'ind_board_5_nail_3',
+    'ind_board_5_nail_4',
+];
+
 export const groupNames = [
     ceilingGroup,
     frontGroup,

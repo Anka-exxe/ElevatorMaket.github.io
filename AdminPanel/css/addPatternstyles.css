@@ -211,7 +211,7 @@ body {
 }
 
 .right-arrow-button {
-    background:  url("images/arrow_icon.png") no-repeat center center;
+    background:  url("../images/arrow_icon.png") no-repeat center center;
     background-size: contain;
     border: none;
 }

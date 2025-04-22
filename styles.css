@@ -840,3 +840,12 @@ input[type="color"] {
 .consent-block input[type="checkbox"] {
     margin-right: 8px;
 }
+
+.display-option-img {
+    width: 170px;
+    height: 80px;
+    object-fit: contain;
+    border: 2px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+}

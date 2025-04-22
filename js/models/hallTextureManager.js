@@ -70,6 +70,52 @@ function applyTextures(objectName, color, albedoTextureURL  = null, normalTextur
     });
 }
 
+export function ChangeWallsColor(colorProp) {
+    const colorSettings = [
+        { name: Element.rightHallWall, color: colorProp, albedoTexture: null,
+            normalTexture: null, 
+            roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
+            roughness: 1, metallness: 0.8  },
+        { name: Element.frontHallWall, color: colorProp, albedoTexture: null,
+             normalTexture: null, 
+             roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
+             roughness: 1, metallness: 0.8 },
+        { name: Element.leftHallWall, color: colorProp, albedoTexture: null,
+            normalTexture: null, 
+            roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
+            roughness: 1, metallness: 0.8  },
+        { name: Element.backHallWall, color: colorProp, albedoTexture: null,
+            normalTexture: null, 
+            roughnessTextureURL: "../../hallModels/hallTextures/WallPaint.jpg",
+            roughness: 1, metallness: 0.8 },
+    ];
+
+    // Применяем цвета ко всем стенам
+    colorSettings.forEach(setting => {
+        applyTextures(setting.name, setting.color, setting.albedoTexture, 
+            setting.normalTexture, setting.roughnessTextureURL,
+            setting.roughness, setting.metallness);
+
+    });
+}
+
+export function ChangeFloorColor(colorProp) {
+    const colorSettings = [
+        { name: Element.floorHall, color: colorProp, albedoTexture: null,
+            normalTexture: null, 
+            roughnessTextureURL: "../../hallModels/hallTextures/Floor.jpg",
+            roughness: 2, metallness: 0 },
+    ];
+
+    // Применяем цвета к полу
+    colorSettings.forEach(setting => {
+        applyTextures(setting.name, setting.color, setting.albedoTexture, 
+            setting.normalTexture, setting.roughnessTextureURL,
+            setting.roughness, setting.metallness);
+
+    });
+}
+
 export function applyColorToElements() {
     const processGroup = (group, defaultColor, albedoTextureUrl = null,
          normalTextureUrl = null, roughnessTexture = null, rough = null, metal = null) => 
@@ -129,6 +175,10 @@ export function applyColorToElements() {
         { name: Element.ceilingLampHall, color: 0xffffff,
              albedoTexture: null, normalTexture: null, roughnessTextureURL: null ,
              roughness: null, metallness: null},
+             { name: Element.floorHall, color: 0x808080, albedoTexture: null,
+                normalTexture: null, 
+                roughnessTextureURL: "../../hallModels/hallTextures/Floor.jpg",
+                roughness: 2, metallness: 0},
         { name: Element.coverFrontPanel, color: 0xffffff, albedoTexture: "../../hallModels/hallTextures/FrontCover.png",
          normalTexture: "../../hallModels/hallTextures/FrontCover.png",
           roughnessTextureURL: "../../hallModels/hallTextures/FrontCover.png",
@@ -138,6 +188,13 @@ export function applyColorToElements() {
           ...processGroup(Element.leavesGroupsHall, 0x556B2F),
           ...processGroup(Element.callPostsHall, 0xB7B7B7, null, null, null, 0.4, 0.9),
           ...processGroup(Element.indicationBoardHall, 0xB7B7B7, null, null, null, 0.4, 0.9),
+          ...processGroup(Element.arrowsCallPosts, 0x000000, null, null, null, 0.4, 0.9),
+          ...processGroup(Element.indBoardNails, 0x000000, null, null, null, 0.4, 0.9),
+          ...processGroup(Element.strokeCallPosts, 0x556B2F, null, null, null, 0.9, 0.2),
+          ...processGroup(Element.callPostsDisplayFlorans, 0xffffff, "../../hallModels/hallTextures/florence.jpg"),
+          ...processGroup(Element.callPostsDisplayMovel, 0xffffff, "../../hallModels/hallTextures/movel.jpg"),
+          ...processGroup(Element.indBoardDisplay, 0xffffff, "../../hallModels/hallTextures/ind_board1.jpg"),
+
         // Группы объектов 0x808080
         /*{ names: Element.squareVasesHall, color: 0x9370DB },
         { names: Element.squareVasesTablesHall, color: 0xDEB887 },
@@ -161,3 +218,44 @@ export function applyColorToElements() {
         }
     });
 }
+
+document.querySelectorAll('.form__radio[name="ind_board_display"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        const processGroup = (group, defaultColor, albedoTextureUrl = null,
+            normalTextureUrl = null, roughnessTexture = null, rough = null, metal = null) => 
+       group.map(name => ({
+           name,
+           color: defaultColor,
+           albedoTexture: albedoTextureUrl,
+           normalTexture: normalTextureUrl,
+           roughnessTextureURL: roughnessTexture,
+           roughness: rough,
+           metalness: metal
+       }));
+
+        // Определяем какая текстура должна быть применена
+        const texturePath = this.value === 'case1' 
+            ? "../../hallModels/hallTextures/ind_board1.jpg" 
+            : "../../hallModels/hallTextures/ind_board2.jpg";
+
+        // Применяем текстуру к индикационной доске
+        const colorSettings = [
+            ...processGroup(Element.indBoardDisplay, 0xffffff, texturePath)
+        ];
+        
+        // Здесь должен быть код для применения colorSettings к вашей сцене
+        colorSettings.forEach(setting => {
+            if (setting.name) {
+                // Для одиночных объектов
+                applyTextures(setting.name, setting.color, setting.albedoTexture, 
+                    setting.normalTexture, setting.roughnessTextureURL,
+                    setting.roughness, setting.metallness);
+            } else if (setting.names) {
+                // Для массивов объектов
+                setting.names.forEach(objName => {
+                    applyTextures(objName, setting.color);
+                });
+            }
+        });
+    });
+});

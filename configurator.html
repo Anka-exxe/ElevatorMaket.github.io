@@ -552,6 +552,26 @@
                     </form>
                 </div>  
 
+                <hr class="menu-container_hr--textures">
+
+                <div class="menu-containerr__form-container form-container--radio">
+                    <h3 class="form-container--radio__title">Дисплей:</h3>
+                    <form class="form-container--radio__form form">
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_display" class="form__form-element" value="case1" id="ind_board_display_1" checked>
+                            <label class="form_form-label" for="ind_board_display_1">
+                                <img src="./hallModels/hallTextures/ind_board1.jpg" alt="Вариант 1" class="display-option-img">
+                            </label>
+                        </div>
+                        <div class="form__radio-with-label">
+                            <input class="form__radio" type="radio" name="ind_board_display" class="form__form-element" value="case2" id="ind_board_display_2">
+                            <label class="form_form-label" for="ind_board_display_2">
+                                <img src="./hallModels/hallTextures/ind_board2.jpg" alt="Вариант 2" class="display-option-img">
+                            </label>
+                        </div>
+                    </form>
+                </div>
+
                 </div>
             </div>
         </div>
@@ -610,7 +630,7 @@
     </div>
 
     <script src="./js/animation/buttonFunctions.js"></script>
-    <script src="./js/animation/colorpicker.js"></script>
+    <script type="module" src="./js/animation/colorpicker.js"></script>
 
     <script type="module" src="./js/models/loadModel.js"></script>
     <script type="module" src="./js/animation/tabFunctions.js"></script>
@@ -623,7 +643,7 @@
 
     <script type="module" src="./js/animation/globalFunctions.js"></script>
 
-    <script>
+    <script type="module">
         document.addEventListener('DOMContentLoaded', async() => {
             await showTab('MainParametersTab');
         });

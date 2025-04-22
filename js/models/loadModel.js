@@ -327,6 +327,10 @@ function onWindowResize() {
         deepSize: 'deep'
     };
 
+    // TODO
+    /*document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
+    document.getElementById('configurator-container').style.visibility = 'visible';*/
+
     if(getCabinSizeFromConfiguration()) {
         loadModelBySize(idToSize[getCabinSizeFromConfiguration()]);
     } else {
@@ -630,7 +634,7 @@ export async function loadHall() {
     } else {
         const fbxLoader = new FBXLoader();
         fbxLoader.load(
-            './hallModels/шт16.fbx',
+            './hallModels/шт21.fbx',
             async (object) => {
                 object.position.set(0, 0, 0);
                 //object.scale.set(0.4, 0.4, 0.4);
@@ -683,8 +687,10 @@ export async function loadHall() {
     }
 
     camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 250);
-        
+   // camera.position.set(0, 45, 250);
+
     controls.target.set(0, GetExtremeYPoint() / 2, 170);
+    //controls.target.set(0, 45, 170);
     controls.minPolarAngle = Math.PI / 4.5; // Минимальный угол по вертикали (в радианах)
     controls.maxPolarAngle = Math.PI / 2; // Максимальный угол по вертикали (в радианах)
     controls.minAzimuthAngle = -Math.PI / 2; // Минимальный угол по горизонтали (в радианах)
