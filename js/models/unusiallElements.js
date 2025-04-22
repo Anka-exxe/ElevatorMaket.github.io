@@ -1,4 +1,7 @@
-﻿document.addEventListener('DOMContentLoaded', () => {
+﻿import { Reflector } from 'jsm/objects/Reflector.js';
+import * as THREE from 'three';
+import {scene} from "./loadModel.js";
+document.addEventListener('DOMContentLoaded', () => {
     const railingRadios = document.querySelectorAll('input[name="railing_type"]');
     railingRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
@@ -544,6 +547,83 @@ function updateControlPanelPlacement() {
         }
     }
 
+}
+export function setupReflectors(camera, renderer) {
+    const mirrorNames = [
+        "MirrorBack", "MirrorRight", "MirrorLeft",
+        "MirrorBackHalf", "MirrorRightHalf", "MirrorLeftHalf"
+    ];
+
+    mirrorNames.forEach(name => {
+        const group = window.model.getObjectByName(name);
+        if (!group) {
+            console.warn(`Группа ${name} не найдена`);
+            return;
+        }
+
+        const meshes = group.children.filter(child => child.isMesh);
+        if (meshes.length === 0) {
+            console.warn(`В группе ${name} нет мешей`);
+            return;
+        }
+
+        meshes.forEach(mesh => {
+            // Обновляем мир
+            mesh.updateWorldMatrix(true, false);
+
+            // Получаем габариты и центр
+            mesh.geometry.computeBoundingBox();
+            const bbox = mesh.geometry.boundingBox.clone();
+            const size = new THREE.Vector3();
+            bbox.getSize(size);
+
+            const center = new THREE.Vector3();
+            bbox.getCenter(center);
+
+            // Переводим центр в мировые координаты
+            mesh.localToWorld(center);
+
+            // Создаём геометрию зеркала по локальным осям меша
+            const width = size.x;
+            const height = size.y;
+            const geometry = new THREE.PlaneGeometry(width, height);
+
+            const mirror = new Reflector(geometry, {
+                textureWidth: 1024,
+                textureHeight: 1024,
+                clipBias: 0.003,
+                color: 0x777777,
+            });
+
+            // Получаем мировые трансформации меша
+            const worldPos = new THREE.Vector3();
+            const worldQuat = new THREE.Quaternion();
+            const worldScale = new THREE.Vector3();
+            mesh.matrixWorld.decompose(worldPos, worldQuat, worldScale);
+
+            mirror.position.copy(worldPos);
+            mirror.quaternion.copy(worldQuat);
+            mirror.scale.copy(worldScale);
+
+            // Отодвигаем немного вперёд по нормали
+            const normal = new THREE.Vector3(1, 0, 0).applyQuaternion(worldQuat);
+            const arrowHelper = new THREE.ArrowHelper(normal, mirror.position, 0.3, 0xff0000);
+            scene.add(arrowHelper);
+            mirror.position.add(normal.multiplyScalar(0.01));
+
+            // Скрываем оригинальный меш
+            mesh.visible = false;
+            group.add(mirror);
+
+            // Визуальные помощники
+            const axesHelper = new THREE.AxesHelper(0.15);
+            mirror.add(axesHelper);
+
+            console.log(`🪞 Reflector установлен в "${name}"`);
+        });
+    });
+
+    renderer.render(scene, camera);
 }
 
 function updateMirrorPlacement() {

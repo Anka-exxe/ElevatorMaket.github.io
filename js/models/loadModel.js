@@ -1,7 +1,8 @@
 ﻿import * as THREE from 'three';
+import { TextureLoader } from 'three';
 import { FBXLoader } from 'jsm/loaders/FBXLoader.js';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
-import {DefaultSettings} from "./unusiallElements.js";
+import {DefaultSettings, setupReflectors} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
 import * as Element from "./elementNames.js";
@@ -12,6 +13,7 @@ import {setAllParameters, getCabinSize} from
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {applyColorToElements} from "./hallTextureManager.js";
 import {initCallPostsHandler, initIndicationBoardHandler} from "./hallCallPostsIndBoard.js";
+import { Reflector } from 'jsm/objects/Reflector.js';
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -59,17 +61,17 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
                     child.material = new THREE.MeshStandardMaterial({
                         color: 0xffffff, // Задайте нужный цвет
-                        roughness: 0.5,  // Настройте шероховатость
-                        metalness: 0.5   // Настройте металлическость
+                        roughness: 0.2,  // Настройте шероховатость
+                        metalness: 1   // Настройте металлическость
                     });
                 });}
 
             isReloaded ? reloadParamsForNewModel() : loadConfiguration();
 
-            console.log("Загружено")
-
             document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
             document.getElementById('configurator-container').style.visibility = 'visible';
+            //setupReflectors(camera, renderer);
+            applyBasicTextures();
         },
         undefined,
         (error) => {
@@ -131,6 +133,79 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
         }
     }
 }
+
+export function applyBasicTextures() {
+    const thresholdNames = [
+        "Threshold",
+        "ThresholdCentral",
+        "ThresholdLeft",
+        "Threshold1",
+        "Threshold1Central",
+        "Threshold1Left"
+    ];
+
+    const loader = new TextureLoader();
+
+    // === Текстуры для порогов ===
+    const metalTexture = loader.load('../../baseTextures/Steel.jpg');
+    const normalMap = loader.load('../../baseTextures/NormalMap.png');
+    const roughnessMap = loader.load('../../baseTextures/AmbientOcclusionMap.png');
+    const metalnessMap = loader.load('../../baseTextures/Steel.jpg');
+
+    [metalTexture, normalMap, roughnessMap, metalnessMap].forEach(tex => {
+        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+        tex.repeat.set(1, 1);
+    });
+
+    const metalMaterial = new THREE.MeshStandardMaterial({
+        map: metalTexture,
+        normalMap: normalMap,
+        roughnessMap: roughnessMap,
+        metalnessMap: metalnessMap,
+        side: THREE.DoubleSide
+    });
+
+    const logoTexture = loader.load('/baseTextures/Logo.png'); // PNG с альфа-каналом
+
+    const logoMaterial = new THREE.MeshStandardMaterial({
+        map: logoTexture,
+        transparent: true,
+        alphaMap: logoTexture,
+        depthWrite: false
+    });
+
+    // === Применение к порогам ===
+    thresholdNames.forEach(name => {
+        const obj = window.model.getObjectByName(name);
+        if (!obj) {
+            console.warn(`⛔ Объект ${name} не найден`);
+            return;
+        }
+
+        obj.traverse(child => {
+            if (child.isMesh) {
+                child.material = metalMaterial;
+                child.material.needsUpdate = true;
+                console.log(`⚙️ Материал (металл) применён к ${child.name}`);
+            }
+        });
+    });
+
+    // === Применение к логотипу ===
+    const logo = window.model.getObjectByName("Logo");
+    if (logo) {
+        logo.traverse(child => {
+            if (child.isMesh) {
+                child.material = logoMaterial;
+                child.material.needsUpdate = true;
+                console.log(`✨ Материал (альфа) применён к ${child.name}`);
+            }
+        });
+    } else {
+        console.warn("❗ Объект Logo не найден");
+    }
+}
+
 //import {isHallClicked} from "../animation/tabFunctions.js";
 
 let model;
