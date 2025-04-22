@@ -165,12 +165,11 @@ export function applyBasicTextures() {
         side: THREE.DoubleSide
     });
 
-    const logoTexture = loader.load('/baseTextures/Logo.png'); // PNG с альфа-каналом
+    const logoTexture = loader.load('../../baseTextures/Logo.png'); // PNG с альфа-каналом
 
     const logoMaterial = new THREE.MeshStandardMaterial({
         map: logoTexture,
         transparent: true,
-        alphaMap: logoTexture,
         depthWrite: false
     });
 
