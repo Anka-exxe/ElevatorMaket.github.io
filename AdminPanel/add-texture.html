@@ -27,20 +27,18 @@
         <details>
             <summary>Настройки иконки</summary>
             <fieldset>
-                <div>
-                    <label for="icon.type">Выберите элементы кабины, к которым применяется текстура</label>
-                    <!-- Используем multiple select -->
-                    <select id="icon.type" name="icon.type" multiple required>
-                        <option value="DOOR">Дверь</option>
-                        <option value="WALL">Стена</option>
-                        <option value="FLOOR">Пол</option>
-                        <option value="CEILING_MATERIAL">Материал потолка</option>
-                        <option value="CEILING">Рисунок потолка</option>
-                        <option value="CONTROL_PANEL">Панель управления</option>
-                        <option value="INDICATION_BOARD">Табло индикации</option>
-                        <option value="HANDRAIL">Перила</option>
-                        <option value="BUMPER">Отбойник</option>
-                    </select>
+                <div class="checkbox-group">
+                    <p>К каким элементам кабины применяется текстура? (можно выбрать несколько)</p>
+                    <label><input type="checkbox" name="icon.type" value="DOOR"> Дверь</label>
+                    <label><input type="checkbox" name="icon.type" value="WALL"> Стена</label>
+                    <label><input type="checkbox" name="icon.type" value="FLOOR"> Пол</label>
+                    <label><input type="checkbox" name="icon.type" value="CEILING_MATERIAL"> Материал потолка</label>
+                    <label><input type="checkbox" name="icon.type" value="CEILING"> Рисунок потолка</label>
+                    <label><input type="checkbox" name="icon.type" value="CONTROL_PANEL"> Панель управления</label>
+                    <label><input type="checkbox" name="icon.type" value="INDICATION_BOARD"> Табло индикации</label>
+                    <label><input type="checkbox" name="icon.type" value="BUMPER"> Отбойник</label>
+                    <label><input type="checkbox" name="icon.type" value="FRAME"> Обрамление</label>
+                    <label><input type="checkbox" name="icon.type" value="HANDRAIL"> Перила</label>
                 </div>
                 <div>
                     <label for="icon.name">Название иконки</label>
@@ -54,6 +52,7 @@
                 </div>
             </fieldset>
         </details>
+
 
         <!-- Секция свойств текстуры -->
         <details>

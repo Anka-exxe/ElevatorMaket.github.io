@@ -180,3 +180,23 @@ button[type="submit"] {
 button[type="submit"]:hover {
     background: var(--primary-color);
 }
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.3em 0.5em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin: 0;
+}

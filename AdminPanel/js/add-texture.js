@@ -320,23 +320,29 @@ const removeMapping = {
             })
             .then(data => {
                 document.getElementById('name').value = data.name;
-                document.getElementById('bumpScale').value = data.properties.bumpScale;
-                document.getElementById('metalness').value = data.properties.metalness;
-                document.getElementById('roughness').value = data.properties.roughness;
-                document.getElementById('emissiveIntensity').value = data.properties.emissiveIntensity;
-                // Заполняем multi-select для icon.type, устанавливая выбранные опции по булевым флагам
+                document.getElementById('bumpScale').value            = data.properties.bumpScale;
+                document.getElementById('metalness').value            = data.properties.metalness;
+                document.getElementById('roughness').value            = data.properties.roughness;
+                document.getElementById('emissiveIntensity').value    = data.properties.emissiveIntensity;
+
+                // Заполняем группу чекбоксов для icon.type
                 if (data.icon) {
-                    const iconSelect = document.getElementById('icon.type');
-                    Array.from(iconSelect.options).forEach(option => option.selected = false);
-                    if (data.icon.isDoor) iconSelect.querySelector('option[value="DOOR"]').selected = true;
-                    if (data.icon.isWall) iconSelect.querySelector('option[value="WALL"]').selected = true;
-                    if (data.icon.isFloor) iconSelect.querySelector('option[value="FLOOR"]').selected = true;
-                    if (data.icon.isCeilingMaterial) iconSelect.querySelector('option[value="CEILING_MATERIAL"]').selected = true;
-                    if (data.icon.isCeiling) iconSelect.querySelector('option[value="CEILING"]').selected = true;
-                    if (data.icon.isControlPanel) iconSelect.querySelector('option[value="CONTROL_PANEL"]').selected = true;
-                    if (data.icon.isIndicationBoard) iconSelect.querySelector('option[value="INDICATION_BOARD"]').selected = true;
-                    if (data.icon.isHandrail) iconSelect.querySelector('option[value="HANDRAIL"]').selected = true;
-                    if (data.icon.isBumper) iconSelect.querySelector('option[value="BUMPER"]').selected = true;
+                    // Сначала сбросим все
+                    document.querySelectorAll('input[name="icon.type"]').forEach(cb => {
+                        cb.checked = false;
+                    });
+                    // Отмечаем согласно флагам из data.icon
+                    if (data.icon.isDoor)             document.querySelector('input[value="DOOR"]').checked = true;
+                    if (data.icon.isWall)             document.querySelector('input[value="WALL"]').checked = true;
+                    if (data.icon.isFloor)            document.querySelector('input[value="FLOOR"]').checked = true;
+                    if (data.icon.isCeilingMaterial)  document.querySelector('input[value="CEILING_MATERIAL"]').checked = true;
+                    if (data.icon.isCeiling)          document.querySelector('input[value="CEILING"]').checked = true;
+                    if (data.icon.isControlPanel)     document.querySelector('input[value="CONTROL_PANEL"]').checked = true;
+                    if (data.icon.isIndicationBoard)  document.querySelector('input[value="INDICATION_BOARD"]').checked = true;
+                    if (data.icon.isBumper)           document.querySelector('input[value="BUMPER"]').checked = true;
+                    if (data.icon.isHandrail)         document.querySelector('input[value="HANDRAIL"]').checked = true;
+                    if (data.icon.isFrame)            document.querySelector('input[value="FRAME"]').checked = true;
+
                     document.getElementById('icon.name').value = data.icon.name;
                 }
                 if (data.baseColor) {
@@ -453,8 +459,9 @@ const removeMapping = {
             }
         }
 
-        const iconSelect = document.getElementById('icon.type');
-        const selectedTypes = Array.from(iconSelect.selectedOptions).map(o => o.value);
+        const selectedTypes = Array.from(
+            document.querySelectorAll('input[name="icon.type"]:checked')
+        ).map(cb => cb.value);
         formData.append('icon.isDoor', selectedTypes.includes('DOOR'));
         formData.append('icon.isWall', selectedTypes.includes('WALL'));
         formData.append('icon.isFloor', selectedTypes.includes('FLOOR'));
@@ -463,6 +470,7 @@ const removeMapping = {
         formData.append('icon.isControlPanel', selectedTypes.includes('CONTROL_PANEL'));
         formData.append('icon.isHandrail', selectedTypes.includes('HANDRAIL'));
         formData.append('icon.isBumper', selectedTypes.includes('BUMPER'));
+        formData.append('icon.isFrame', selectedTypes.includes('FRAME'));
         formData.append('icon.isIndicationBoard', selectedTypes.includes('INDICATION_BOARD'));
 
         const url = textureId

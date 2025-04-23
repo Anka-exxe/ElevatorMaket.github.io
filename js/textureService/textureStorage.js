@@ -145,6 +145,7 @@ async function fetchIcons() {
             isControlPanel: item.isControlPanel,
             isHandrail: item.isHandrail,
             isBumper: item.isBumper,
+            isFrame: item.isFrame,
             isIndicationBoard: item.isIndicationBoard,
         }));
     

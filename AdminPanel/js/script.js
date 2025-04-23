@@ -144,6 +144,7 @@ function iconMatchesTab(icon, tabId) {
         case 'controlPanel': return icon.isControlPanel;
         case 'indicationBoard': return icon.isIndicationBoard;
         case 'handrails': return icon.isHandrail;
+        case 'frame': return icon.isFrame;
         default: return false;
     }
 }

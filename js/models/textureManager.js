@@ -320,18 +320,17 @@ console.log(tabId)
                         depthWrite: false,
                     });
 
-                    const logo = model.getObjectByName("Logo");
-                    if (logo) {
-                        logo.traverse((child) => {
-                            if (child.isMesh) {
-                                child.material = logoMaterial;
-                                child.material.needsUpdate = true;
-                            }
-                        });
-                    } else {
-                        console.warn("❗ Объект Logo не найден");
+                    let logoCount = 0;
+                    model.traverse((child) => {
+                        if (child.isMesh && child.name === 'Logo') {
+                            child.material = logoMaterial;
+                            child.material.needsUpdate = true;
+                            logoCount++;
+                        }
+                    });
+                    if (logoCount === 0) {
+                        console.warn("❗ Ни одного объекта с именем 'Logo' не найдено");
                     }
-
 
                     if (isVertical) {
                         Panel.setBoard(textureId);
