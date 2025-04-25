@@ -201,6 +201,14 @@ const removeMapping = {
         const inputEl = document.getElementById(item.id);
         if (inputEl) {
             inputEl.addEventListener('change', () => {
+                if (!inputEl.files || inputEl.files.length === 0) {
+                    if (!textureId) {
+                        const previewDiv = document.getElementById("preview-" + item.id);
+                        if (previewDiv) previewDiv.innerHTML = "";
+                    }
+                    return;
+                }
+
                 updateMaterialMap(item.id, item.type, item.oldKey);
             });
         }

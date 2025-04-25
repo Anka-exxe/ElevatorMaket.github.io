@@ -67,13 +67,13 @@ const images = {
 async function loadTextures(imageArray, filterFn) {
     if (imageArray.length === 0) {
         await getAllIcons(); // Ждём завершения загрузки иконок
-        console.log('All textures before filtering:', allTextures); // Лог всех текстур
+        //console.log('All textures before filtering:', allTextures); // Лог всех текстур
 
         const filteredTextures = allTextures.filter(filterFn);
-        console.log('Filtered textures:', filteredTextures); // Лог отфильтрованных текстур
+        //console.log('Filtered textures:', filteredTextures); // Лог отфильтрованных текстур
 
         imageArray.push(...filteredTextures);
-        console.log('Updated imageArray:', imageArray); // Лог обновлённого массива
+        //console.log('Updated imageArray:', imageArray); // Лог обновлённого массива
     }
     return imageArray;
 }
@@ -118,7 +118,7 @@ export async function getAllIcons() {
     if (!iconsLoadedPromise) { // Если загрузка ещё не начата
         iconsLoadedPromise = fetchIcons().then(textures => {
             allTextures = textures;
-            console.log(allTextures);
+            //console.log(allTextures);
         });
     }
     return iconsLoadedPromise; // Возвращаем Promise загрузки
@@ -162,6 +162,7 @@ async function fetchIcons() {
     
         return textures.map(texture => ({
             id: texture.id,
+            name: texture.name,
             icon: texture.icon.url,
             isDoor: texture.icon.isDoor,
             isWall: texture.icon.isWall,

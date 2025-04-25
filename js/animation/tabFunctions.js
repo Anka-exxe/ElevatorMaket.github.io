@@ -136,7 +136,7 @@ export async function loadImagesForAllTabs() {
 export async function loadAllImages() {
 
     if (images.walls.length === 0) {
-        console.log("Loading all images...");
+        //console.log("Loading all images...");
     images.walls = await TextureStorage.getWalls();
     images.ceiling = await TextureStorage.getCeilingPlafon();
     images.ceilingMaterial = await TextureStorage.getCeilingMaterial();
@@ -147,7 +147,7 @@ export async function loadAllImages() {
     images.door = await TextureStorage.getDoor();
     images.bumper = await TextureStorage.getBumper();
     }
-    console.log("All images loaded.");
+    //console.log("All images loaded.");
 }
 
 export async function showImages(category, tabId) {
@@ -156,7 +156,7 @@ export async function showImages(category, tabId) {
         if (imagesFilled[category]) return; 
 
         imagesFilled[category] = true; // Устанавливаем флаг для этой категории
-        console.log("Loading images for: " + category);
+        //console.log("Loading images for: " + category);
 
         if (images[category]) {
             images[category].forEach(item => {
@@ -164,6 +164,7 @@ export async function showImages(category, tabId) {
                 img.src = item.icon || item.texture;
                 img.alt = `${category} image`;
 
+                img.setAttribute('title', item.name);
                 img.setAttribute('data-texture-id', item.id);
                 img.setAttribute('data-texture-url', item.texture || "");
                 img.setAttribute('data-alpha-url',  item.alpha || "");

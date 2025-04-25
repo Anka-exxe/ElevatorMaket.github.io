@@ -5,32 +5,50 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
 .login-container {
     background: #fff;
-    padding: 20px 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    width: 420px; /* фиксированная ширина для одинаковых полей */
+    box-sizing: border-box;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+input,
+button {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
 }
 
 input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: #4285f4;
+    outline: none;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
     background: #4285f4;
     border: none;
     color: #fff;
-    font-size: 16px;
-    border-radius: 4px;
-    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
 }
 
 button:hover {
@@ -40,4 +58,6 @@ button:hover {
 .error {
     color: red;
     margin-bottom: 10px;
+    font-size: 14px;
+    text-align: center;
 }
