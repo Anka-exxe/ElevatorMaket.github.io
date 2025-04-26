@@ -7,6 +7,8 @@ import * as Panel from '../shareConfiguration/panelParams.js';
 import {setHandrailTexture} from '../shareConfiguration/handrailParams.js';
 import * as Bumper from '../shareConfiguration/otherParams.js';
 import {currentCabinSize} from "./loadModel.js";
+import {setFrameTexture} from "../shareConfiguration/hallParams.js";
+import {setTextureClassActiveByContainerName} from "../shareConfiguration/findElementsHelper.js";
 
 let currentCeilingTextureURL = null;
 export function applyTextureToElement(model,
@@ -400,6 +402,37 @@ console.log(tabId)
             elementNames = ['HandrailUnified','HandrailComposite'];
             setHandrailTexture(textureId);
              break;
+        case 'HallParametrsTab':
+
+        if (textureType === "doorHall") {
+            elementNames = ['Door','DoorCentral','DoorLeft','Door1','Door1Central','Door1Left'];
+            setDoorTexture(textureId);
+            setTextureClassActiveByContainerName("doorTextures", textureId);
+            break;
+        } else if (textureType === "portal") {
+            elementNames = ['Portal'];
+            setFrameTexture(textureId);
+
+            applyTextureToElement(
+                window.hallModel,
+                elementNames,
+                color,
+                textureURL,
+                alphaURL,
+                bumpUrl,
+                aoURL,
+                displacementURL,
+                metalnessURL,
+                normalURL,
+                roughnessURL,
+                {
+                    metalness: metalness,
+                    roughness: roughness,
+                });
+
+            return;
+        }
+            
         default:
             console.error("Неизвестная вкладка:", tabId);
             return;

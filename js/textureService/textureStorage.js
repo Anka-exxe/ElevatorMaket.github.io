@@ -33,7 +33,7 @@ const images = {
     board_color: [],
     door: [],
     bumper: [],
-    
+    portal: [],
 
     isWallsEmpty() {
         return this.walls.length === 0;
@@ -61,7 +61,10 @@ const images = {
     },
     isDoorEmpty() {
         return this.door.length === 0;
-    }
+    },
+    isPortalEmpty() {
+        return this.portal.length === 0;
+    },
 };
 
 async function loadTextures(imageArray, filterFn) {
@@ -114,6 +117,10 @@ export async function getDoor() {
     return await loadTextures(images.door, texture => texture.isDoor);
 }
 
+export async function getPortal() {
+    return await loadTextures(images.portal, texture => texture.isFrame);
+}
+
 export async function getAllIcons() {
     if (!iconsLoadedPromise) { // Если загрузка ещё не начата
         iconsLoadedPromise = fetchIcons().then(textures => {
@@ -145,8 +152,8 @@ async function fetchIcons() {
             isControlPanel: item.isControlPanel,
             isHandrail: item.isHandrail,
             isBumper: item.isBumper,
-            isFrame: item.isFrame,
             isIndicationBoard: item.isIndicationBoard,
+            isFrame: item.isFrame,
         }));
     
         const texturePromises = icons.map(icon => 
@@ -173,6 +180,7 @@ async function fetchIcons() {
             isHandrail: texture.icon.isHandrail,
             isBumper: texture.icon.isBumper,
             isIndicationBoard: texture.icon.isIndicationBoard,
+            isFrame: texture.icon.isFrame,
             texture: texture.baseTextureUrl,
             alpha: texture.alphaMapUrl || "",
             bump: texture.bumpMapUrl || "",

@@ -100,6 +100,8 @@ export function getCategoryByTabId(tabId) {
             return 'handrail';
         case 'OtherParametrsTab':
             return 'bumper'; 
+        case 'HallParametrsTab':
+            return 'door_hall'; 
         default:
             console.error(`Unknown tabId: ${tabId}`);
             return null; // Возвращаем null, если tabId не распознан
@@ -116,6 +118,8 @@ const images = {
     board_color: [],
     door: [],
     bumper: [],
+    door_hall: [],
+    portal: [],
 };
 
 // Объект для отслеживания состояния каждой вкладки
@@ -129,12 +133,15 @@ export async function loadImagesForAllTabs() {
             showImages(getCategoryByTabId(tabId), tabId)
         )
     );
-    isImagesShowed= true;
 
+    // Вызов showImages для 'HallParametrsTab' должен быть вне Promise.all
+    await showImages(getCategoryByTabId('HallParametrsTab'), 'HallParametrsTab');
+    
+    isImagesShowed = true;
 }
 
 export async function loadAllImages() {
-
+   
     if (images.walls.length === 0) {
         console.log("Loading all images...");
     images.walls = await TextureStorage.getWalls();
@@ -145,9 +152,12 @@ export async function loadAllImages() {
     images.board = await TextureStorage.getBoard();
     images.board_color = await TextureStorage.getBoardColor();
     images.door = await TextureStorage.getDoor();
+    images.door_hall = await TextureStorage.getDoor();
     images.bumper = await TextureStorage.getBumper();
-    }
+    images.portal = await TextureStorage.getPortal();
     console.log("All images loaded.");
+    }
+
 }
 
 export async function showImages(category, tabId) {
@@ -210,6 +220,18 @@ export async function showImages(category, tabId) {
         const ceiling_material_container = parentElement.querySelector('.menu-container__options-menu-container-main .panel-color');
         
         addEventListenerToImages(ceiling_material_container, category);
+    } else if (category == 'door_hall') {
+        category = 'door_hall';
+
+        const door_hall_container = parentElement.querySelector('.menu-container__options-menu-container-main .door-material');
+        
+        addEventListenerToImages(door_hall_container, category);
+
+        category = 'portal';
+
+        const portal_container = parentElement.querySelector('.menu-container__options-menu-container-main .portal-material');
+
+        addEventListenerToImages(portal_container, category);
     } else {
         const container = parentElement.querySelector('.menu-container__options-menu-container-main .textures-container');
 

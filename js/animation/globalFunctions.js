@@ -14,7 +14,7 @@ window.markParameterButton = function(button) {
     buttons.forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
 
-    console.log("Выбрана кнопка: " + button.id);
+    //console.log("Выбрана кнопка: " + button.id);
 
     const idToSize = {
         wideSize: 'wide',

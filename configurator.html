@@ -476,10 +476,23 @@
                 <hr class="menu-container_hr">
 
                 <h3 class="additional-title">
+                    Двери открыты:
+                </h3>
+
+                <div class="isOpenDoorContainer">
+                    <label class="switch">
+                        <input type="checkbox"  id="toggleSwitch">
+                        <span class="slider round"></span>
+                      </label>
+                </div>
+
+                <hr class="menu-container_hr--textures">
+
+                <h3 class="additional-title">
                     Материал обрамления:
                 </h3>
 
-                <div class="textures-container" name="portalTextures">
+                <div class="textures-container portal-material" data-texture-type="portal" name="portalTextures">
                 </div>
 
                 <hr class="menu-container_hr--textures">
@@ -488,7 +501,7 @@
                     Материал дверей:
                 </h3>
 
-                <div class="textures-container" name="wallHallTextures">
+                <div class="textures-container door-material" data-texture-type="doorHall" name="wallHallTextures">
                 </div>
 
                 <hr class="menu-container_hr--textures"> 
@@ -611,10 +624,8 @@
             <div class="consent-block">
                 <input type="checkbox" id="consentCheckbox" required>
                 <label for="consentCheckbox">
-                    Нажимая кнопку «Отправить», я принимаю условия 
-                    пользовательского соглашения и даю согласие на обработку 
-                    моих персональных данных на условиях и для целей, определенных в 
-                    Согласии на обработку персональных данных
+                    Нажимая кнопку «Отправить», я соглашаюсь на
+                    отправку письма мне на почту
                 </label>
             </div>
             <div class="modal__footer">
@@ -642,6 +653,8 @@
     <script type="module" src="./js/animation/designProjectAnimation.js"></script>
 
     <script type="module" src="./js/animation/globalFunctions.js"></script>
+    <script type="module" src="./js/animation/hallDoorToggleButton.js"></script>
+    
 
     <script type="module">
         document.addEventListener('DOMContentLoaded', async() => {

@@ -1,5 +1,8 @@
 import * as THREE from 'three';
 import * as Element from "./elementNames.js";
+import {setCallPostType, 
+  setIndicationBoardType} from 
+  "../shareConfiguration/hallParams.js";
 
 let callPostObjects = {}; // Кэш для быстрого доступа
 let indBoardObjects = {}; // Кэш для быстрого доступа
@@ -20,6 +23,8 @@ export function initCallPostsHandler(model) {
       if (radio.checked) {
         const postNumber = index + 1;
         const selectedPost = `call_post_${postNumber}`;
+
+        setCallPostType(radio.id);
         
         // Управление видимостью
         Object.entries(callPostObjects).forEach(([name, obj]) => {
@@ -54,6 +59,8 @@ export function initIndicationBoardHandler(model) {
             const indBoardNumber = index + 1;
             const selectedBoard = `ind_board_${indBoardNumber}`;
             
+            setIndicationBoardType(radio.id);
+
             // Управление видимостью
             Object.entries(indBoardObjects).forEach(([name, obj]) => {
               obj.visible = (name === selectedBoard);

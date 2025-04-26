@@ -50,6 +50,18 @@ export function getAllParameters() {
 export async function reloadParamsForNewModel() {
     getAllParameters();
 
+    allParameters.mirror.existence = "noMirror";
+    allParameters.mirror.type = "to_rail";
+    allParameters.mirror.back = false;
+    allParameters.mirror.left = false;
+    allParameters.mirror.right = false;
+
+    allParameters.handrail.existence = "noHand";
+    allParameters.handrail.type = "unified";
+    allParameters.handrail.back = false;
+    allParameters.handrail.left = false;
+    allParameters.handrail.right = false;
+
     console.log(allParameters); // Логирование параметров
     
     await setAllParametersReloadVersion(allParameters);

@@ -61,7 +61,7 @@ export function setActiveCabinSizeByFormName(formName, buttonId) {
 }
 
 export async function setActiveTextureWithAllWalls(tabName, formName, textureContainerName, parameters) {
-    await showTab(tabName);
+    //await showTab(tabName);
 
     const form = document.forms[formName];
 

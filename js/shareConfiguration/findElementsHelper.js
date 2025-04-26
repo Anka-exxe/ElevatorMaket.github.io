@@ -33,7 +33,6 @@ export function setActiveRadioByInputName(inputName, radioId) {
         if (radio.id === radioId) {
             radio.click(); 
             radio.checked = true;
-            
         }
     });
 }
@@ -111,8 +110,24 @@ export async function setActiveTextureWithAllWalls(tabName, formName, textureCon
         }
 }
 
+export async function setActiveFirstTextureByContainerName(textureContainerName) {
+    const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
+    if (!texturesContainer) {
+        console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+    }
+
+    // Находим первую текстуру в контейнере
+    const firstTexture = texturesContainer.querySelector('img[data-texture-id]');
+    if (firstTexture) {
+        firstTexture.click(); // Вызываем событие клика на первой текстуре
+    } else {
+        console.warn('No textures found in the container.');
+    }
+}
+
 export async function setActiveTextureByContainerName(tabName, textureContainerName, textureId) {
-    await showTab(tabName);
+    //await showTab(tabName);
 
     const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
     if (!texturesContainer) {
@@ -124,8 +139,32 @@ export async function setActiveTextureByContainerName(tabName, textureContainerN
 
     if (textureId) {
         const texture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
-        console.log(texture);
+        //console.log(texture);
         texture.click();
+    }
+}
+
+export async function setTextureClassActiveByContainerName(textureContainerName, textureId) {
+    const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
+    if (!texturesContainer) {
+        console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+    }
+    
+    if (textureId) {
+        // Находим выбранную текстуру
+        const activeTexture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
+        
+        // Удаляем класс 'active' у всех текстур
+        const allTextures = texturesContainer.querySelectorAll('img[data-texture-id]');
+        allTextures.forEach(texture => {
+            if (texture !== activeTexture) {
+                texture.classList.remove('active');
+            }
+        });
+    
+        // Добавляем класс 'active' к текущей текстуре
+        activeTexture.classList.add('active');
     }
 }
 

@@ -93,9 +93,25 @@ export function setWallVisible(
     }
 }
 
-export function setDoorVisible(isVisible) {
-    const doorGroup = window.model.getObjectByName(Element.doorGroup);
-    doorGroup.visible = isVisible;
+
+const doorNames = ['Door', 'DoorCentral', 'DoorLeft'];
+let hiddenDoorName = null;
+
+export function setDoorOpen(isOpen) {
+        if(isOpen) {
+            doorNames.forEach(name => {
+                const object = window.model.getObjectByName(name);
+                if (object && object.visible) {
+                    hiddenDoorName = name;
+                    object.visible = false;
+                }
+            });
+        } else {
+            if(hiddenDoorName) {
+                let element = window.model.getObjectByName(hiddenDoorName);
+                element.visible = true;
+            }
+        }
 }
 
 export function setPortalVisible(isVisible) {

@@ -28,6 +28,10 @@ import {GetImage} from "../models/loadModel.js";
 import {isDesignProjectsLoaded, populateForm} from "../animation/designProjectAnimation.js";
 
 import {loadModelBySize} from "../models/loadModel.js";
+
+import {isHallSettingsSet, setHallSettings,
+    getHallState, setHallParams} 
+    from "../shareConfiguration/hallParams.js";
  
 
 const allParameters = {
@@ -39,7 +43,8 @@ const allParameters = {
     controlPanel: null,
     mirror: null,
     handrail: null,
-    bumpers: null
+    bumpers: null,
+    hall: null
 };
 
 export function getAllParameters() {
@@ -52,6 +57,11 @@ export function getAllParameters() {
     allParameters.mirror = getMirrorParams();
     allParameters.handrail = getHandrailParams();
     allParameters.bumpers = getAllBumperTextures();
+
+    if(isHallSettingsSet) {
+        allParameters.hall = getHallState();
+    }
+
     console.log(allParameters);
 }
 
@@ -73,6 +83,18 @@ export function saveParametersToFile() {
 export async function reloadParamsForNewModel() {
     getAllParameters();
 
+    allParameters.mirror.existence = "noMirror";
+    allParameters.mirror.type = "to_rail";
+    allParameters.mirror.back = false;
+    allParameters.mirror.left = false;
+    allParameters.mirror.right = false;
+
+    allParameters.handrail.existence = "noHand";
+    allParameters.handrail.type = "unified";
+    allParameters.handrail.back = false;
+    allParameters.handrail.left = false;
+    allParameters.handrail.right = false;
+
     console.log(allParameters); // Логирование параметров
     
     await setAllParameters(allParameters);
@@ -86,7 +108,7 @@ export function getCabinSize(parameters) {
 }
 
 export async function setAllParameters(parameters) {
-    console.log(parameters); // Логирование параметров
+    //console.log(parameters); // Логирование параметров
     
     if (parameters && typeof parameters === 'object') {
         if (!isImagesShowed) {
@@ -107,6 +129,12 @@ export async function setAllParameters(parameters) {
         await setActiveBumperParameters(parameters.bumpers);
         await setActiveWallParameters(parameters.wall);
 
+        if(parameters.hall) {
+            setHallSettings(true);
+
+            setHallParams(parameters.hall);
+        }
+
         // Проверка на существование элемента для имитации клика
         const mainTabMenuTitle = document.getElementById('MainTabMenuTitle');
         if (mainTabMenuTitle) {
@@ -115,7 +143,7 @@ export async function setAllParameters(parameters) {
             console.error('Элемент с ID "MainTabMenuTitle" не найден.');
         }
 
-        console.log('Параметры установлены:', parameters); // Логируем установленные параметры
+       // console.log('Параметры установлены:', parameters); // Логируем установленные параметры
     } else {
         console.error('Неверный тип параметров. Ожидался объект.');
     }
@@ -131,6 +159,12 @@ export function loadParametersFromFile() {
             input.onchange = async (event) => { // Сделайте этот обработчик асинхронным
                 const file = event.target.files[0];
                 if (file) {
+                    if (file.type !== 'application/json') {
+                        console.error("Выбранный файл не является JSON-файлом.");
+                        alert("Неверный формат файла");
+                        return;
+                    }
+
                     const reader = new FileReader();
                     reader.onload = async (e) => { // Сделайте этот обработчик тоже асинхронным
                         try {
@@ -148,6 +182,7 @@ export function loadParametersFromFile() {
                             await loadModelBySize(idToSize[getCabinSize(parameters)]);
                             //await setAllParameters(parameters); // Вызываем метод с загруженными параметрами
                         } catch (error) {
+                            alert("Ошибка при загрузке параметров");
                             console.error("Ошибка при загрузке параметров:", error);
                         }
                     };

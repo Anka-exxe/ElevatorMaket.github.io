@@ -13,7 +13,17 @@ import {setAllParameters, getCabinSize} from
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {applyColorToElements} from "./hallTextureManager.js";
 import {initCallPostsHandler, initIndicationBoardHandler} from "./hallCallPostsIndBoard.js";
-import { Reflector } from 'jsm/objects/Reflector.js';
+//import { Reflector } from 'jsm/objects/Reflector.js';
+import {setDoorOpen} from "./setVisibilityManager.js";
+import {getDoorState} from "../shareConfiguration/doorParams.js";
+import {setTextureClassActiveByContainerName,
+    setActiveFirstTextureByContainerName} 
+from "../shareConfiguration/findElementsHelper.js";
+import {isHallSettingsSet, 
+    getHallState, setHallParamsActive, 
+    setFrameExistence, setHallSettings} 
+    from "../shareConfiguration/hallParams.js"
+
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -24,6 +34,7 @@ let buttonViewInside;
 let buttonHallViewInside;
 let buttonDoorOpen;
 let buttonDoorClose;
+let isHallModelLoaded = false;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
@@ -67,6 +78,8 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
                 });}
 
             isReloaded ? reloadParamsForNewModel() : loadConfiguration();
+
+            isHallModelLoaded = isReloaded ? false : isHallModelLoaded;
 
             document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
             document.getElementById('configurator-container').style.visibility = 'visible';
@@ -211,7 +224,7 @@ let model;
 let camera, renderer, controls;
 const maxDistance = 160;
 var strDownloadMime = "image/octet-stream";
-let isHallModelLoaded = false;
+
 export let scene;
 function init() {
     console.log('init');
@@ -585,6 +598,8 @@ async function loadConfiguration() {
 const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
 const templateId = JSON.parse(localStorage.getItem('templateId'));
 
+isHallModelLoaded = false;
+
 if (templateConfiguration) {
     console.log(JSON.parse(templateConfiguration));
     try {
@@ -653,6 +668,10 @@ export function InitialOrbitControls() {
 
 
 export function SetSettingsBackFromHallToElevetor() {
+    const checkbox = document.getElementById('toggleSwitch');
+    checkbox.checked = false;
+    setDoorOpen(false);
+
     window.hallModel.visible = false;
     camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2); 
     controls.enableDamping = true;
@@ -691,6 +710,7 @@ if (buttonView3D) {
  radioButtons.forEach(radio => {
      radio.addEventListener('change', () => {
          if (radio.checked) {
+            setFrameExistence(radio.id);
             Visibility.setPortalVisible(radio.value === "have_portal");
          }
      });
@@ -701,22 +721,29 @@ export async function loadHall() {
     document.getElementById('loading').style.display = 'flex'; // Скрыть индикатор загрузки
     document.getElementById('configurator-container').style.visibility = 'hidden'; 
 
+    let doorState = getDoorState();
+    let doorTexture = doorState.texture;
+    setTextureClassActiveByContainerName("wallHallTextures", doorTexture);
+
     if(isHallModelLoaded) {
         window.hallModel.visible = true;
         document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
         document.getElementById('configurator-container').style.visibility = 'visible'; 
     } else {
         const fbxLoader = new FBXLoader();
-        fbxLoader.load(
+        await fbxLoader.load(
             './hallModels/шт21.fbx',
             async (object) => {
                 object.position.set(0, 0, 0);
+                
+            if (window.hallModel) {
+                scene.remove(window.hallModel);
+            }
                 //object.scale.set(0.4, 0.4, 0.4);
                 scene.add(object);
-                model = object;
-                window.hallModel = model;
-        
-                object.traverse((child) => {
+               // model = object;
+                window.hallModel = object;
+                /*object.traverse((child) => {
                     if (child.isMesh) {
                         // Убираем текстуру
                         if (child.material) {
@@ -735,18 +762,23 @@ export async function loadHall() {
                         // Пересчитываем нормали
                         child.geometry.computeVertexNormals();
                     }
-                });
+                });*/
 
-                applyColorToElements();
-                initCallPostsHandler(window.hallModel);
-                initIndicationBoardHandler(window.hallModel);
+                await applyColorToElements();
+                await initCallPostsHandler(window.hallModel);
+                await initIndicationBoardHandler(window.hallModel);
 
-                animate();
-        
+                if(isHallSettingsSet) {
+                    await setHallParamsActive();
+                } else {
+                    await setActiveFirstTextureByContainerName("portalTextures");
+                    setHallSettings(true);
+                }
+
+                isHallModelLoaded= true;
+                        
                 document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
                 document.getElementById('configurator-container').style.visibility = 'visible'; 
-               
-                isHallModelLoaded= true;
             },
             undefined,
             (error) => {

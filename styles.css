@@ -705,7 +705,7 @@ body {
     position: absolute; /* Позволяет позиционировать подсказку */
     z-index: 1; /* Убедитесь, что подсказка выше других элементов */
     bottom: 125%; /* Позиция над элементом */
-    left: 50%; /* Центрирование по горизонтали */
+    left: 25%; /* Центрирование по горизонтали */
     margin-left: -50px; /* Сдвиг влево для центрирования */
     opacity: 0; /* Скрыто по умолчанию */
     transition: opacity 0.3s; /* Плавный переход */
@@ -786,6 +786,13 @@ input[type="color"] {
     position: relative;
 }
 
+.close-button {
+    position: absolute;
+    right: 20px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
 .close {
     position: absolute;
     top: 10px;
@@ -838,6 +845,7 @@ input[type="color"] {
 }
 
 .consent-block input[type="checkbox"] {
+    cursor: pointer;
     margin-right: 8px;
 }
 
@@ -849,3 +857,65 @@ input[type="color"] {
     border-radius: 4px;
     cursor: pointer;
 }
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide default HTML checkbox */
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The slider */
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+  
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+  
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+  
+  /* Rounded sliders */
+  .slider.round {
+    border-radius: 34px;
+  }
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
