@@ -62,7 +62,7 @@ export function getAllParameters() {
         allParameters.hall = getHallState();
     }
 
-    console.log(allParameters);
+    //console.log(allParameters);
 }
 
 export function saveParametersToFile() {
@@ -95,15 +95,12 @@ export async function reloadParamsForNewModel() {
     allParameters.handrail.left = false;
     allParameters.handrail.right = false;
 
-    console.log(allParameters); // Логирование параметров
+   // console.log(allParameters); // Логирование параметров
     
     await setAllParameters(allParameters);
 }
 
 export function getCabinSize(parameters) {
-    console.log(parameters);
-    console.log(parameters.cabin);
-    console.log(parameters.cabin.size);
     return parameters.cabin.size;
 }
 

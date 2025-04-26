@@ -178,13 +178,23 @@ export function applyBasicTextures() {
         side: THREE.DoubleSide
     });
 
-    const logoTexture = loader.load('../../baseTextures/Logo.png'); // PNG с альфа-каналом
+    loader.load('../../baseTextures/Logo.png', (texture) => {
+        const logoMaterial = new THREE.MeshStandardMaterial({
+            map: texture,
+            transparent: true,
+            depthWrite: false
+        });
 
-    const logoMaterial = new THREE.MeshStandardMaterial({
-        map: logoTexture,
-        transparent: true,
-        depthWrite: false
-    });
+        const logo = window.model.getObjectByName("Logo");
+        if (logo) {
+            logo.traverse(child => {
+                if (child.isMesh) {
+                    child.material = logoMaterial;
+                    child.material.needsUpdate = true;
+                }
+            });
+        }
+    })
 
     // === Применение к порогам ===
     thresholdNames.forEach(name => {
@@ -198,24 +208,9 @@ export function applyBasicTextures() {
             if (child.isMesh) {
                 child.material = metalMaterial;
                 child.material.needsUpdate = true;
-                console.log(`⚙️ Материал (металл) применён к ${child.name}`);
             }
         });
     });
-
-    // === Применение к логотипу ===
-    const logo = window.model.getObjectByName("Logo");
-    if (logo) {
-        logo.traverse(child => {
-            if (child.isMesh) {
-                child.material = logoMaterial;
-                child.material.needsUpdate = true;
-                console.log(`✨ Материал (альфа) применён к ${child.name}`);
-            }
-        });
-    } else {
-        console.warn("❗ Объект Logo не найден");
-    }
 }
 
 //import {isHallClicked} from "../animation/tabFunctions.js";
@@ -227,7 +222,6 @@ var strDownloadMime = "image/octet-stream";
 
 export let scene;
 function init() {
-    console.log('init');
     const canvas = document.getElementById('elevatorCanvas');
     if (!canvas) {
         console.error('Canvas элемент не найден');
@@ -601,7 +595,7 @@ const templateId = JSON.parse(localStorage.getItem('templateId'));
 isHallModelLoaded = false;
 
 if (templateConfiguration) {
-    console.log(JSON.parse(templateConfiguration));
+    //console.log(JSON.parse(templateConfiguration));
     try {
         await setAllParameters(JSON.parse(templateConfiguration));
     } catch (error) {

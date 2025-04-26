@@ -155,7 +155,7 @@ export async function loadAllImages() {
     images.door_hall = await TextureStorage.getDoor();
     images.bumper = await TextureStorage.getBumper();
     images.portal = await TextureStorage.getPortal();
-    console.log("All images loaded.");
+    //console.log("All images loaded.");
     }
 }
 
