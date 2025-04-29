@@ -224,7 +224,7 @@ export function handleTextureClick(event) {
 
     img.classList.add('active');
 
-console.log(tabId)
+//console.log(tabId)
 
     switch (tabId) {
         case 'WallsParametersTab':

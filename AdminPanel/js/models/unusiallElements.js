@@ -290,7 +290,6 @@ function updateHandrailVisibility(isVisible) {
     const handrailGroup = model.getObjectByName("HandrailsGroup");
     if (handrailGroup) {
         handrailGroup.visible = isVisible;
-        console.log("Handrail group visibility:", isVisible);
     } else {
         console.error("Группа Handrail не найдена");
     }
@@ -349,7 +348,6 @@ export function updateHandrailPosition() {
             }
 
             group.visible = visible;
-            console.log(`Группа ${groupName} видима: ${visible}`);
         } else {
             console.warn(`Группа ${groupName} не найдена`);
         }
@@ -502,7 +500,6 @@ function updateControlPanelPlacement() {
                 rightPanel.visible = true;
                 rightPanel1.visible = true;
             }
-            console.log("Отображаются панели с обеих сторон");
         } else {
             console.warn("Вариант 'С двух сторон' недоступен для непроходной кабины");
         }
@@ -561,8 +558,6 @@ function updateControlPanelPlacement() {
         const panelGroup = window.model.getObjectByName(groupName);
         if (panelGroup) {
             panelGroup.visible = true;
-            console.log(`Отображается группа панели: ${groupName}`);
-            //window.model.getObjectByName("DisplayHorisontal").visible = false;
         } else {
             console.warn(`Группа панели ${groupName} не найдена`);
         }
@@ -721,11 +716,5 @@ function updateControlPanelPlacement() {
             if (mirrorRight) mirrorRight.visible = false;
             if (mirrorLeft) mirrorLeft.visible = false;
         }
-
-        console.log("Mirror placement updated:",
-            "Back:", mirrorBack ? mirrorBack.visible : "not found",
-            "Right:", mirrorRight ? mirrorRight.visible : "not found",
-            "Left:", mirrorLeft ? mirrorLeft.visible : "not found"
-        );
     }
 
