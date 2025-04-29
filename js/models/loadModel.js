@@ -871,6 +871,12 @@ function animate() {
 export async function GetImage() {
     try {
         const strMime = "image/jpeg";
+        let isHallHiden = false;
+
+        if (isHallModelLoaded && window.hallModel.visible) {
+            window.hallModel.visible = false;
+            isHallHiden = true;
+        }
 
         const originalPosition = camera.position.clone();
         const originalTarget = controls.target.clone(); // Сохраняем исходное положение target
@@ -906,6 +912,10 @@ export async function GetImage() {
         controls.update(); // Обновляем управление
 
         scene.background = new THREE.Color(0xe0e0e0); 
+
+        if (isHallHiden) {
+            window.hallModel.visible = true;
+        }
 
         // Преобразуем DataURL в Blob
         const response = await fetch(imgData);
