@@ -726,11 +726,17 @@ if (buttonView3D) {
     document.getElementById('configurator-container').style.visibility = 'hidden';
 
     // 1. Переносим константы в начало функции (чтобы были видны во всей функции)
-    const hallModelPaths = {
-        wide: './hallModels/шт28.fbx',
+   /*const hallModelPaths = {
+        wide: './hallModels/wideHallModel.fbx',
         square: './hallModels/кт10.fbx',
         deep: './hallModels/гт13.fbx',
-    };
+    };*/
+
+    const hallModelPaths = {
+        wide: 'http://localhost:9000/models/wideHallModel.fbx',
+        square: 'http://localhost:9000/models/squareHallModel.fbx',
+        deep: 'http://localhost:9000/models/deepHallModel.fbx',
+    }; 
 
     const hallPositions = {
         wide: {
@@ -861,6 +867,7 @@ if (buttonView3D) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('configurator-container').style.visibility = 'visible';
 }
+
 function animate() {
     requestAnimationFrame(animate); // Запрашиваем следующий кадр анимации
 
