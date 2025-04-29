@@ -727,7 +727,7 @@ if (buttonView3D) {
 
     // 1. Переносим константы в начало функции (чтобы были видны во всей функции)
     const hallModelPaths = {
-        wide: './hallModels/шт27.fbx',
+        wide: './hallModels/шт28.fbx',
         square: './hallModels/кт10.fbx',
         deep: './hallModels/гт13.fbx',
     };
@@ -828,7 +828,6 @@ if (buttonView3D) {
                         await setActiveTextureByContainerNameHallVersion('wallHallTextures', doorTexture);
 
                         isHallModelLoaded = true;
-                        window.modelController = new ModelPositionController(window.hallModel);
                         resolve();
                     } catch (error) {
                         reject(error);
@@ -918,51 +917,3 @@ export async function GetImage() {
         return null; // Возвращаем null в случае ошибки
     }
 }
-
-// Инициализация слайдера
-// JavaScript
-class ModelPositionController {
-    constructor(model) {
-      this.model = model;
-      this.initSliders();
-    }
-  
-    initSliders() {
-      // Инициализация слайдера X
-      const xSlider = document.getElementById('x-slider');
-      const xValue = document.getElementById('x-value');
-      
-      // Инициализация слайдера Z
-      const zSlider = document.getElementById('z-slider');
-      const zValue = document.getElementById('z-value');
-  
-      // Обработчики для слайдера X
-      xSlider.addEventListener('input', () => {
-        const value = parseFloat(xSlider.value);
-        this.model.position.x = value;
-        xValue.textContent = value.toFixed(1);
-        console.log(`Позиция X: ${value}`);
-      });
-  
-      // Обработчики для слайдера Z
-      zSlider.addEventListener('input', () => {
-        const value = parseFloat(zSlider.value);
-        this.model.position.z = value;
-        zValue.textContent = value.toFixed(1);
-        console.log(`Позиция Z: ${value}`);
-      });
-  
-      // Инициализация значений
-      this.updateSliderValues();
-    }
-  
-    updateSliderValues() {
-      if (!this.model) return;
-      
-      document.getElementById('x-slider').value = this.model.position.x;
-      document.getElementById('z-slider').value = this.model.position.z;
-      document.getElementById('x-value').textContent = this.model.position.x.toFixed(1);
-      document.getElementById('z-value').textContent = this.model.position.z.toFixed(1);
-    }
-  }
-  
