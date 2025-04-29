@@ -23,13 +23,12 @@ let buttonViewUp;
 let buttonViewInside;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
-    console.log("loading by size");
 
     const loader = new FBXLoader();
     const modelPaths = {
-        wide: './liftModels/wideModel.fbx',
-        square: './liftModels/squareModel.fbx',
-        deep: './liftModels/deepModel.fbx',
+        wide: 'http://localhost:9000/models/wideLiftModel.fbx',
+        square: 'http://localhost:9000/models/squareLiftModel.fbx',
+        deep: 'http://localhost:9000/models/deepLiftModel.fbx',
     };
 
     const path = modelPaths[idToSizeElement];
@@ -67,7 +66,6 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
             isReloaded ? reloadParamsForNewModel() : loadConfiguration();
 
-            console.log("Загружено")
 
             document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
             document.getElementById('configurator-container').style.visibility = 'visible';
@@ -139,7 +137,6 @@ const maxDistance = 160;
 export let scene;
 
 async function init() {
-    console.log('init');
     const canvas = document.getElementById('elevatorCanvas');
     if (!canvas) {
         console.error('Canvas элемент не найден');
@@ -330,8 +327,6 @@ function onWindowResize() {
 
     if(modelSize) {
         loadModelBySize(idToSize[modelSize]);
-
-        console.log("loaded by size");
     } else {
         //window.location.href = `index.html`;
     }
@@ -470,11 +465,9 @@ async function getCabinSizeFromConfiguration() {
 
     const urlParams = new URLSearchParams(window.location.search);
     const templateId = urlParams.get('designProject'); // Получаем ID проекта
-    console.log("templateId" + templateId);
 
     if (templateId) {
         const template = await fetchTemplateById(templateId); // Ожидаем результат
-        console.log(template);
         if (!template) {
             throw new Error('Template not found');
         }
@@ -488,29 +481,6 @@ async function getCabinSizeFromConfiguration() {
 
     return "wideSize";
 }
-
-
-/*async function loadConfiguration() {
-const templateConfiguration = JSON.parse(localStorage.getItem('templateConfiguration'));
-const templateId = JSON.parse(localStorage.getItem('templateId'));
-
-if (templateConfiguration) {
-    console.log(JSON.parse(templateConfiguration));
-    try {
-        await setAllParameters(JSON.parse(templateConfiguration));
-    } catch (error) {
-        console.error('Ошибка при установке параметров:', error);
-        alert('Произошла ошибка при загрузке параметров.');
-        window.location.href = `index.html`;
-    }
-
-    setDesignProject(templateId);
-} else {
-    window.location.href = `index.html`;
-}
-
-localStorage.removeItem('templateConfiguration');
-}*/
 
 async function reloadConfiguration() {
     reloadParamsForNewModel();
@@ -555,10 +525,9 @@ export function InitialOrbitControls() {
 export let templateId;
 
 async function loadConfiguration() {
-    console.log("loadConf");
+
     const urlParams = new URLSearchParams(window.location.search);
     const templateId = urlParams.get('designProject'); // Получаем ID проекта
-    console.log("templateId" + templateId);
 
     if(!isImagesShowed) {
         await loadImagesForAllTabs();
@@ -567,8 +536,6 @@ async function loadConfiguration() {
     if (templateId) {
         try {
             const template = await fetchTemplateById(templateId); // Ожидаем результат
-            console.log("template");
-            console.log(template);
             if (!template) {
                 throw new Error('Template not found');
             }

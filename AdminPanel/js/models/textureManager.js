@@ -222,8 +222,6 @@ export function handleTextureClick(event) {
 
     img.classList.add('active');
 
-console.log(tabId)
-
     switch (tabId) {
         case 'WallsParametersTab':
             let activeButton = tabContainer.querySelector('.form__form-element.active');
@@ -293,8 +291,95 @@ console.log(tabId)
             break;
         case 'BoardParametrsTab':
             if (textureType === "panel") {
-                Panel.setBoard(textureId);
-                elementNames = ['DisplayHorisontal', 'DisplayVertical'];
+                const image = new Image();
+                image.src = textureURL;
+
+                image.onload = () => {
+                    const isVertical = image.height > image.width;
+                    const isHorizontal = image.width > image.height;
+
+                    const showDisplay = (targetNameToShow) => {
+                        model.traverse((child) => {
+                            if (!child.isMesh) return;
+
+                            if (child.name === 'DisplayVertical') {
+                                child.visible = (targetNameToShow === 'DisplayVertical');
+                            }
+                            if (child.name === 'DisplayHorisontal') {
+                                child.visible = (targetNameToShow === 'DisplayHorisontal');
+                            }
+                        });
+                    };
+
+                    const logoTexture = new THREE.TextureLoader().load('../../baseTextures/Logo1.png');
+                    const logoMaterial = new THREE.MeshStandardMaterial({
+                        map: logoTexture,
+                        transparent: true,
+                        depthWrite: false,
+                    });
+
+                    let logoCount = 0;
+                    model.traverse((child) => {
+                        if (child.isMesh && child.name === 'Logo') {
+                            child.material = logoMaterial;
+                            child.material.needsUpdate = true;
+                            logoCount++;
+                        }
+                    });
+                    if (logoCount === 0) {
+                        console.warn("❗ Ни одного объекта с именем 'Logo' не найдено");
+                    }
+
+                    if (isVertical) {
+                        Panel.setBoard(textureId);
+                        showDisplay('DisplayVertical');
+                        applyTextureToElement(
+                            model,
+                            ['DisplayVertical'],
+                            color,
+                            textureURL,
+                            alphaURL,
+                            bumpUrl,
+                            aoURL,
+                            displacementURL,
+                            metalnessURL,
+                            normalURL,
+                            roughnessURL,
+                            {
+                                metalness: metalness,
+                                roughness: roughness,
+                            }
+                        );
+                    } else if (isHorizontal) {
+                        Panel.setBoard(textureId);
+                        showDisplay('DisplayHorisontal');
+                        applyTextureToElement(
+                            model,
+                            ['DisplayHorisontal'],
+                            color,
+                            textureURL,
+                            alphaURL,
+                            bumpUrl,
+                            aoURL,
+                            displacementURL,
+                            metalnessURL,
+                            normalURL,
+                            roughnessURL,
+                            {
+                                metalness: metalness,
+                                roughness: roughness,
+                            }
+                        );
+                    } else {
+                        alert("Текстура для табло индикации не имеет подходящей ориентации (должна быть прямоугольной).");
+                    }
+                };
+
+                image.onerror = () => {
+                    console.error("Ошибка загрузки изображения для определения ориентации.");
+                };
+
+                return;
             } else if (textureType === "panelColor") {
                 Panel.setPanelMaterial(textureId);
                 elementNames = ['ControlPanel'];

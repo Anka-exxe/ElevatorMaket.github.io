@@ -48,17 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     panelSideRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
-        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     });
 
     panelLocationRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
-        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     });
 
     panelWallPositionsRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
-        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     });
 
     const mirrorAvailabilityRadios = document.querySelectorAll('input[name="mirror_availability"]');
@@ -109,7 +106,6 @@ export function DefaultSettings(){
 
     updateControlPanelPlacement();
     updateMirrorPlacement();
-    //window.model.getObjectByName("DisplayHorisontal").visible = false;
 }
 
 
@@ -569,8 +565,6 @@ function updateControlPanelPlacement() {
     const panelGroup = window.model.getObjectByName(groupName);
     if (panelGroup) {
         panelGroup.visible = true;
-        //console.log(`Отображается группа панели: ${groupName}`);
-        //window.model.getObjectByName("DisplayHorisontal").visible = false;
     } else {
         console.warn(`Группа панели ${groupName} не найдена`);
     }

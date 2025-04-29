@@ -39,9 +39,9 @@ let isHallModelLoaded = false;
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
     const modelPaths = {
-        wide: './liftModels/wideModel.fbx',
-        square: './liftModels/squareModel.fbx',
-        deep: './liftModels/deepModel.fbx',
+        wide: 'http://localhost:9000/models/wideLiftModel.fbx',
+        square: 'http://localhost:9000/models/squareLiftModel.fbx',
+        deep: 'http://localhost:9000/models/deepLiftModel.fbx',
     };
 
     const path = modelPaths[idToSizeElement];
