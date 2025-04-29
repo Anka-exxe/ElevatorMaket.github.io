@@ -8,7 +8,7 @@ export const INDICATION_BOARD = 'INDICATION_BOARD';
 export const HANDRAIL = 'HANDRAIL';
 export const BUMPER = 'BUMPER';
 
-const host = "http://configurator-service:8090/api/v1/";
+const host = "http://localhost:8090/api/v1/";
 
 export const urlTemplateGetIcons = `${host}icons?page=0&size=1000`;
 export const urlTemplateGetTextureByIconId = `${host}textures/icon/{}`;
