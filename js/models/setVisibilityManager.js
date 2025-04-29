@@ -93,11 +93,13 @@ export function setWallVisible(
     }
 }
 
-
 const doorNames = ['Door', 'DoorCentral', 'DoorLeft'];
+
 let hiddenDoorName = null;
 
 export function setDoorOpen(isOpen) {
+    const elevatorDoor = window.hallModel.getObjectByName(Element.hallElevatorDoor);
+
         if(isOpen) {
             doorNames.forEach(name => {
                 const object = window.model.getObjectByName(name);
@@ -106,11 +108,15 @@ export function setDoorOpen(isOpen) {
                     object.visible = false;
                 }
             });
+           
+            elevatorDoor.visible = false;
         } else {
             if(hiddenDoorName) {
                 let element = window.model.getObjectByName(hiddenDoorName);
                 element.visible = true;
             }
+
+            elevatorDoor.visible = true;
         }
 }
 

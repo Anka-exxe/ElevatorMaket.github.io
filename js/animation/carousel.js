@@ -45,22 +45,27 @@ export function displayTemplates(templates) {
 
             const title = document.createElement('p');
             title.className = 'pattern-card__title';
-            title.textContent = template.name; // Предполагаем, что у шаблона есть поле name
+            title.textContent = template.name;
             patternCard.appendChild(title);
 
             const img = document.createElement('img');
-            img.src = template.previewImageUrl; // Предполагаем, что у шаблона есть поле previewImageUrl
+            img.src = template.previewImageUrl;
             img.alt = template.name;
             img.className = 'pattern-img';
+            
+            // Ждем загрузки изображения перед инициализацией карусели
+            img.onload = function() {
+                setTimeout(initCarousel, 100); // Небольшая задержка для стабилизации DOM
+            };
+            
             patternCard.appendChild(img);
 
             patternCard.onclick = () => {
                 try {
-                    localStorage.setItem('templateConfiguration', JSON.stringify(template.configuration)); // Сохраняем конфигурацию как строку
+                    localStorage.setItem('templateConfiguration', JSON.stringify(template.configuration));
                     localStorage.setItem('templateId', JSON.stringify(template.id));
                     console.log(template.configuration);
                     window.location.href = 'configurator.html';
-
                 } catch (error) {
                     console.error('Ошибка при парсинге JSON:', error);
                 }
@@ -68,7 +73,9 @@ export function displayTemplates(templates) {
 
             templatesList.appendChild(patternCard);
         });
-        initCarousel();
+        
+        // Инициализация карусели с задержкой на случай если изображения уже загружены
+        setTimeout(initCarousel, 300);
     } else {
         const noTemplatesMessage = document.createElement('p');
         noTemplatesMessage.textContent = 'Нет доступных дизайн проектов';
@@ -89,18 +96,31 @@ function initCarousel() {
     const prevButton = document.querySelector('.prev');
     const nextButton = document.querySelector('.next');
     const carousel = document.getElementById('carousel');
+    
+    if (!cards || !prevButton || !nextButton || !carousel) return;
+    cards.style.transform = 'translateX(0)';
     let offset = 0;
 
-    const cardWidth = cards.children[0].offsetWidth + 20; // Ширина карточки с учетом отступов
+    // Пересчитываем ширину карточки
+    const firstCard = cards.children[0];
+    if (!firstCard) return;
+    
+    const cardWidth = firstCard.offsetWidth + 20; // Ширина карточки с учетом отступов
     const totalCards = cards.children.length; // Общее количество карточек
 
     const updateButtons = () => {
-        const maxOffset = -((totalCards * cardWidth) - (Math.floor(carousel.clientWidth / cardWidth) * cardWidth));
+        if (totalCards === 0) return;
+        
+        const visibleCards = Math.floor(carousel.clientWidth / cardWidth);
+        const maxOffset = -((totalCards * cardWidth) - (visibleCards * cardWidth));
+        
         prevButton.style.display = offset < 0 ? 'block' : 'none';
-        nextButton.style.display = offset > maxOffset ? 'block' : 'none';
+        nextButton.style.display = offset > maxOffset && visibleCards < totalCards ? 'block' : 'none';
 
         if (totalCards * cardWidth <= carousel.clientWidth) {
             carousel.style.justifyContent = 'center';
+            prevButton.style.display = 'none';
+            nextButton.style.display = 'none';
         } else {
             carousel.style.justifyContent = 'flex-start';
         }
@@ -108,23 +128,26 @@ function initCarousel() {
 
     const scrollCards = (delta) => {
         offset += delta;
-        const maxOffset = -((totalCards * cardWidth) - (Math.floor(carousel.clientWidth / cardWidth) * cardWidth));
+        const visibleCards = Math.floor(carousel.clientWidth / cardWidth);
+        const maxOffset = -((totalCards * cardWidth) - (visibleCards * cardWidth));
+        
         if (offset > 0) offset = 0;
         if (offset < maxOffset) offset = maxOffset;
+        
         cards.style.transform = `translateX(${offset}px)`;
         updateButtons();
-    };
-
-    const wheelScroll = (event) => {
-        event.preventDefault();
-        scrollCards(event.deltaY > 0 ? -cardWidth : cardWidth);
     };
 
     prevButton.addEventListener('click', () => scrollCards(cardWidth));
     nextButton.addEventListener('click', () => scrollCards(-cardWidth));
 
+    // Добавляем обработчик изменения размера окна
+    window.addEventListener('resize', updateButtons);
+
     // Инициализация состояния кнопок
     updateButtons();
+    
+    // Принудительно обновляем карусель после небольшой задержки
+   // setTimeout(updateButtons, 100);
 }
-
   

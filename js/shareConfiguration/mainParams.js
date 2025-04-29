@@ -31,7 +31,7 @@ function getCabinTypeParam() {
     return getRadioParamByInputName("cabin_type");
 }
 
-function getOpeningTypeParam() {
+export function getOpeningTypeParam() {
     return getRadioParamByInputName("opening_type");
 }
 

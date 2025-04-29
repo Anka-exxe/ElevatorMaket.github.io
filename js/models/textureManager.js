@@ -405,7 +405,27 @@ export function handleTextureClick(event) {
         case 'HallParametrsTab':
 
         if (textureType === "doorHall") {
+            elementNames = ['ElevatorDoor'];
+           
+            applyTextureToElement(
+                window.hallModel,
+                elementNames,
+                color,
+                textureURL,
+                alphaURL,
+                bumpUrl,
+                aoURL,
+                displacementURL,
+                metalnessURL,
+                normalURL,
+                roughnessURL,
+                {
+                    metalness: metalness,
+                    roughness: roughness,
+                });
+
             elementNames = ['Door','DoorCentral','DoorLeft','Door1','Door1Central','Door1Left'];
+
             setDoorTexture(textureId);
             setTextureClassActiveByContainerName("doorTextures", textureId);
             break;

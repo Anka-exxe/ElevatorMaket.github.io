@@ -5,6 +5,11 @@ export function findImageByTextureId(textureId) {
     return imgElement;
 }
 
+export function setTextureActiveById(textureId) {
+    const texture = findImageByTextureId(textureId);
+    texture.click();
+}
+
 export function getRadioParamByInputName(inputName) {
     const radios = document.querySelectorAll(`input[name="${inputName}"]`);
     for (const radio of radios) {
@@ -127,8 +132,25 @@ export async function setActiveFirstTextureByContainerName(textureContainerName)
 }
 
 export async function setActiveTextureByContainerName(tabName, textureContainerName, textureId) {
-    //await showTab(tabName);
+    await showTab(tabName);
 
+    const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
+    if (!texturesContainer) {
+        console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+       
+        return;
+    }
+
+    if (textureId) {
+        const texture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
+        //console.log(texture);
+        texture.click();
+    }
+}
+
+
+export async function setActiveTextureByContainerNameHallVersion(textureContainerName, textureId) {
     const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
     if (!texturesContainer) {
         console.error('Textures container not found.');

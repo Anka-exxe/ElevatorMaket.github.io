@@ -350,7 +350,7 @@ async function SendFile(email) {
             alert("Произошла ошибка отправки опросного листа");
             throw new Error('Network response was not ok');
         } else {
-            //alert("Опросный лист отправлен");
+            alert("Опросный лист отправлен на почту");
         }
 
     } catch (error) {
