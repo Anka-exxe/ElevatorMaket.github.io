@@ -19,8 +19,8 @@ export const circleVaseHall = 'CircleVase';
 export const circleVaseTableHall = 'FlowerTable3';
 export const tableGlassHall = "TableGlass";
 export const sofaTableSupportHall = "SofaTableSupport";
-export const plintus = 'plinth';
 export const coverFrontPanel = 'CoverFrontPanel';
+export const hallElevatorDoor = 'ElevatorDoor';
 
 export const squareVasesHall = [
     'SquareVase1',
@@ -52,7 +52,6 @@ export const indicationBoardHall = [
     'ind_board_2',
     'ind_board_3',
     'ind_board_4',
-    'ind_board_5'
 ];
 
 export const arrowsCallPosts = [
@@ -94,14 +93,13 @@ export const indBoardDisplay = [
     'ind_board_2_display',
     'ind_board_3_display',
     'ind_board_4_display',
-    'ind_board_5_display',
 ];
 
 export const indBoardNails = [
-    'ind_board_5_nail_1',
-    'ind_board_5_nail_2',
-    'ind_board_5_nail_3',
-    'ind_board_5_nail_4',
+    'ind_board_4_nail_1',
+    'ind_board_4_nail_2',
+    'ind_board_4_nail_3',
+    'ind_board_4_nail_4',
 ];
 
 export const groupNames = [

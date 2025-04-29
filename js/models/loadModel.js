@@ -17,13 +17,16 @@ import {initCallPostsHandler, initIndicationBoardHandler} from "./hallCallPostsI
 import {setDoorOpen} from "./setVisibilityManager.js";
 import {getDoorState} from "../shareConfiguration/doorParams.js";
 import {setTextureClassActiveByContainerName,
-    setActiveFirstTextureByContainerName} 
+    setActiveFirstTextureByContainerName, 
+    setActiveTextureByContainerNameHallVersion
+} 
 from "../shareConfiguration/findElementsHelper.js";
 import {isHallSettingsSet, 
     getHallState, setHallParamsActive, 
     setFrameExistence, setHallSettings} 
     from "../shareConfiguration/hallParams.js"
-
+import {getOpeningTypeParam} from 
+"../shareConfiguration/mainParams.js"
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -35,6 +38,7 @@ let buttonHallViewInside;
 let buttonDoorOpen;
 let buttonDoorClose;
 let isHallModelLoaded = false;
+let currentOpenType;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
@@ -717,94 +721,147 @@ if (buttonView3D) {
  });
 
 
-export async function loadHall() {
-    document.getElementById('loading').style.display = 'flex'; // Скрыть индикатор загрузки
-    document.getElementById('configurator-container').style.visibility = 'hidden'; 
+ export async function loadHall() {
+    document.getElementById('loading').style.display = 'flex';
+    document.getElementById('configurator-container').style.visibility = 'hidden';
 
+    // 1. Переносим константы в начало функции (чтобы были видны во всей функции)
+    const hallModelPaths = {
+        wide: './hallModels/шт27.fbx',
+        square: './hallModels/кт10.fbx',
+        deep: './hallModels/гт13.fbx',
+    };
+
+    const hallPositions = {
+        wide: {
+            central: new THREE.Vector3(1.4, 0, -14),
+            right: new THREE.Vector3(10.6, 0, -14),
+            left: new THREE.Vector3(-7.2, 0, -14),
+        },
+        square: {
+            central: new THREE.Vector3(-1.7, 0, -14.5),
+            right: new THREE.Vector3(8.15, 0, -14.5),
+            left: new THREE.Vector3(-11.55, 0, -14.5),
+        },
+        deep: {
+            central: new THREE.Vector3(-2, 0, -5.6),
+            left: new THREE.Vector3(-5.65, 0, -5.6),
+            right: new THREE.Vector3(1.25, 0, -5.6),
+        },
+    };
+
+    const openTypeToProp = {
+        centralOpenType: 'central',
+        leftOpenType: 'right', // Проверьте, правильно ли это соответствие!
+        rightOpenType: 'left', // Проверьте, правильно ли это соответствие!
+    };
+
+    // 2. Получаем параметры
     let doorState = getDoorState();
     let doorTexture = doorState.texture;
-    setTextureClassActiveByContainerName("wallHallTextures", doorTexture);
+    let openType = getOpeningTypeParam();
+    let positionType = openTypeToProp[openType];
 
+    // 3. Проверяем загружена ли модель
     if(isHallModelLoaded) {
         window.hallModel.visible = true;
-        document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
-        document.getElementById('configurator-container').style.visibility = 'visible'; 
+        await setActiveTextureByContainerNameHallVersion('wallHallTextures', doorTexture);
+
+        // 4. Исправленное условие для изменения позиции
+        if(currentOpenType && currentOpenType !== openType) {
+            if(hallPositions[currentCabinSize] && hallPositions[currentCabinSize][positionType]) {
+                // Диагностика
+                console.group('Обновление позиции холла');
+                const targetPos = hallPositions[currentCabinSize][positionType];
+                console.log('Целевая позиция:', targetPos);
+                
+                // Устанавливаем позицию
+                window.hallModel.position.copy(targetPos);
+                window.hallModel.updateMatrixWorld(true);
+                
+                // Проверка
+                const actualWorldPos = new THREE.Vector3();
+                window.hallModel.getWorldPosition(actualWorldPos);
+                console.log('Фактическая позиция после обновления:', actualWorldPos);
+                console.groupEnd();
+            }
+        }
+        currentOpenType = openType;
     } else {
+        // 5. Загрузка новой модели
+        const path = hallModelPaths[currentCabinSize];
+        if (!path) return;
+
         const fbxLoader = new FBXLoader();
-        await fbxLoader.load(
-            './hallModels/шт21.fbx',
-            async (object) => {
-                object.position.set(0, 0, 0);
-                
-            if (window.hallModel) {
-                scene.remove(window.hallModel);
-            }
-                //object.scale.set(0.4, 0.4, 0.4);
-                scene.add(object);
-               // model = object;
-                window.hallModel = object;
-                /*object.traverse((child) => {
-                    if (child.isMesh) {
-                        // Убираем текстуру
-                        if (child.material) {
-                            // Если у меша есть материал, меняем его цвет
-                            if (Array.isArray(child.material)) {
-                                // Если материал массив, меняем цвет каждому материалу
-                                child.material.forEach(material => {
-                                    material.color.set(0x808080); // Устанавливаем серый цвет
-                                });
-                            } else {
-                                // Если материал один, меняем его цвет
-                                child.material.color.set(0x808080); // Устанавливаем серый цвет
-                            }
+        await new Promise((resolve, reject) => {
+            fbxLoader.load(
+                path,
+                async (object) => {
+                    try {
+                        if (!hallPositions[currentCabinSize] || !hallPositions[currentCabinSize][positionType]) {
+                            throw new Error('Не найдена позиция для текущей конфигурации');
                         }
-                
-                        // Пересчитываем нормали
-                        child.geometry.computeVertexNormals();
-                    }
-                });*/
 
-                await applyColorToElements();
-                await initCallPostsHandler(window.hallModel);
-                await initIndicationBoardHandler(window.hallModel);
+                        object.position.copy(hallPositions[currentCabinSize][positionType]);
+                        currentOpenType = openType;
 
-                if(isHallSettingsSet) {
-                    await setHallParamsActive();
-                } else {
-                    await setActiveFirstTextureByContainerName("portalTextures");
-                    setHallSettings(true);
-                }
+                        if (window.hallModel) {
+                            scene.remove(window.hallModel);
+                        }
 
-                isHallModelLoaded= true;
+                        scene.add(object);
+                        window.hallModel = object;
+
+                        await Promise.all([
+                            applyColorToElements(),
+                            initCallPostsHandler(window.hallModel),
+                            initIndicationBoardHandler(window.hallModel)
+                        ]);
+
+                        if(isHallSettingsSet) {
+                            await setHallParamsActive();
+                        } else {
+                            await setActiveFirstTextureByContainerName("portalTextures");
+                            setHallSettings(true);
+                        }
                         
-                document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
-                document.getElementById('configurator-container').style.visibility = 'visible'; 
-            },
-            undefined,
-            (error) => {
-                alert("Ошибка загрузки холла");
-                console.error('Ошибка загрузки FBX модели:', error);
-            }
-        );
+                        await setActiveTextureByContainerNameHallVersion('wallHallTextures', doorTexture);
+
+                        isHallModelLoaded = true;
+                        window.modelController = new ModelPositionController(window.hallModel);
+                        resolve();
+                    } catch (error) {
+                        reject(error);
+                    }
+                },
+                undefined,
+                (error) => {
+                    alert("Ошибка загрузки холла");
+                    console.error('Ошибка загрузки FBX модели:', error);
+                    reject(error);
+                }
+            );
+        });
         
+        // Освещение
         const pointLight = new THREE.PointLight(0xffffff, 1000, 1000);
         pointLight.position.set(0, 80, 200);
         scene.add(pointLight);
     }
 
+    // 6. Настройка камеры
     camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 250);
-   // camera.position.set(0, 45, 250);
-
     controls.target.set(0, GetExtremeYPoint() / 2, 170);
-    //controls.target.set(0, 45, 170);
-    controls.minPolarAngle = Math.PI / 4.5; // Минимальный угол по вертикали (в радианах)
-    controls.maxPolarAngle = Math.PI / 2; // Максимальный угол по вертикали (в радианах)
-    controls.minAzimuthAngle = -Math.PI / 2; // Минимальный угол по горизонтали (в радианах)
-    controls.maxAzimuthAngle = Math.PI / 2.5; // Максимальный угол по горизонтали (в радианах)
+    controls.minPolarAngle = Math.PI / 4.5;
+    controls.maxPolarAngle = Math.PI / 2;
+    controls.minAzimuthAngle = -Math.PI / 2;
+    controls.maxAzimuthAngle = Math.PI / 2.5;
     controls.maxDistance = 95;
     controls.update();
-}
 
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('configurator-container').style.visibility = 'visible';
+}
 function animate() {
     requestAnimationFrame(animate); // Запрашиваем следующий кадр анимации
 
@@ -819,10 +876,12 @@ export async function GetImage() {
         const originalTarget = controls.target.clone(); // Сохраняем исходное положение target
         const originalMaxDistance = controls.maxDistance; // Сохраняем исходное значение maxDistance
 
+        scene.background = new THREE.Color(0xffffff);
+
         // Устанавливаем maxDistance и позицию камеры
         controls.maxDistance = maxDistance; // Устанавливаем maxDistance для скриншота
         camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2);
-        controls.target.set(0, 50, 0);
+        controls.target.set(0, 45, 0);
         controls.update(); // Обновляем управление
 
         // Рендерим сцену
@@ -846,6 +905,7 @@ export async function GetImage() {
         controls.maxDistance = originalMaxDistance; // Восстанавливаем maxDistance
         controls.update(); // Обновляем управление
 
+        scene.background = new THREE.Color(0xe0e0e0); 
 
         // Преобразуем DataURL в Blob
         const response = await fetch(imgData);
@@ -858,3 +918,51 @@ export async function GetImage() {
         return null; // Возвращаем null в случае ошибки
     }
 }
+
+// Инициализация слайдера
+// JavaScript
+class ModelPositionController {
+    constructor(model) {
+      this.model = model;
+      this.initSliders();
+    }
+  
+    initSliders() {
+      // Инициализация слайдера X
+      const xSlider = document.getElementById('x-slider');
+      const xValue = document.getElementById('x-value');
+      
+      // Инициализация слайдера Z
+      const zSlider = document.getElementById('z-slider');
+      const zValue = document.getElementById('z-value');
+  
+      // Обработчики для слайдера X
+      xSlider.addEventListener('input', () => {
+        const value = parseFloat(xSlider.value);
+        this.model.position.x = value;
+        xValue.textContent = value.toFixed(1);
+        console.log(`Позиция X: ${value}`);
+      });
+  
+      // Обработчики для слайдера Z
+      zSlider.addEventListener('input', () => {
+        const value = parseFloat(zSlider.value);
+        this.model.position.z = value;
+        zValue.textContent = value.toFixed(1);
+        console.log(`Позиция Z: ${value}`);
+      });
+  
+      // Инициализация значений
+      this.updateSliderValues();
+    }
+  
+    updateSliderValues() {
+      if (!this.model) return;
+      
+      document.getElementById('x-slider').value = this.model.position.x;
+      document.getElementById('z-slider').value = this.model.position.z;
+      document.getElementById('x-value').textContent = this.model.position.x.toFixed(1);
+      document.getElementById('z-value').textContent = this.model.position.z.toFixed(1);
+    }
+  }
+  
