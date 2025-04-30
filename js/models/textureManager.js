@@ -154,7 +154,9 @@ export function applyTextureToElement(model,
                         map: texture,
                         alphaMap: alphaMap,
                         bumpMap: bump,
-                        bumpScale: 0.5,
+                        bumpScale: (materialOptions.bumpScale !== undefined && materialOptions.bumpScale !== null && materialOptions.bumpScale !== "null")
+                            ? parseFloat(materialOptions.bumpScale)
+                            : 0.5,
                         aoMap: aoMap,
                         displacementMap: displacementMap,
                         displacementScale: 0,
@@ -350,6 +352,7 @@ export function handleTextureClick(event) {
                             normalURL,
                             roughnessURL,
                             {
+                                bumpScale: bumpScale,
                                 metalness: metalness,
                                 roughness: roughness,
                             }
@@ -370,6 +373,7 @@ export function handleTextureClick(event) {
                             normalURL,
                             roughnessURL,
                             {
+                                bumpScale: bumpScale,
                                 metalness: metalness,
                                 roughness: roughness,
                             }
@@ -420,6 +424,7 @@ export function handleTextureClick(event) {
                 normalURL,
                 roughnessURL,
                 {
+                    bumpScale: bumpScale,
                     metalness: metalness,
                     roughness: roughness,
                 });
@@ -446,13 +451,13 @@ export function handleTextureClick(event) {
                 normalURL,
                 roughnessURL,
                 {
+                    bumpScale: bumpScale,
                     metalness: metalness,
                     roughness: roughness,
                 });
 
             return;
         }
-            
         default:
             console.error("Неизвестная вкладка:", tabId);
             return;
@@ -476,6 +481,7 @@ export function handleTextureClick(event) {
         normalURL,
         roughnessURL,
         {
+            bumpScale: bumpScale,
             metalness: metalness,
             roughness: roughness,
         });
