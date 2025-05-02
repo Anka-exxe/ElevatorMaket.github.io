@@ -587,9 +587,10 @@ body {
 
 .special-texture-image {
     cursor: pointer;
-    height: 150px;
+    height: 200px;
     margin: 5px;
-    width: auto;
+    object-fit: contain;
+    width: 30%;
     border: solid #E0E0E0 1px;
 }
 

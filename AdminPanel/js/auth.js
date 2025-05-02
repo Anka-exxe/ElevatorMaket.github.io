@@ -1,7 +1,4 @@
-﻿import * as UrlHelper from "./urlHelper/urls.js";
-import {urlRefreshToken} from "./urlHelper/urls.js";
-
-const _fetch = window.fetch.bind(window);
+﻿const _fetch = window.fetch.bind(window);
 
 async function refreshAccessToken() {
     const refreshToken = sessionStorage.getItem('refresh_token');
@@ -11,7 +8,7 @@ async function refreshAccessToken() {
         return null;
     }
     try {
-        const res = await _fetch(UrlHelper.urlRefreshToken, {
+        const res = await _fetch(`http://localhost:8090/api/v1/auth/refresh-token`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken })
