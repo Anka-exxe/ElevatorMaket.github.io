@@ -30,29 +30,28 @@ async function refreshAccessToken() {
 }
 
 window.fetch = async function(input, init = {}) {
-    // создаём Request, чтобы можно было .clone()
-    let req = new Request(input, init);
-
-    // вешаем токен, если есть
+    const originalRequest = new Request(input, init);
     const token = sessionStorage.getItem('access_token');
     if (token) {
-        req.headers.set('Authorization', 'Bearer ' + token);
+        originalRequest.headers.set('Authorization', 'Bearer ' + token);
     }
 
-    // первый запрос
-    let res = await _fetch(req.clone());
+    let response = await _fetch(originalRequest.clone());
 
-    // если 401 — попробуем обновить и повторить
-    if (res.status === 401 && !req.url.endsWith('/refresh-token')) {
+    // Если 401 и это не запрос на рефреш
+    if (response.status === 401 && !originalRequest.url.includes('/api/v1/auth/refresh-token')) {
         const newToken = await refreshAccessToken();
         if (newToken) {
-            req.headers.set('Authorization', 'Bearer ' + newToken);
-            res = await _fetch(req.clone());
+            // подтягиваем новый токен в заголовок
+            originalRequest.headers.set('Authorization', 'Bearer ' + newToken);
+            // повторяем запрос
+            response = await _fetch(originalRequest.clone());
         }
     }
 
-    return res;
+    return response;
 };
+
 
 
 if (!sessionStorage.getItem('access_token')) {
