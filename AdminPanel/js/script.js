@@ -1,4 +1,6 @@
-﻿document.getElementById('addTextureBtn').addEventListener('click', () => {
+﻿import * as UrlHelper from "./urlHelper/urls.js";
+import {API_BASE_URL, urlTemplateGetIcons} from "./urlHelper/urls.js";
+document.getElementById('addTextureBtn').addEventListener('click', () => {
     window.location.href = "add-texture.html";
 });
 
@@ -27,7 +29,7 @@ function showTextureModal(textureData, iconElement) {
         if (mapUrl && mapUrl.trim() !== "") {
             return `<div class="map-preview">
                 <strong>${label}:</strong><br>
-                <img src="${mapUrl}" alt="${label}" class="modal-map-img">
+                <img src="${API_BASE_URL}/${mapUrl}" alt="${label}" class="modal-map-img">
               </div>`;
         } else {
             return `<p><strong>${label}:</strong> Нет</p>`;
@@ -39,14 +41,14 @@ function showTextureModal(textureData, iconElement) {
     html += `<p><strong>Базовый цвет:</strong> ${textureData.baseColor || 'Нет данных'}</p>`;
 
     html += `<h3>Карты текстуры</h3>`;
-    html += mapSection("Diffuse (Base)", textureData.baseTextureUrl);
-    html += mapSection("AO", textureData.aoMapUrl);
-    html += mapSection("Displacement", textureData.displacementMapUrl);
-    html += mapSection("Metal", textureData.metalnessMapUrl);
-    html += mapSection("Normal", textureData.normalMapUrl);
-    html += mapSection("Rough Gloss", textureData.roughnessMapUrl);
-    html += mapSection("Alpha", textureData.alphaMapUrl);
-    html += mapSection("Bump", textureData.bumpMapUrl);
+    html += mapSection("Diffuse (Base)", `${API_BASE_URL}/${textureData.baseTextureUrl}`);
+    html += mapSection("AO", `${API_BASE_URL}/${textureData.aoMapUrl}`);
+    html += mapSection("Displacement", `${API_BASE_URL}/${textureData.displacementMapUrl}`);
+    html += mapSection("Metal", `${API_BASE_URL}/${textureData.metalnessMapUrl}`);
+    html += mapSection("Normal", `${API_BASE_URL}/${textureData.normalMapUrl}`);
+    html += mapSection("Rough Gloss", `${API_BASE_URL}/${textureData.roughnessMapUrl}`);
+    html += mapSection("Alpha", `${API_BASE_URL}/${textureData.alphaMapUrl}`);
+    html += mapSection("Bump", `${API_BASE_URL}/${textureData.bumpMapUrl}`);
 
     html += `<h3>Свойства текстуры</h3>`;
     if (textureData.properties) {
@@ -108,7 +110,7 @@ document.getElementById('deleteTextureBtn').addEventListener('click', () => {
     }
 
     if (currentTextureId) {
-        fetch(`http://localhost:8090/api/v1/textures/${currentTextureId}`, {
+        fetch(`${UrlHelper.host}textures/${currentTextureId}`, {
             method: 'DELETE'
         })
             .then(response => {
@@ -158,7 +160,7 @@ function loadIconsForTab(tabId) {
     grid.innerHTML = 'Загрузка...';
 
     // Запрашиваем все иконки и затем фильтруем их по нужному флагу
-    fetch(`http://localhost:8090/api/v1/icons?page=0&size=100`)
+    fetch(UrlHelper.urlTemplateGetIcons)
         .then(response => response.json())
         .then(data => {
             grid.innerHTML = '';
@@ -171,7 +173,7 @@ function loadIconsForTab(tabId) {
                         iconDiv.className = 'texture-item';
 
                         const img = document.createElement('img');
-                        img.src = icon.url;
+                        img.src = `${API_BASE_URL}/${icon.url}`;
                         img.alt = icon.name;
                         iconDiv.appendChild(img);
 
@@ -181,7 +183,7 @@ function loadIconsForTab(tabId) {
 
                         // При клике на иконку загружаем детали текстуры и показываем модальное окно
                         iconDiv.addEventListener('click', () => {
-                            fetch(`http://localhost:8090/api/v1/textures/icon/${icon.id}`)
+                            fetch(`${UrlHelper.host}textures/icon/${icon.id}`)
                                 .then(response => response.json())
                                 .then(textureData => {
                                     showTextureModal(textureData, iconDiv);

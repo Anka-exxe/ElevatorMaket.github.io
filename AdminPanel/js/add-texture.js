@@ -1,5 +1,6 @@
 ﻿import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
+import * as UrlHelper from "./urlHelper/urls.js";
 
 // В самом верху add-texture.js
 const urlParams     = new URLSearchParams(window.location.search);
@@ -41,7 +42,7 @@ if (textureId) {
 
         try {
             const res = await fetch(
-                `http://localhost:8090/api/v1/textures/${textureId}/name`,
+                `${UrlHelper.host}textures/${textureId}/name`,
                 {
                     method: 'PUT',
                     body: formData
@@ -319,7 +320,7 @@ const removeMapping = {
         document.querySelector('button[type="submit"]').textContent = "Сохранить изменения";
         // Для иконки убираем обязательность
         document.getElementById('icon.icon').removeAttribute('required');
-        fetch(`http://localhost:8090/api/v1/textures/${textureId}`)
+        fetch(`${UrlHelper.host}textures/${textureId}`)
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Не удалось загрузить данные текстуры");
@@ -482,8 +483,8 @@ const removeMapping = {
         formData.append('icon.isIndicationBoard', selectedTypes.includes('INDICATION_BOARD'));
 
         const url = textureId
-            ? `http://localhost:8090/api/v1/textures/${textureId}`
-            : 'http://localhost:8090/api/v1/textures';
+            ? `${UrlHelper.host}textures/${textureId}`
+            : `${UrlHelper.host}textures`;
         const method = textureId ? 'PUT' : 'POST';
 
         fetch(url, {

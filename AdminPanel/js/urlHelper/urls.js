@@ -10,8 +10,8 @@ export const BUMPER = 'BUMPER';
 export const API_BASE_URL = window.location.origin;
 export const MODEL_BASE_PATH = `${API_BASE_URL}/models/`;
 
-const host = "http://localhost:8090/api/v1/";
-
+export const host = "http://localhost:8090/api/v1/";
+export const API_BASE_URL = window.location.origin;
 export const urlTemplateGetIcons = `${host}icons?page=0&size=1000`;
 export const urlTemplateGetTextureByIconId = `${host}textures/icon/{}`;
 
@@ -24,6 +24,8 @@ export const urlTemplateCreateNewPattern = `${host}project-templates`;
 export const urlTemplateUpdatePattern = `${host}project-templates/{}`;
 export const urlTemplateDeletePattern = `${host}project-templates/{}`;
 export const urlGetTemplateById= `${host}project-templates/{}`;
+export const urlAuthorise= `${host}auth/login`;
+export const urlRefreshToken= `${host}auth/refresh-token`;
 
 export function getUrl(urlTemplate, parameter) {
     return urlTemplate.replace('{}', parameter);

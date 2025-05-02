@@ -1,11 +1,13 @@
-﻿document.getElementById('loginForm').addEventListener('submit', async function(e) {
+﻿import {urlAuthorise} from "./urlHelper/urls.js";
+
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch('http://localhost:8090/api/v1/auth/login', {
+        const response = await fetch(urlAuthorise, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
