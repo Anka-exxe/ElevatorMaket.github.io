@@ -1,4 +1,5 @@
 import {fetchDesignProjects, fetchTemplates} from '../designProjectService/designProjectStorage.js';
+import {API_BASE_URL} from "../urlHelper/urls.js";
 
 // Получаем кнопку по ID
 const backButton = document.getElementById('backButton');
@@ -49,7 +50,7 @@ export function displayTemplates(templates) {
             patternCard.appendChild(title);
 
             const img = document.createElement('img');
-            img.src = template.previewImageUrl;
+            img.src = `${API_BASE_URL}${template.previewImageUrl}`;
             img.alt = template.name;
             img.className = 'pattern-img';
             
