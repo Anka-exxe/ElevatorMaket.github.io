@@ -135,7 +135,6 @@ export async function setAllParametersReloadVersion(parameters) {
     }
 }
 
-
 export async function setAllParameters(parameters) {
     console.log(parameters); // Логирование параметров
     

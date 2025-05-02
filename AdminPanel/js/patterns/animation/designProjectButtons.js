@@ -7,6 +7,7 @@ import {deleteDesignProject,
             from "../../designProjectService/designProjectStorage.js";
 
 import { getUrl, urlTemplateDeletePattern } from "../../urlHelper/urls.js";
+import {API_BASE_URL} from "../../urlHelper/urls.js";
 
 let isEditMode = false; // Флаг для режима редактирования
 let editedProjectId = null;
@@ -137,7 +138,7 @@ export async function populateDesignProjects() {
             templateCard.setAttribute('data-id', template.id); // Сохраняем id шаблона в атрибуте data-id
             templateCard.innerHTML = `
                 <strong>${template.name}</strong><br>
-                <img src="${template.previewImageUrl}" alt="${template.name}" class="pattern-img"> <!-- Предполагаем, что есть поле imageUrl -->
+                <img src="${API_BASE_URL}${template.previewImageUrl}" alt="${template.name}" class="pattern-img"> <!-- Предполагаем, что есть поле imageUrl -->
                 <div class="pattern-card__button-container">
                     <button class="small-button editPatternBtn">Изменить</button>
                     <button class="small-button deletePatternBtn">Удалить</button>

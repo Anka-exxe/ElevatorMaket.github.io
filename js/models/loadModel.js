@@ -24,9 +24,10 @@ from "../shareConfiguration/findElementsHelper.js";
 import {isHallSettingsSet, 
     getHallState, setHallParamsActive, 
     setFrameExistence, setHallSettings} 
-    from "../shareConfiguration/hallParams.js"
+    from "../shareConfiguration/hallParams.js";
 import {getOpeningTypeParam} from 
-"../shareConfiguration/mainParams.js"
+"../shareConfiguration/mainParams.js";
+import {MODEL_BASE_PATH} from "../urlHelper/urls.js";
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -43,9 +44,9 @@ let currentOpenType;
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
     const modelPaths = {
-        wide: 'http://localhost:9000/models/wideLiftModel.fbx',
-        square: 'http://localhost:9000/models/squareLiftModel.fbx',
-        deep: 'http://localhost:9000/models/deepLiftModel.fbx',
+        wide: `${MODEL_BASE_PATH}wideLiftModel.fbx`,
+        square: `${MODEL_BASE_PATH}squareLiftModel.fbx`,
+        deep: `${MODEL_BASE_PATH}deepLiftModel.fbx`,
     };
 
     const path = modelPaths[idToSizeElement];
@@ -727,9 +728,9 @@ if (buttonView3D) {
     };*/
 
     const hallModelPaths = {
-        wide: 'http://localhost:9000/models/wideHallModel.fbx',
-        square: 'http://localhost:9000/models/squareHallModel.fbx',
-        deep: 'http://localhost:9000/models/deepHallModel.fbx',
+        wide: `${MODEL_BASE_PATH}wideHallModel.fbx`,
+        square: `${MODEL_BASE_PATH}squareHallModel.fbx`,
+        deep: `${MODEL_BASE_PATH}deepHallModel.fbx`,
     }; 
 
     const hallPositions = {

@@ -1,4 +1,5 @@
 import * as UrlHelper from "../urlHelper/urls.js";
+import {API_BASE_URL} from "../urlHelper/urls.js";
 
 export let allTextures = null; 
 let iconsLoadedPromise = null;
@@ -143,7 +144,7 @@ async function fetchIcons() {
     
         const icons = data.content.map(item => ({
             id: item.id,
-            url: item.url,
+            url: `${API_BASE_URL}${item.url}`,            
             isDoor: item.isDoor,
             isWall: item.isWall,
             isFloor: item.isFloor,
@@ -171,7 +172,7 @@ async function fetchIcons() {
         return textures.map(texture => ({
             id: texture.id,
             name: texture.name,
-            icon: texture.icon.url,
+            icon: `${API_BASE_URL}${texture.icon.url}`,
             isDoor: texture.icon.isDoor,
             isWall: texture.icon.isWall,
             isFloor: texture.icon.isFloor,
@@ -182,14 +183,14 @@ async function fetchIcons() {
             isBumper: texture.icon.isBumper,
             isIndicationBoard: texture.icon.isIndicationBoard,
             isFrame: texture.icon.isFrame,
-            texture: texture.baseTextureUrl,
-            alpha: texture.alphaMapUrl || "",
-            bump: texture.bumpMapUrl || "",
-            aoMap: texture.aoMapUrl || "",
-            displacementMap: texture.displacementMapUrl || "",
-            metalnessMap: texture.metalnessMapUrl || "",
-            roughnessMap: texture.roughnessMapUrl || "",
-            normalMap: texture.normalMapUrl || "",
+            texture: texture.baseTextureUrl ? `${API_BASE_URL}${texture.baseTextureUrl}` : "", 
+            alpha: texture.alphaMapUrl ? `${API_BASE_URL}${texture.alphaMapUrl}` : "", 
+            bump: texture.bumpMapUrl ? `${API_BASE_URL}${texture.bumpMapUrl}` : "",
+            aoMap: texture.aoMapUrl ? `${API_BASE_URL}${texture.aoMapUrl}` : "",
+            displacementMap: texture.displacementMapUrl ? `${API_BASE_URL}${texture.displacementMapUrl}` : "", 
+            metalnessMap: texture.metalnessMapUrl ? `${API_BASE_URL}${texture.metalnessMapUrl}` : "", 
+            roughnessMap: texture.roughnessMapUrl ? `${API_BASE_URL}${texture.roughnessMapUrl}` : "", 
+            normalMap: texture.normalMapUrl ? `${API_BASE_URL}${texture.normalMapUrl}` : "", 
             options: {
                 bumpScale: texture.properties.bumpScale,
                 metalness: texture.properties.metalness,

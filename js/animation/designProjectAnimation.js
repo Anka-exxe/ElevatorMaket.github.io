@@ -7,6 +7,8 @@ import { showTab } from "./tabFunctions.js";
 import {setAllParameters, getCabinSize} from "../shareConfiguration/allParams.js";
 
 import {loadModelBySize} from "../models/loadModel.js";
+
+import {API_BASE_URL} from "../urlHelper/urls.js";
  
 let activeProjectId = null;
 export let isDesignProjectsLoaded = false;
@@ -40,10 +42,10 @@ function displayTemplates(templates) {
             title.textContent = template.name; // Предполагаем, что у шаблона есть поле name
             patternCard.appendChild(title);
             patternCard.appendChild(document.createElement('br')); // Перенос строки
-
+           
             // Добавляем изображение шаблона
             const img = document.createElement('img');
-            img.src = template.previewImageUrl; // Предполагаем, что у шаблона есть поле previewImageUrl
+            img.src =  `${API_BASE_URL}${template.previewImageUrl}`; // Предполагаем, что у шаблона есть поле previewImageUrl
             img.alt = template.name; // Альтернативный текст
             img.className = 'pattern-img'; // Класс изображения
             patternCard.appendChild(img);

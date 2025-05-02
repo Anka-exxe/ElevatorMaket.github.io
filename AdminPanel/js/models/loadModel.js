@@ -14,6 +14,7 @@ import {setAllParameters,
     import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {fetchTemplateById} from "../designProjectService/designProjectStorage.js";
 import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
+import {API_BASE_URL, MODEL_BASE_PATH} from "../urlHelper/urls.js";
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -26,9 +27,9 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
     const loader = new FBXLoader();
     const modelPaths = {
-        wide: 'http://localhost:9000/models/wideLiftModel.fbx',
-        square: 'http://localhost:9000/models/squareLiftModel.fbx',
-        deep: 'http://localhost:9000/models/deepLiftModel.fbx',
+        wide: `${MODEL_BASE_PATH}wideLiftModel.fbx`,
+        square: `${MODEL_BASE_PATH}squareLiftModel.fbx`,
+        deep: `${MODEL_BASE_PATH}deepLiftModel.fbx`,
     };
 
     const path = modelPaths[idToSizeElement];
@@ -544,9 +545,9 @@ async function loadConfiguration() {
 
             const preview = document.getElementById('preview-pattern');
             if (preview) {
-                preview.innerHTML = `<img src="${template.previewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`;
+                preview.innerHTML = `<img src=" ${API_BASE_URL}${template.previewImageUrl}" alt="Preview" class="pattern-img" style="max-width: 100%;">`;
             }
-
+           
             await setAllParameters(template.configuration);
             setDesignProject(templateId);
         } catch (error) {

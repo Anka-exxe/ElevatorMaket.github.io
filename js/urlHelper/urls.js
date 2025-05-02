@@ -7,6 +7,9 @@ export const CONTROL_PANEL = 'CONTROL_PANEL';
 export const INDICATION_BOARD = 'INDICATION_BOARD';
 export const HANDRAIL = 'HANDRAIL';
 export const BUMPER = 'BUMPER';
+export const API_BASE_URL = window.location.origin;
+export const MODEL_BASE_PATH = `${API_BASE_URL}/models/`;
+export const HALLTEXTURES_BASE_PATH = `${API_BASE_URL}/static-files/`;
 
 const host = "http://localhost:8090/api/v1/";
 
