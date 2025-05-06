@@ -8,7 +8,7 @@ async function refreshAccessToken() {
         return null;
     }
     try {
-        const res = await _fetch(`http://localhost:8090/api/v1/auth/refresh-token`, {
+        const res = await _fetch(`${window.location.origin}/api/v1/auth/refresh-token`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ refreshToken })

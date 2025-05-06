@@ -26,10 +26,10 @@ function showTextureModal(textureData, iconElement) {
 
     // Функция для формирования блока с картой
     function mapSection(label, mapUrl) {
-        if (mapUrl && mapUrl.trim() !== "") {
+        if (mapUrl && mapUrl.trim() !== "" && mapUrl !== "null") {
             return `<div class="map-preview">
                 <strong>${label}:</strong><br>
-                <img src="${API_BASE_URL}/${mapUrl}" alt="${label}" class="modal-map-img">
+                <img src="${API_BASE_URL}${mapUrl}" alt="${label}" class="modal-map-img">
               </div>`;
         } else {
             return `<p><strong>${label}:</strong> Нет</p>`;
@@ -41,14 +41,14 @@ function showTextureModal(textureData, iconElement) {
     html += `<p><strong>Базовый цвет:</strong> ${textureData.baseColor || 'Нет данных'}</p>`;
 
     html += `<h3>Карты текстуры</h3>`;
-    html += mapSection("Diffuse (Base)", `${API_BASE_URL}/${textureData.baseTextureUrl}`);
-    html += mapSection("AO", `${API_BASE_URL}/${textureData.aoMapUrl}`);
-    html += mapSection("Displacement", `${API_BASE_URL}/${textureData.displacementMapUrl}`);
-    html += mapSection("Metal", `${API_BASE_URL}/${textureData.metalnessMapUrl}`);
-    html += mapSection("Normal", `${API_BASE_URL}/${textureData.normalMapUrl}`);
-    html += mapSection("Rough Gloss", `${API_BASE_URL}/${textureData.roughnessMapUrl}`);
-    html += mapSection("Alpha", `${API_BASE_URL}/${textureData.alphaMapUrl}`);
-    html += mapSection("Bump", `${API_BASE_URL}/${textureData.bumpMapUrl}`);
+    html += mapSection("Diffuse (Base)", `${textureData.baseTextureUrl}`);
+    html += mapSection("AO", `${textureData.aoMapUrl}`);
+    html += mapSection("Displacement", `${textureData.displacementMapUrl}`);
+    html += mapSection("Metal", `${textureData.metalnessMapUrl}`);
+    html += mapSection("Normal", `${textureData.normalMapUrl}`);
+    html += mapSection("Rough Gloss", `${textureData.roughnessMapUrl}`);
+    html += mapSection("Alpha", `${textureData.alphaMapUrl}`);
+    html += mapSection("Bump", `${textureData.bumpMapUrl}`);
 
     html += `<h3>Свойства текстуры</h3>`;
     if (textureData.properties) {
@@ -173,7 +173,7 @@ function loadIconsForTab(tabId) {
                         iconDiv.className = 'texture-item';
 
                         const img = document.createElement('img');
-                        img.src = `${API_BASE_URL}/${icon.url}`;
+                        img.src = `${API_BASE_URL}${icon.url}`;
                         img.alt = icon.name;
                         iconDiv.appendChild(img);
 
@@ -183,7 +183,7 @@ function loadIconsForTab(tabId) {
 
                         // При клике на иконку загружаем детали текстуры и показываем модальное окно
                         iconDiv.addEventListener('click', () => {
-                            fetch(`${UrlHelper.host}textures/icon/${icon.id}`)
+                            fetch(`${window.location.origin}/api/v1/textures/icon/${icon.id}`)
                                 .then(response => response.json())
                                 .then(textureData => {
                                     showTextureModal(textureData, iconDiv);

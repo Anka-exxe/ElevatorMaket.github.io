@@ -233,7 +233,7 @@
         const formData = new FormData();
         formData.append('file', file);
 
-        fetch('http://localhost:8090/api/v1/files/document-template', {
+        fetch(`${window.location.origin}/api/v1/files/document-template`, {
             method: 'POST',
             body: formData
         })

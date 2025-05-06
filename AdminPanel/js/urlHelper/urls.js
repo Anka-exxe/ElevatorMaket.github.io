@@ -10,7 +10,7 @@ export const BUMPER = 'BUMPER';
 export const API_BASE_URL = window.location.origin;
 export const MODEL_BASE_PATH = `${API_BASE_URL}/models/`;
 
-const host = `${API_BASE_URL}/api/v1/`;
+export const host = `${API_BASE_URL}/api/v1/`;
 export const urlTemplateGetIcons = `${host}icons?page=0&size=1000`;
 export const urlTemplateGetTextureByIconId = `${host}textures/icon/{}`;
 
