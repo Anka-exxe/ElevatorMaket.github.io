@@ -11,7 +11,7 @@ export const API_BASE_URL = window.location.origin;
 export const MODEL_BASE_PATH = `${API_BASE_URL}/models/`;
 export const HALLTEXTURES_BASE_PATH = `${API_BASE_URL}/static-files/`;
 
-const host = "http://localhost:8090/api/v1/";
+const host = `${API_BASE_URL}/api/v1/`;
 
 export const urlTemplateGetIcons = `${host}icons?page=0&size=1000`;
 export const urlTemplateGetTextureByIconId = `${host}textures/icon/{}`;
