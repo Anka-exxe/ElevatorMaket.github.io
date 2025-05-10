@@ -238,9 +238,9 @@ function init() {
         preserveDrawingBuffer: true }
         );
     renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-    //renderer.outputColorSpace = THREE.SRGBColorSpace;
-    //renderer.gammaOutput = true;
-    //renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.gammaOutput = true;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping; // Или другой режим, например, THREE.LinearToneMapping
     //renderer.toneMappingExposure = 1; // Настройте этот параметр для управления яркостью
 
     scene = new THREE.Scene();

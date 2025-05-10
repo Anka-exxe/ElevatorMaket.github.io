@@ -160,11 +160,11 @@
                     <div class="menu-container__form form-container">
                         <h3 class="form-container__title">Стена:</h3>
                         <form class="form-container__form form" name="wallSideWalls">
-                            <button class="form__form-element active" data-target="all" type="button" onclick="selectWall(this)">Все</button>
-                            <button class="form__form-element" data-target="front" type="button" onclick="selectWall(this)">Передняя</button>
-                            <button class="form__form-element" data-target="back" type="button" onclick="selectWall(this)">Задняя</button>
-                            <button class="form__form-element" data-target="left" type="button" onclick="selectWall(this)">Левая</button>
-                            <button class="form__form-element" data-target="right" type="button" onclick="selectWall(this)">Правая</button>
+                            <button id="allWallsTextureBtn" class="form__form-element active" data-target="all" type="button" onclick="selectWall(this)">Все</button>
+                            <button id="frontWallTextureBtn" class="form__form-element" data-target="front" type="button" onclick="selectWall(this)">Передняя</button>
+                            <button id="backWallTextureBtn" class="form__form-element" data-target="back" type="button" onclick="selectWall(this)">Задняя</button>
+                            <button id="leftWallTextureBtn" class="form__form-element" data-target="left" type="button" onclick="selectWall(this)">Левая</button>
+                            <button id="rightWallTextureBtn" class="form__form-element" data-target="right" type="button" onclick="selectWall(this)">Правая</button>
                         </form>
                     </div>
 
@@ -647,6 +647,7 @@
     <script type="module" src="./js/shareConfiguration/allParams.js"></script>
     <script type="module" src="./js/textureService/textureStorage.js"></script>
     <script type="module" src="./js/animation/designProjectAnimation.js"></script>
+    <script type="module" src="./js/animation/wallButtons.js"></script>
 
     <script type="module" src="./js/animation/globalFunctions.js"></script>
     <script type="module" src="./js/animation/hallDoorToggleButton.js"></script>

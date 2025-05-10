@@ -266,7 +266,7 @@ body {
     margin-left: 10px;
     display: grid;
     justify-items: center;
-    gap: 10px; /* Создание одинаковых отступов между ячейками */
+    gap: 5px; /* Создание одинаковых отступов между ячейками */
     grid-template-columns: repeat(10, auto);
     grid-template-rows: minmax(50px, 1fr) minmax(50px, 1fr); /* Одно определение для строк */
 }
@@ -283,20 +283,20 @@ body {
 
 @media(max-width: 2100px) {
     .menu-container__navigation--with-animation{
-        width: 700px;
+        width: 850px;
     }
 }
 
 @media(max-width: 1980px) {
     .menu-container__navigation--with-animation{
-        width: 650px;
+        width: 850px;
     }
 }
 
 
 @media(max-width: 1900px) {
     .menu-container__navigation--with-animation{
-        width: 630px;
+        width: 800px;
     }
 }
 
@@ -353,9 +353,15 @@ body {
 .navigation__tab {
     color: #484747;
     font-weight: normal;
-    font-size: 20px;
+    font-size: 18px;
     text-align: center;
     cursor: pointer;
+}
+
+@media(max-width: 1600px) {
+    .navigation__tab {
+        font-size: 20px;
+    }
 }
 
 @media(max-width: 1200px) {
