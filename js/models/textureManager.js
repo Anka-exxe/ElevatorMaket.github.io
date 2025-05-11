@@ -86,7 +86,7 @@ export function applyTextureToElement(model,
                 }
 
                 if (elementNamesArr.includes('Lamp')) {
-                    if (currentCabinSize !== 'square') {
+                    if (currentCabinSize !== 'square' && currentCabinSize !== 'wide') {
                         alphaMap.center = new THREE.Vector2(0.5, 0.5);
                         alphaMap.rotation = Math.PI / 2;
                     }
