@@ -2,6 +2,54 @@
 import * as THREE from 'three';
 import {scene} from "./loadModel.js";
 document.addEventListener('DOMContentLoaded', () => {
+    const availabilityRadios = document.querySelectorAll('input[name="handrail_availability"]');
+    const typeRadios        = document.querySelectorAll('input[name="railing_type"]');
+    const posButtons        = document.querySelectorAll('button[name="railing_position"]');
+    const materialControls  = document.querySelectorAll('[name="handrailTextureContainer"] .textures-container *');
+
+    function setHandrailControlsEnabled(enabled) {
+        typeRadios.forEach(r => r.disabled = !enabled);
+        posButtons.forEach(b => {
+            b.disabled = !enabled;
+            if (!enabled) b.classList.remove('active');
+        });
+        materialControls.forEach(c => {
+            if ('disabled' in c) c.disabled = !enabled;
+            else c.style.opacity = enabled ? '' : '0.3';
+        });
+
+        const panelSide = document.querySelector('input[name="panel_side"]:checked').value;
+        posButtons.forEach(b => {
+            const text = b.textContent.trim().toLowerCase();
+            if ((panelSide === 'left'  && text === 'слева') ||
+                (panelSide === 'right' && text === 'справа')) {
+                b.disabled = true;
+                b.classList.remove('active');
+                b.classList.add('disabled');
+            }
+        });
+
+        const cabinType = document.querySelector('input[name="cabin_type"]:checked').value;
+        if (cabinType === 'walk_through_cabin') {
+            const backBtn = Array.from(posButtons)
+                .find(b => b.textContent.trim().toLowerCase() === 'сзади');
+            if (backBtn) {
+                backBtn.disabled = true;
+                backBtn.classList.remove('active');
+                backBtn.classList.add('disabled');
+            }
+        }
+    }
+
+    setHandrailControlsEnabled(false);
+
+    availabilityRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const has = radio.value === 'yes';
+            setHandrailControlsEnabled(has);
+        });
+    });
+
     const railingRadios = document.querySelectorAll('input[name="railing_type"]');
     railingRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
@@ -22,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     handrailRadios.forEach(radio => {
         radio.addEventListener('change', (event) => {
             const selectedValue = event.target.value;
-            updateHandrailVisibility(selectedValue === "yes");
         });
     });
 
@@ -39,6 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
         radio.addEventListener('change', (event) => {
             const selectedValue = event.target.value;
             updateCabinView(selectedValue);
+            const has = document.querySelector('input[name="handrail_availability"]:checked').value === 'yes';
+            setHandrailControlsEnabled(has);
         });
     });
 
@@ -48,6 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     panelSideRadios.forEach(radio => {
         radio.addEventListener('change', updateControlPanelPlacement);
+        const hasHandrail = document.querySelector('input[name="handrail_availability"]:checked').value === 'yes';
+        setHandrailControlsEnabled(hasHandrail);
     });
 
     panelLocationRadios.forEach(radio => {
@@ -77,6 +128,31 @@ document.addEventListener('DOMContentLoaded', () => {
     mirrorTypeRadios.forEach(radio => {
         radio.addEventListener('change', updateMirrorPlacement);
     });
+
+    function setMirrorControlsEnabled(enabled) {
+        mirrorTypeRadios.forEach(r => {
+            r.disabled = !enabled;
+            if (!enabled) r.checked = false;
+        });
+        mirrorButtons.forEach(b => {
+            b.disabled = !enabled;
+            b.classList.toggle('disabled', !enabled);
+            if (!enabled) b.classList.remove('active');
+        });
+    }
+
+    // при старте — всё заблокировано
+    setMirrorControlsEnabled(false);
+
+    // как только выбрана доступность — включаем/выключаем
+    mirrorAvailabilityRadios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const has = radio.value === 'yes';
+            setMirrorControlsEnabled(has);
+            // и сразу же обновляем зеркало, чтобы убрать лишние
+            updateMirrorPlacement();
+        });
+    });
 });
 
 
@@ -95,8 +171,6 @@ export function DefaultSettings(){
     const selectedHandrailAvabilityRadio = document.querySelector('input[name="handrail_availability"]:checked');
     if (selectedHandrailAvabilityRadio) {
         const selectedValue = selectedHandrailAvabilityRadio.value; // "yes" или "no"
-
-        updateHandrailVisibility(selectedValue === "yes");
     }
 
     const selectedRailingTypeRadio = document.querySelector('input[name="railing_type"]:checked');
@@ -285,16 +359,6 @@ function updateOpenType(openingType) {
     updateControlPanelPlacement();
 }
 
-function updateHandrailVisibility(isVisible) {
-    const handrailGroup = model.getObjectByName("HandrailsGroup");
-    if (handrailGroup) {
-        handrailGroup.visible = isVisible;
-        //console.log("Handrail group visibility:", isVisible);
-    } else {
-        console.error("Группа Handrail не найдена");
-    }
-}
-
 function updateHandrailType(type) {
     const compositeGroup = model.getObjectByName("HandrailComposite");
     const unifiedGroup = model.getObjectByName("HandrailUnified");
@@ -374,7 +438,6 @@ function updateControlPanelPlacement() {
     const locationRadio = document.querySelector('input[name="panel_location"]:checked');
     const cabinRadio = document.querySelector('input[name="cabin_type"]:checked');
     const openingRadio = document.querySelector('input[name="opening_type"]:checked');
-    // Радио для выбора положения панели относительно стен (передней или задней)
     const wallPositionRadios = Array.from(document.querySelectorAll('input[name="panel_wall_position"]'));
 
     if (window.currentCabinSize === 'wide') {
@@ -402,6 +465,14 @@ function updateControlPanelPlacement() {
     let panelLocation = locationRadio.value;       // "closer_to_door", "center", "both_sides"
     const cabinType = cabinRadio.value;            // "walk_through_cabin" или "not_walk_through_cabin"
     const openingType = openingRadio.value;        // "central", "left", "right"
+
+    // Спрятать/показать блок "Расположение относительно стен" при выборе "С двух сторон"
+    const wallPositionSection = document.querySelector('[name="panel_wall_position"]').closest('.menu-container__form');
+    if (panelLocation === 'both_sides') {
+        wallPositionSection.style.display = 'none';
+    } else {
+        wallPositionSection.style.display = '';
+    }
 
     let wallPosition = "front"; // значение по умолчанию – ближе к передней стене
     if ((panelLocation === "closer_to_door" || panelLocation === "center") && cabinType === "walk_through_cabin") {

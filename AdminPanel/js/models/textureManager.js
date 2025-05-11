@@ -167,7 +167,7 @@ export function applyTextureToElement(model,
                             ? parseFloat(materialOptions.roughness)
                             : 0.8,
                         emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffff),
-                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined ? parseFloat(materialOptions.emissiveIntensity) : 0
+                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined && materialOptions.emissiveIntensity !== "null" ? parseFloat(materialOptions.emissiveIntensity) : 0
                     });
                     newMaterial.needsUpdate = true;
                     child.material = newMaterial;
@@ -346,8 +346,11 @@ export function handleTextureClick(event) {
                             normalURL,
                             roughnessURL,
                             {
+                                bumpScale: bumpScale,
                                 metalness: metalness,
                                 roughness: roughness,
+                                emissive: new THREE.Color(0xffffee),
+                                emissiveIntensity: emissive,
                             }
                         );
                     } else if (isHorizontal) {
@@ -366,8 +369,11 @@ export function handleTextureClick(event) {
                             normalURL,
                             roughnessURL,
                             {
+                                bumpScale: bumpScale,
                                 metalness: metalness,
                                 roughness: roughness,
+                                emissive: new THREE.Color(0xffffee),
+                                emissiveIntensity: emissive,
                             }
                         );
                     } else {
@@ -397,7 +403,26 @@ export function handleTextureClick(event) {
         case 'HandrailParametrsTab':
             elementNames = ['HandrailUnified','HandrailComposite'];
             setHandrailTexture(textureId);
-             break;
+            applyTextureToElement(
+                window.model,
+                elementNames,
+                color,
+                textureURL,
+                alphaURL,
+                bumpUrl,
+                aoURL,
+                displacementURL,
+                metalnessURL,
+                normalURL,
+                roughnessURL,
+                {
+                    bumpScale: bumpScale,
+                    metalness: metalness,
+                    roughness: roughness,
+                    emissive: new THREE.Color(0xffffee),
+                    emissiveIntensity: emissive,
+                });
+            break;
         default:
             console.error("Неизвестная вкладка:", tabId);
             return;
@@ -421,7 +446,11 @@ export function handleTextureClick(event) {
         normalURL,
         roughnessURL,
         {
+            bumpScale: bumpScale,
             metalness: metalness,
             roughness: roughness,
-        });
+            emissive: new THREE.Color(0xffffee),
+            emissiveIntensity: emissive,
+        }
+    );
 }

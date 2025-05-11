@@ -10,6 +10,9 @@ import {setAllParameters, getCabinSize} from
     "../shareConfiguration/allParams.js";
     import {setDesignProject} from 
     "../shareConfiguration/mainParams.js";
+import { RectAreaLightUniformsLib } from 'jsm/lights/RectAreaLightUniformsLib.js';
+import { RectAreaLightHelper }      from 'jsm/helpers/RectAreaLightHelper.js';
+import { RectAreaLight }            from 'three';
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {applyColorToElements} from "./hallTextureManager.js";
 import {initCallPostsHandler, initIndicationBoardHandler} from "./hallCallPostsIndBoard.js";
@@ -246,11 +249,12 @@ function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xe0e0e0); 
     scene.environment = null
+    RectAreaLightUniformsLib.init();
 
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 3);
     scene.add(ambientLight);
 
     const menuContainer = document.getElementById('menu-container');
@@ -267,43 +271,42 @@ function init() {
         optionMenuVisibilityBtn.classList.toggle('rotate');
     });
 
+    function onMenuHiden() {
+        const element = document.getElementById('elevator-container');
+        const width = element.clientWidth;
+        const height = element.clientHeight;
 
-function onMenuHiden() {
-    const element = document.getElementById('elevator-container');
-    const width = element.clientWidth;
-    const height = element.clientHeight;
+        // Если меню скрыто, возвращаем исходные размеры
+        if (!menuContainer.classList.contains('hidden')) {
+            canvas.style.width = `${originalWidth}px`;
+            canvas.style.height = `${originalHeight}px`;
+            renderer.setSize(originalWidth, originalHeight);
+            onWindowResize();
+        } else {
+            // Устанавливаем размеры в зависимости от контейнера
+            canvas.style.width = `${width}px`;
+            canvas.style.height = `${height}px`;
+            renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+        }
 
-    // Если меню скрыто, возвращаем исходные размеры
-    if (!menuContainer.classList.contains('hidden')) {
-        canvas.style.width = `${originalWidth}px`;
-        canvas.style.height = `${originalHeight}px`;
-        renderer.setSize(originalWidth, originalHeight);
-        onWindowResize();
-    } else {
-        // Устанавливаем размеры в зависимости от контейнера
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+    }
+
+    // Функция изменения размера
+    function onWindowResize() {
+        const element = document.getElementById('elevator-container');
+        const width = element.clientWidth;
+        const height = element.clientHeight;
+
+            // Устанавливаем размеры в зависимости от контейнера
         canvas.style.width = `${width}px`;
         canvas.style.height = `${height}px`;
         renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
     }
-
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-}    
-
-// Функция изменения размера
-function onWindowResize() {
-    const element = document.getElementById('elevator-container');
-    const width = element.clientWidth;
-    const height = element.clientHeight;
-
-        // Устанавливаем размеры в зависимости от контейнера
-    canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
-    renderer.setSize(canvas.clientWidth, canvas.clientHeight);
-
-    camera.aspect = canvas.clientWidth / canvas.clientHeight;
-    camera.updateProjectionMatrix();
-}
 
     window.addEventListener('resize', onWindowResize);
     document.addEventListener('fullscreenchange', onWindowResize);
@@ -311,45 +314,64 @@ function onWindowResize() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(0, 60, 100);
-    directionalLight.target.position.set(0, 30, 0);
+    /*let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
+    directionalLight.position.set(0, 80, 0);
+    directionalLight.target.position.set(0, 0, 0);
     scene.add(directionalLight);
 
-     //let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
-     //scene.add(directionalLightHelper);
+     let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
+     scene.add(directionalLightHelper);*/
 
-    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
+    // --- Создаём RectAreaLight — большой потолочный светильник ---
+    const areaLightCeiling = new RectAreaLight(0xffffff, 4, 90, 80);
+    // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+    areaLightCeiling.position.set(0, 88, 0);
+    // Направляем вниз:
+    areaLightCeiling.lookAt(0, 0, 0);
+    scene.add(areaLightCeiling);
+
+    const areaLightLeft = new RectAreaLight(0xffffff, 0.5, 80, 50);
+    areaLightLeft.position.set(-60, 50, 0);
+    areaLightLeft.lookAt(0, 50, 0);
+    scene.add(areaLightLeft);
+
+    const areaLightRight = new RectAreaLight(0xffffff, 0.5, 80, 50);
+    areaLightRight.position.set(60, 50, 0);
+    areaLightRight.lookAt(0, 50, 0);
+    scene.add(areaLightRight);
+
+    const helperCeil = new RectAreaLightHelper(areaLightCeiling);
+    const helperLeft  = new RectAreaLightHelper(areaLightLeft);
+    const helperRight = new RectAreaLightHelper(areaLightRight);
+    //scene.add(helperCeil,helperLeft, helperRight);
+
+
+
+    /*let directionalLight1 = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight1.position.set(100, 60, 0);
     directionalLight1.target.position.set(0, 30, 0);
     scene.add(directionalLight1);
 
-     //let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
-     //scene.add(directionalLightHelper1);
+     let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
+     scene.add(directionalLightHelper1);
 
-    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
+    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight2.position.set(-100, 60, 0);
     directionalLight2.target.position.set(0, 30, 0);
     scene.add(directionalLight2);
 
-     //let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
-     //scene.add(directionalLightHelper2);
+     let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
+     scene.add(directionalLightHelper2);
 
-    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
+    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight3.position.set(0, 60, -100);
     directionalLight3.target.position.set(0, 30, 0);
     scene.add(directionalLight3);
 
-     //let directionalLightHelper3 = new THREE.DirectionalLightHelper(directionalLight3, 3);
-     //scene.add(directionalLightHelper3);
+     let directionalLightHelper3 = new THREE.DirectionalLightHelper(directionalLight3, 3);
+     scene.add(directionalLightHelper3);*/
 
-    /*let directionalLight4 = new THREE.AmbientLight(0xffffff, 100);
-    directionalLight4.position.set(0, 80, 0);
-    directionalLight4.target.position.set(0, 40, 0);
-    scene.add(directionalLight4);
 
-    let directionalLightHelper4 = new THREE.DirectionalLightHelper(directionalLight4, 10);
-    scene.add(directionalLightHelper4);*/
 
     InitialOrbitControls();
 
@@ -365,47 +387,6 @@ function onWindowResize() {
         return camera.position.distanceTo(center);
     }
 
-    /*function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-
-       for (let element of Element.groupNames) {
-            let distance = GetDistanceToWall(element);
-
-            let  group = window.model.getObjectByName(element);
-            let unvisibleDistance =  camera.position.distanceTo(controls.target) - 0.5;
-
-            if(camera.position.x >= -GetExtremeXPoint() &&  camera.position.x <= GetExtremeXPoint()  &&
-                camera.position.z <= GetExtremeZPoint() &&  camera.position.z >= -GetExtremeZPoint() &&
-                camera.position.y < 0) {
-                Visibility.setWallVisibleByGroupName(Element.floorGroup, false);
-                Visibility.setWallVisibleByGroupName(Element.leftGroup, true);
-                Visibility.setWallVisibleByGroupName(Element.rightGroup, true);
-                Visibility.setWallVisibleByGroupName(Element.backGroup, true);
-                Visibility.setWallVisibleByGroupName(Element.frontGroup, true);
-                continue;
-            }
-
-            if(distance < unvisibleDistance) {
-                if (element === Element.ceilingGroup) {
-                    Visibility.setCeilingVisibility(false);
-                } else if (element === Element.floorGroup) {
-                    group.visible = false;
-                } else {
-                    Visibility.setWallVisibleByGroupName(element, false);
-                }
-
-            } else {
-                if (element === Element.ceilingGroup) {
-                    Visibility.setCeilingVisibility(true);
-                } else if (element === Element.floorGroup) {
-                    group.visible = true;
-                } else {
-                    Visibility.setWallVisibleByGroupName(element, true);
-                }
-            }
-        }  
-    }*/
 
     const idToSize = {
         wideSize: 'wide',
@@ -413,78 +394,12 @@ function onWindowResize() {
         deepSize: 'deep'
     };
 
-    // TODO
-    /*document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
-    document.getElementById('configurator-container').style.visibility = 'visible';*/
 
     if(getCabinSizeFromConfiguration()) {
         loadModelBySize(idToSize[getCabinSizeFromConfiguration()]);
     } else {
         window.location.href = `index.html`;
     }
-
-    /*const gltfLoader = new GLTFLoader();
-    gltfLoader.load(
-        './liftModels/LiftModel.fbx',
-        (gltf) => {
-            object.position.set(0, 0, 0);
-            scene.add(gltf.scene);
-            model = gltf.scene;
-            window.model = model;
-            applyDefaultElevatorTextures();
-            animate();
-        },
-        undefined,
-        (error) => {
-            console.error('Ошибка загрузки GLTF модели:', error);
-
-            const fbxLoader = new FBXLoader();
-            fbxLoader.load(
-                './liftModels/squareModel.fbx',
-                async (object) => {
-                    object.position.set(0, 0, 0);
-                    scene.add(object);
-                    model = object;
-                    window.model = model;
-                    getObjectNames(object);
-                    DefaultSettings()
-                    animate();
-                  
-                    //let pointLight = new THREE.PointLight(0xffffff, 50, 80);
-                    //pointLight.position.set(0, GetExtremeYPoint() / 2, GetExtremeZPoint() / 2);
-                    //scene.add(pointLight);
-                    
-                    //pointLight = new THREE.PointLight(0xffffff, 100, 80);
-                    //pointLight.position.set(0, GetExtremeYPoint() / 2, -GetExtremeZPoint() / 2);
-                    //scene.add(pointLight);
-
-                    function getObjectNames(obj) {
-                        const names = [];
-                        obj.traverse((child) => {
-
-                            child.material = new THREE.MeshStandardMaterial({
-                                color: 0xffffff, // Задайте нужный цвет
-                                roughness: 0.5,  // Настройте шероховатость
-                                metalness: 0.5   // Настройте металлическость
-                            });
-
-                            if (child.isMesh) {
-                            }
-                        });}
-
-                        await loadConfiguration();
-
-                        document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
-                        document.getElementById('configurator-container').style.visibility = 'visible'; 
-                        console.log("Hi");
-                },
-                undefined,
-                (error) => {
-                    console.error('Ошибка загрузки FBX модели:', error);
-                }
-            );
-        }
-    );*/
 
     window.addEventListener('resize', () => {
         const width = canvas.clientWidth;

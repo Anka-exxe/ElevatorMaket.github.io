@@ -329,10 +329,17 @@ const removeMapping = {
             })
             .then(data => {
                 document.getElementById('name').value = data.name;
-                document.getElementById('bumpScale').value            = data.properties.bumpScale;
-                document.getElementById('metalness').value            = data.properties.metalness;
-                document.getElementById('roughness').value            = data.properties.roughness;
-                document.getElementById('emissiveIntensity').value    = data.properties.emissiveIntensity;
+                document.getElementById('bumpScale').value = data.properties.bumpScale;
+                document.getElementById('metalness').value = data.properties.metalness;
+                document.getElementById('roughness').value = data.properties.roughness;
+                document.getElementById('emissiveIntensity').value = data.properties.emissiveIntensity;
+
+                material.bumpScale = parseFloat(data.properties.bumpScale);
+                material.metalness = parseFloat(data.properties.metalness);
+                material.roughness = parseFloat(data.properties.roughness);
+                material.emissive = new THREE.Color(0xffffff);      // или из data, если сохранили цвет
+                material.emissiveIntensity= parseFloat(data.properties.emissiveIntensity);
+                material.needsUpdate = true;
 
                 // Заполняем группу чекбоксов для icon.type
                 if (data.icon) {
@@ -429,9 +436,27 @@ const removeMapping = {
                 alert("Ошибка загрузки данных текстуры");
             });
     }
+    const textureForm = document.getElementById('textureForm');
+    const nameInput   = document.getElementById('name');
+    const submitBtn   = textureForm.querySelector('button[type="submit"]');
+
+
+    textureForm.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            if (document.activeElement !== submitBtn) {
+                e.preventDefault();
+            }
+        }
+    });
 
     document.getElementById('textureForm').addEventListener('submit', (e) => {
         e.preventDefault();
+
+        const action = textureId ? 'обновить' : 'добавить';
+        const name   = nameInput.value.trim() || '<без названия>';
+        if (!window.confirm(`Вы уверены, что хотите ${action} текстуру "${name}"?`)) {
+            return;
+        }
 
         const form = document.getElementById('textureForm');
         const formData = new FormData(form);
