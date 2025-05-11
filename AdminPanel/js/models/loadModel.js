@@ -6,6 +6,9 @@ import {DefaultSettings} from "./unusiallElements.js";
 import {GetExtremeZPoint, GetExtremeXPoint, GetExtremeYPoint} from "./positionManager.js";
 import * as Visibility from "./setVisibilityManager.js";
 import * as Element from "./elementNames.js";
+import { RectAreaLightUniformsLib } from 'jsm/lights/RectAreaLightUniformsLib.js';
+import { RectAreaLightHelper }      from 'jsm/helpers/RectAreaLightHelper.js';
+import { RectAreaLight }            from 'three';
 import {setAllParameters, 
     getAllParameters, getCabinSize} from 
     "../shareConfiguration/allParams.js";
@@ -143,7 +146,7 @@ async function init() {
         console.error('Canvas элемент не найден');
         return;
     }
-
+    RectAreaLightUniformsLib.init();
     renderer = new THREE.WebGLRenderer({ canvas, 
         antialias: true, 
         preserveDrawingBuffer: true }
@@ -222,37 +225,26 @@ function onWindowResize() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(0, 60, 100);
-    directionalLight.target.position.set(0, 30, 0);
-    scene.add(directionalLight);
+    const areaLightCeiling = new RectAreaLight(0xffffff, 3, 90, 80);
+    // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+    areaLightCeiling.position.set(0, 88, 0);
+    // Направляем вниз:
+    areaLightCeiling.lookAt(0, 0, 0);
+    scene.add(areaLightCeiling);
 
-     //let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
-     //scene.add(directionalLightHelper);
+    const areaLightLeft = new RectAreaLight(0xffffff, 0.5, 80, 50);
+    areaLightLeft.position.set(-60, 50, 0);
+    areaLightLeft.lookAt(0, 50, 0);
+    scene.add(areaLightLeft);
 
-    let directionalLight1 = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight1.position.set(100, 60, 0);
-    directionalLight1.target.position.set(0, 30, 0);
-    scene.add(directionalLight1);
+    const areaLightRight = new RectAreaLight(0xffffff, 0.5, 80, 50);
+    areaLightRight.position.set(60, 50, 0);
+    areaLightRight.lookAt(0, 50, 0);
+    scene.add(areaLightRight);
 
-     //let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
-     //scene.add(directionalLightHelper1);
-
-    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight2.position.set(-100, 60, 0);
-    directionalLight2.target.position.set(0, 30, 0);
-    scene.add(directionalLight2);
-
-     //let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
-     //scene.add(directionalLightHelper2);
-
-    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight3.position.set(0, 60, -100);
-    directionalLight3.target.position.set(0, 30, 0);
-    scene.add(directionalLight3);
-
-     //let directionalLightHelper3 = new THREE.DirectionalLightHelper(directionalLight3, 3);
-     //scene.add(directionalLightHelper3);
+    const helperCeil = new RectAreaLightHelper(areaLightCeiling);
+    const helperLeft  = new RectAreaLightHelper(areaLightLeft);
+    const helperRight = new RectAreaLightHelper(areaLightRight);
 
     /*let directionalLight4 = new THREE.AmbientLight(0xffffff, 100);
     directionalLight4.position.set(0, 80, 0);

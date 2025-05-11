@@ -1,4 +1,5 @@
 import * as UrlHelper from "../urlHelper/urls.js";
+import {API_BASE_URL} from "../urlHelper/urls.js";
 
 export let allTextures = null; 
 let iconsLoadedPromise = null;

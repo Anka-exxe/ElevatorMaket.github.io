@@ -56,6 +56,8 @@ function showTextureModal(textureData, iconElement) {
         html += `<p><strong>Metalness:</strong> ${textureData.properties.metalness}</p>`;
         html += `<p><strong>Roughness:</strong> ${textureData.properties.roughness}</p>`;
         html += `<p><strong>Emissive Intensity:</strong> ${textureData.properties.emissiveIntensity}</p>`;
+        html += `<p><strong>Tile Size X:</strong> ${textureData.properties.tileSizeX ?? 'Не задано'}</p>`;
+        html += `<p><strong>Tile Size Y:</strong> ${textureData.properties.tileSizeY ?? 'Не задано'}</p>`;
     } else {
         html += `<p>Нет свойств</p>`;
     }

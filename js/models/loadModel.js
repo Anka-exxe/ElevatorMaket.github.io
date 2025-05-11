@@ -219,12 +219,38 @@ export function applyBasicTextures() {
             }
         });
     });
+
+    const mirrorMaterial = new THREE.MeshStandardMaterial({
+        color:           "#cdc9c9",
+        metalness:       0.7,
+        roughness:       0,
+    });
+
+    const mirrorNames = [
+        "MirrorBack","MirrorBackHalf",
+        "MirrorLeft","MirrorLeftHalf",
+        "MirrorRight","MirrorRightHalf"
+    ];
+
+    mirrorNames.forEach(name => {
+        const obj = model.getObjectByName(name);
+        if (!obj) {
+            console.warn(`⛔ Объект ${name} не найден`);
+            return;
+        }
+        obj.traverse(child => {
+            if (child.isMesh) {
+                child.material = mirrorMaterial;
+                child.material.needsUpdate = true;
+            }
+        });
+    });
 }
 
 //import {isHallClicked} from "../animation/tabFunctions.js";
 
 let model;
-let camera, renderer, controls;
+export let camera, renderer, controls;
 const maxDistance = 160;
 var strDownloadMime = "image/octet-stream";
 
@@ -236,7 +262,7 @@ function init() {
         return;
     }
 
-    renderer = new THREE.WebGLRenderer({ canvas, 
+    renderer = new THREE.WebGLRenderer({ canvas,
         antialias: true, 
         preserveDrawingBuffer: true }
         );
@@ -254,7 +280,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 3);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
     const menuContainer = document.getElementById('menu-container');
@@ -323,14 +349,14 @@ function init() {
      scene.add(directionalLightHelper);*/
 
     // --- Создаём RectAreaLight — большой потолочный светильник ---
-    const areaLightCeiling = new RectAreaLight(0xffffff, 4, 90, 80);
+    const areaLightCeiling = new RectAreaLight(0xffffff, 2, 80, 80);
     // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
     areaLightCeiling.position.set(0, 88, 0);
     // Направляем вниз:
     areaLightCeiling.lookAt(0, 0, 0);
     scene.add(areaLightCeiling);
 
-    const areaLightLeft = new RectAreaLight(0xffffff, 0.5, 80, 50);
+    /*const areaLightLeft = new RectAreaLight(0xffffff, 0.5, 80, 50);
     areaLightLeft.position.set(-60, 50, 0);
     areaLightLeft.lookAt(0, 50, 0);
     scene.add(areaLightLeft);
@@ -338,12 +364,12 @@ function init() {
     const areaLightRight = new RectAreaLight(0xffffff, 0.5, 80, 50);
     areaLightRight.position.set(60, 50, 0);
     areaLightRight.lookAt(0, 50, 0);
-    scene.add(areaLightRight);
+    scene.add(areaLightRight);*/
 
-    const helperCeil = new RectAreaLightHelper(areaLightCeiling);
-    const helperLeft  = new RectAreaLightHelper(areaLightLeft);
-    const helperRight = new RectAreaLightHelper(areaLightRight);
-    //scene.add(helperCeil,helperLeft, helperRight);
+    //const helperCeil = new RectAreaLightHelper(areaLightCeiling);
+    /*const helperLeft  = new RectAreaLightHelper(areaLightLeft);
+    const helperRight = new RectAreaLightHelper(areaLightRight);*/
+    //scene.add(helperCeil);
 
 
 

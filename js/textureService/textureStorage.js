@@ -19,7 +19,9 @@ export const texturePattern = {
         "metalness": undefined,
         "roughness": undefined,
         "emissiveIntensity": undefined,
-        "color": "#ffffff"
+        "color": "#ffffff",
+        "tileSizeY": undefined,
+        "tileSizeX": undefined,
     }
 }
 
@@ -195,7 +197,9 @@ async function fetchIcons() {
                 metalness: texture.properties.metalness,
                 roughness: texture.properties.roughness,
                 emissiveIntensity: texture.properties.emissiveIntensity,
-                color: texture.baseColor
+                color: texture.baseColor,
+                tileSizeY: texture.properties.tileSizeY,
+                tileSizeX: texture.properties.tileSizeX
             }
         }));
     } catch (error) {

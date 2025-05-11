@@ -1,6 +1,9 @@
 ﻿import * as THREE from 'three';
 import { OrbitControls } from 'jsm/controls/OrbitControls.js';
 import * as UrlHelper from "./urlHelper/urls.js";
+import { RectAreaLightUniformsLib } from 'jsm/lights/RectAreaLightUniformsLib.js';
+import { RectAreaLightHelper }      from 'jsm/helpers/RectAreaLightHelper.js';
+import { RectAreaLight }            from 'three';
 
 // В самом верху add-texture.js
 const urlParams     = new URLSearchParams(window.location.search);
@@ -105,12 +108,16 @@ const removeMapping = {
     controls.enableZoom = true;
 
     scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(5, 5, 5);
-    scene.add(directionalLight);
-    const topLight = new THREE.DirectionalLight(0xffffff, 0.7);
-    topLight.position.set(0, 10, 0);
-    scene.add(topLight);
+    const areaLightCeiling = new RectAreaLight(0xffffff, 2, 20, 20);
+   areaLightCeiling.position.set(0, 20, 0);
+   areaLightCeiling.lookAt(0, 0, 0);
+   scene.add(areaLightCeiling);
+
+    const areaLightCeiling1 = new RectAreaLight(0xffffff, 2, 20, 20);
+    areaLightCeiling1.position.set(-20, 0, 20);
+    areaLightCeiling1.lookAt(0, 0, 0);
+    scene.add(areaLightCeiling1);
+
 
     let material = new THREE.MeshStandardMaterial({ color: 0xffffff });
     let geometry = new THREE.BoxGeometry(1, 1, 1);
@@ -135,56 +142,67 @@ const removeMapping = {
     // Функция обновления текстуры материала по файловому input
     function updateMaterialMap(inputId, mapType, oldKey) {
         const input = document.getElementById(inputId);
-        if (input.files && input.files[0]) {
-            removeFlags[oldKey] = false; // сбрасываем флаг удаления
-            const file = input.files[0];
-            // Для предпросмотра создаем URL объекта
-            const url = URL.createObjectURL(file);
-            const loader = new THREE.TextureLoader();
-            loader.load(url, (texture) => {
-                texture.needsUpdate = true;
-                switch(mapType) {
-                    case 'baseTexture':
-                        texture.encoding = THREE.sRGBEncoding;
-                        material.map = texture;
-                        break;
-                    case 'aoMap':
-                        material.aoMap = texture;
-                        break;
-                    case 'displacementMap':
-                        material.displacementMap = texture;
-                        break;
-                    case 'metalMap':
-                        material.metalnessMap = texture;
-                        break;
-                    case 'normalMapDX':
-                        material.normalMap = texture;
-                        break;
-                    case 'roughnessMap':
-                        material.roughnessMap = texture;
-                        break;
-                    case 'alphaMap':
-                        material.alphaMap = texture;
-                        material.transparent = true;
-                        material.alphaTest = 0.5;
-                        break;
-                    case 'bumpMap':
-                        material.bumpMap = texture;
-                        break;
-                    case 'icon':
-                        // Для иконки обновляем только превью
-                        break;
-                    default:
-                        break;
-                }
-                material.needsUpdate = true;
-                updateFilePreview(inputId, url);
-                if (oldKey) {
-                    oldMapValues[oldKey] = url;
-                }
-            });
-        }
+        if (!input.files?.length) return;
+
+        removeFlags[oldKey] = false;
+        const file = input.files[0];
+        const url  = URL.createObjectURL(file);
+
+        // Считываем необязательные размеры плитки из формы
+        const tx = parseFloat(document.getElementById('tileSizeX').value);
+        const ty = parseFloat(document.getElementById('tileSizeY').value);
+        const useTile = !isNaN(tx) && tx > 0 && !isNaN(ty) && ty > 0;
+
+        new THREE.TextureLoader().load(url, texture => {
+            // Цветовая карта — sRGB, остальные — Linear
+            texture.colorSpace  = (mapType === 'baseTexture')
+                ? THREE.SRGBColorSpace
+                : THREE.LinearSRGBColorSpace;
+
+            // Повтор и фильтры
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            texture.generateMipmaps = true;
+            texture.minFilter = THREE.LinearMipMapLinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+            if (useTile) {
+                // если заданы tileSizeX/Y — считаем 1м / размер_плитки
+                texture.repeat.set(1 / tx, 1 / ty);
+            } else {
+                texture.repeat.set(1, 1);
+            }
+
+            // Присваиваем нужному полю материала
+            switch(mapType) {
+                case 'baseTexture':
+                    material.map = texture; break;
+                case 'aoMap':
+                    material.aoMap = texture; break;
+                case 'displacementMap':
+                    material.displacementMap = texture; break;
+                case 'metalMap':
+                    material.metalnessMap = texture; break;
+                case 'normalMapDX':
+                    material.normalMap = texture; break;
+                case 'roughnessMap':
+                    material.roughnessMap = texture; break;
+                case 'alphaMap':
+                    material.alphaMap = texture;
+                    material.transparent = true;
+                    material.alphaTest = 0.5;
+                    break;
+                case 'bumpMap':
+                    material.bumpMap = texture; break;
+                // 'icon' не трогаем
+            }
+
+            material.needsUpdate = true;
+            updateFilePreview(inputId, url);
+            oldMapValues[oldKey] = url;
+        });
     }
+
 
     // Массив файловых инпутов с типами и ключами (oldKey – ключ для хранения старого URL)
     const fileInputs = [
@@ -333,6 +351,8 @@ const removeMapping = {
                 document.getElementById('metalness').value = data.properties.metalness;
                 document.getElementById('roughness').value = data.properties.roughness;
                 document.getElementById('emissiveIntensity').value = data.properties.emissiveIntensity;
+                document.getElementById('tileSizeX').value = data.properties.tileSizeX ?? '';
+                document.getElementById('tileSizeY').value = data.properties.tileSizeY ?? '';
 
                 material.bumpScale = parseFloat(data.properties.bumpScale);
                 material.metalness = parseFloat(data.properties.metalness);
@@ -452,6 +472,14 @@ const removeMapping = {
     document.getElementById('textureForm').addEventListener('submit', (e) => {
         e.preventDefault();
 
+        const selectedTypes = Array.from(
+            document.querySelectorAll('input[name="icon.type"]:checked')
+        ).map(cb => cb.value);
+
+        if (selectedTypes.length === 0) {
+            alert('Пожалуйста, выберите хотя бы один элемент, к которому будет применяться текстура');
+            return;
+        }
         const action = textureId ? 'обновить' : 'добавить';
         const name   = nameInput.value.trim() || '<без названия>';
         if (!window.confirm(`Вы уверены, что хотите ${action} текстуру "${name}"?`)) {
@@ -493,9 +521,7 @@ const removeMapping = {
             }
         }
 
-        const selectedTypes = Array.from(
-            document.querySelectorAll('input[name="icon.type"]:checked')
-        ).map(cb => cb.value);
+        selectedTypes.map(cb => cb.value);
         formData.append('icon.isDoor', selectedTypes.includes('DOOR'));
         formData.append('icon.isWall', selectedTypes.includes('WALL'));
         formData.append('icon.isFloor', selectedTypes.includes('FLOOR'));
