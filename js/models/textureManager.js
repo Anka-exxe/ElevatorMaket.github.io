@@ -418,6 +418,7 @@ export function handleTextureClick(event) {
                 normalURL,
                 roughnessURL,
                 {
+                    tileSize: { x: tileSizeX, y: tileSizeY },
                     bumpScale: bumpScale,
                     metalness: metalness,
                     roughness: roughness,
@@ -447,6 +448,7 @@ export function handleTextureClick(event) {
                 normalURL,
                 roughnessURL,
                 {
+                    tileSize: { x: tileSizeX, y: tileSizeY },
                     bumpScale: bumpScale,
                     metalness: metalness,
                     roughness: roughness,
