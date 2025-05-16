@@ -166,6 +166,20 @@ export async function setActiveTextureByContainerNameHallVersion(textureContaine
     }
 }
 
+export async function removeTextureClassesActiveByContainerName(textureContainerName) {
+    const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
+    if (!texturesContainer) {
+        console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+    }
+    
+     // Удаляем класс 'active' у всех текстур
+    const allTextures = texturesContainer.querySelectorAll('img[data-texture-id]');
+    allTextures.forEach(texture => {
+        texture.classList.remove('active');
+    });
+}
+
 export async function setTextureClassActiveByContainerName(textureContainerName, textureId) {
     const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
     if (!texturesContainer) {

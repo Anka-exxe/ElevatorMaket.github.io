@@ -139,3 +139,41 @@ export function setButtonActiveById(id) {
     const button = document.getElementById(id);
     button.click();
 }
+
+export async function setTextureClassActiveByContainerName(textureContainerName, textureId) {
+    const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
+    if (!texturesContainer) {
+        console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+    }
+    
+    if (textureId) {
+        // Находим выбранную текстуру
+        const activeTexture = texturesContainer.querySelector(`img[data-texture-id="${textureId}"]`);
+        
+        // Удаляем класс 'active' у всех текстур
+        const allTextures = texturesContainer.querySelectorAll('img[data-texture-id]');
+        allTextures.forEach(texture => {
+            if (texture !== activeTexture) {
+                texture.classList.remove('active');
+            }
+        });
+    
+        // Добавляем класс 'active' к текущей текстуре
+        activeTexture.classList.add('active');
+    }
+}
+
+export async function removeTextureClassesActiveByContainerName(textureContainerName) {
+    const texturesContainer = document.querySelector(`div[name="${textureContainerName}"]`);
+    if (!texturesContainer) {
+        console.error('Textures container not found.');
+        throw new Error('Textures container not found.');
+    }
+    
+     // Удаляем класс 'active' у всех текстур
+    const allTextures = texturesContainer.querySelectorAll('img[data-texture-id]');
+    allTextures.forEach(texture => {
+        texture.classList.remove('active');
+    });
+}

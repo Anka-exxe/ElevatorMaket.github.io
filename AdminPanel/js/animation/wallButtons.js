@@ -5,7 +5,10 @@ import {setTextureClassActiveByContainerName, removeTextureClassesActiveByContai
 from "../shareConfiguration/findElementsHelper.js";
 
 function handleAllWallsClick() {
+    selectParameterButton(this);
+    console.log('Выбраны все стены');
     const wallState = getAllWallTextures();
+  
     if(isAllTexturesSame(wallState)) {
         setTextureClassActiveByContainerName("wallTextures", wallState.back);
     } else {
@@ -14,21 +17,26 @@ function handleAllWallsClick() {
 }
 
 function handleFrontWallClick() {
+    selectParameterButton(this);
+    console.log('Выбраны все стены');
     const wallState = getAllWallTextures();
     setTextureClassActiveByContainerName("wallTextures", wallState.front);
 }
 
 function handleBackWallClick() {
+    selectParameterButton(this);
     const wallState = getAllWallTextures();
     setTextureClassActiveByContainerName("wallTextures", wallState.back);
 }
 
 function handleLeftWallClick() {
+    selectParameterButton(this);
     const wallState = getAllWallTextures();
     setTextureClassActiveByContainerName("wallTextures", wallState.left);
 }
 
 function handleRightWallClick() {
+    selectParameterButton(this);
     const wallState = getAllWallTextures();
     setTextureClassActiveByContainerName("wallTextures", wallState.right);
 }

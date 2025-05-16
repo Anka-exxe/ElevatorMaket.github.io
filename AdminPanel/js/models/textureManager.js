@@ -7,187 +7,135 @@ import * as Panel from '../shareConfiguration/panelParams.js';
 import {setHandrailTexture} from '../shareConfiguration/handrailParams.js';
 import * as Bumper from '../shareConfiguration/otherParams.js';
 import {currentCabinSize} from "./loadModel.js";
+import {renderer} from "./loadModel.js";
 
 let currentCeilingTextureURL = null;
-export function applyTextureToElement(model,
-                                      elementNames,
-                                      color,
-                                      textureInput,
-                                      alphaMapInput = null,
-                                      bump= null,
-                                      aoMap= null,
-                                      displacementMap= null,
-                                      metalnessMap= null,
-                                      normalMap= null,
-                                      roughnessMap= null,
-                                      materialOptions = {}) {
-    const elementNamesArr = Array.isArray(elementNames) ? elementNames : [elementNames];
-    const textureLoader = new THREE.TextureLoader();
+export function applyTextureToElement(
+    model,
+    elementNames,
+    color,
+    textureURL,
+    alphaURL = null,
+    bumpURL = null,
+    aoURL = null,
+    dispURL = null,
+    metalURL = null,
+    normURL = null,
+    roughURL = null,
+    materialOptions = {}
+) {
+    const names = Array.isArray(elementNames) ? elementNames : [elementNames];
+    const loader = new THREE.TextureLoader();
 
-    const loadTexture = (input) => {
-        return new Promise((resolve, reject) => {
-            if (typeof input === 'string' && input) {
-                textureLoader.load(
-                    input,
-                    (tex) => {
-                        tex.colorSpace = THREE.SRGBColorSpace;
-                        resolve(tex);
-                    },
-                    undefined,
-                    reject
-                );
-            } else {
-                resolve(input);
-            }
-        });
-    };
+    // Загрузка одной карты
+    const load = url => url
+        ? new Promise((res, rej) =>
+            loader.load(url, tex => {
+                tex.colorSpace = THREE.SRGBColorSpace;
+                res(tex);
+            }, undefined, rej)
+        )
+        : Promise.resolve(null);
 
+    // Параллельно грузим все карты
     Promise.all([
-        color,
-        loadTexture(textureInput),
-        loadTexture(alphaMapInput),
-        loadTexture(bump),
-        loadTexture(aoMap),
-        loadTexture(displacementMap),
-        loadTexture(metalnessMap),
-        loadTexture(normalMap),
-        loadTexture(roughnessMap)
-    ])
-        .then(([color,
-                   texture,
-                   alphaMap,
-                   bump,
-                   aoMap,
-                   displacementMap,
-                   metalnessMap,
-                   normalMap,
-                   roughnessMap
-               ]) => {
-            if (texture) {
-                texture.wrapS = THREE.RepeatWrapping;
-                texture.wrapT = THREE.RepeatWrapping;
-                texture.colorSpace = THREE.SRGBColorSpace;
-                if (materialOptions.repeat) {
-                    texture.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    texture.repeat.set(1, 1);
-                }
-            }
-            if (alphaMap) {
-                alphaMap.wrapS = THREE.RepeatWrapping;
-                alphaMap.wrapT = THREE.RepeatWrapping;
-                //alphaMap.colorSpace = THREE.SRGBColorSpace;
-                if (materialOptions.repeat) {
-                    alphaMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    alphaMap.repeat.set(1, 1);
-                }
+        Promise.resolve(color),
+        load(textureURL),
+        load(alphaURL),
+        load(bumpURL),
+        load(aoURL),
+        load(dispURL),
+        load(metalURL),
+        load(normURL),
+        load(roughURL)
+    ]).then(([ clr, map, alphaMap, bumpMap, aoMap, dispMap, metalMap, normMap, roughMap ]) => {
 
-                if (elementNamesArr.includes('Lamp')) {
-                    if (currentCabinSize !== 'square') {
-                        alphaMap.center = new THREE.Vector2(0.5, 0.5);
-                        alphaMap.rotation = Math.PI / 2;
-                    }
-                }
+        // Всё в один массив для одинаковой настройки
+        const maps = [
+            { tex: map,      prop: 'map' },
+            { tex: alphaMap, prop: 'alphaMap' },
+            { tex: bumpMap,  prop: 'bumpMap' },
+            { tex: aoMap,    prop: 'aoMap' },
+            { tex: dispMap,  prop: 'displacementMap' },
+            { tex: metalMap, prop: 'metalnessMap' },
+            { tex: normMap,  prop: 'normalMap' },
+            { tex: roughMap, prop: 'roughnessMap' },
+        ];
+
+        // Опции
+        const tile      = materialOptions.tileSize;  // { x: meters, y: meters }
+        const repeatOpt = materialOptions.repeat;    // { x: count,  y: count }
+
+        // Настраиваем каждую карту
+        maps.forEach(({ tex, prop }) => {
+            if (!tex) return;
+
+            // кодировка
+            tex.colorSpace = (prop === 'map') ? THREE.SRGBColorSpace : THREE.LinearSRGBColorSpace;
+
+            // фильтры и анизотропия
+            tex.generateMipmaps = true;
+            tex.minFilter      = THREE.LinearMipMapLinearFilter;
+            tex.magFilter      = THREE.LinearFilter;
+            tex.anisotropy     = renderer.capabilities.getMaxAnisotropy();
+
+            // повтор / тайлинг
+            tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+
+            if (tile?.x > 0 && tile?.y > 0) {
+                const bbox = new THREE.Box3().setFromObject(model);
+                const size = new THREE.Vector3(); bbox.getSize(size);
+                tex.repeat.set(size.x / tile.x, size.y / tile.y);
             }
-            if (bump) {
-                bump.wrapS = THREE.RepeatWrapping;
-                bump.wrapT = THREE.RepeatWrapping
-                if (materialOptions.repeat) {
-                    bump.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    bump.repeat.set(1, 1);
-                }
+            else if (repeatOpt?.x && repeatOpt?.y) {
+                tex.repeat.set(repeatOpt.x, repeatOpt.y);
             }
-            if (aoMap) {
-                aoMap.wrapS = THREE.RepeatWrapping;
-                aoMap.wrapT = THREE.RepeatWrapping;
-                if (materialOptions.repeat) {
-                    aoMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    aoMap.repeat.set(1, 1);
-                }
-            }
-            if (displacementMap) {
-                displacementMap.wrapS = THREE.RepeatWrapping;
-                displacementMap.wrapT = THREE.RepeatWrapping;
-                if (materialOptions.repeat) {
-                    displacementMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    displacementMap.repeat.set(1, 1);
-                }
-            }
-            if (metalnessMap) {
-                metalnessMap.wrapS = THREE.RepeatWrapping;
-                metalnessMap.wrapT = THREE.RepeatWrapping;
-                if (materialOptions.repeat) {
-                    metalnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    metalnessMap.repeat.set(1, 1);
-                }
-            }
-            if (normalMap) {
-                normalMap.wrapS = THREE.RepeatWrapping;
-                normalMap.wrapT = THREE.RepeatWrapping;
-                if (materialOptions.repeat) {
-                    normalMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    normalMap.repeat.set(1, 1);
-                }
-            }
-            if (roughnessMap) {
-                roughnessMap.wrapS = THREE.RepeatWrapping;
-                roughnessMap.wrapT = THREE.RepeatWrapping;
-                if (materialOptions.repeat) {
-                    roughnessMap.repeat.set(materialOptions.repeat.x, materialOptions.repeat.y);
-                } else {
-                    roughnessMap.repeat.set(1, 1);
-                }
+            else {
+                tex.repeat.set(1, 1);
             }
 
-            model.traverse((child) => {
-                if (child.isMesh && (elementNamesArr.includes(child.name) || hasAncestorWithName(child, elementNamesArr))) {
-                    const newMaterial = new THREE.MeshStandardMaterial({
-                        color: color !== undefined ? color : 0xffffff,
-                        map: texture,
-                        alphaMap: alphaMap,
-                        bumpMap: bump,
-                        bumpScale: 0.5,
-                        aoMap: aoMap,
-                        displacementMap: displacementMap,
-                        displacementScale: 0,
-                        metalnessMap: metalnessMap,
-                        normalMap: normalMap,
-                        roughnessMap: roughnessMap,
-                        transparent: !!alphaMap,
-                        metalness: (materialOptions.metalness !== undefined && materialOptions.metalness !== null && materialOptions.metalness !== "null")
-                            ? parseFloat(materialOptions.metalness)
-                            : 0.5,
-                        roughness: (materialOptions.roughness !== undefined && materialOptions.roughness !== null && materialOptions.roughness !== "null")
-                            ? parseFloat(materialOptions.roughness)
-                            : 0.8,
-                        emissive: materialOptions.emissive !== undefined ? materialOptions.emissive : new THREE.Color(0xffffff),
-                        emissiveIntensity: materialOptions.emissiveIntensity !== undefined && materialOptions.emissiveIntensity !== "null" ? parseFloat(materialOptions.emissiveIntensity) : 0
-                    });
-                    newMaterial.needsUpdate = true;
-                    child.material = newMaterial;
-                }
-            });
-        })
-        .catch((error) => {
-            console.error("Ошибка загрузки текстуры или альфа-карты:", error);
+            tex.needsUpdate = true;
         });
+
+        // Назначаем материал
+        model.traverse(child => {
+            if (!child.isMesh) return;
+            if (!names.includes(child.name) && !hasAncestorWithName(child, names)) return;
+
+            const mat = new THREE.MeshStandardMaterial({
+                color: clr != null ? clr : 0xffffff,
+                map:            map,
+                alphaMap:       alphaMap,
+                bumpMap:        bumpMap,
+                bumpScale:      parseFloat(materialOptions.bumpScale)    || 0.5,
+                aoMap:          aoMap,
+                displacementMap: dispMap,
+                displacementScale: parseFloat(materialOptions.displacementScale) || 0,
+                metalnessMap:   metalMap,
+                metalness:      parseFloat(materialOptions.metalness)     || 0.5,
+                normalMap:      normMap,
+                roughnessMap:   roughMap,
+                roughness:      parseFloat(materialOptions.roughness)     || 0.8,
+                emissive:       materialOptions.emissive                  || new THREE.Color(0x000000),
+                emissiveIntensity: parseFloat(materialOptions.emissiveIntensity) || 0,
+                transparent:    !!alphaMap
+            });
+            mat.needsUpdate = true;
+            child.material = mat;
+        });
+
+    }).catch(err => console.error("Ошибка загрузки карт:", err));
 }
 
-
-    function hasAncestorWithName(object, names) {
-    let parent = object.parent;
-    while (parent) {
-        if (names.includes(parent.name)) return true;
-        parent = parent.parent;
+function hasAncestorWithName(obj, names) {
+    let p = obj.parent;
+    while (p) {
+        if (names.includes(p.name)) return true;
+        p = p.parent;
     }
     return false;
 }
+
 
 
 export function handleTextureClick(event) {
@@ -207,6 +155,8 @@ export function handleTextureClick(event) {
     const roughness = img.getAttribute('data-roughness') || null;
     const emissive = img.getAttribute('data-emissive-intensity') || null;
     const color = img.getAttribute('data-color') || null;
+    const tileSizeY = img.getAttribute('data-tile-size-y') || null;
+    const tileSizeX = img.getAttribute('data-tile-size-x') || null;
 
     const texturesContainer = img.closest('.textures-container');
     const tabContainer = texturesContainer.closest('.menu-container__content');
@@ -273,6 +223,7 @@ export function handleTextureClick(event) {
                     normalURL,
                     roughnessURL,
                     {
+                        tileSize: { x: tileSizeX, y: tileSizeY },
                         metalness: metalness,
                         roughness: roughness,
                         emissive: new THREE.Color(0xffffee),
@@ -288,6 +239,28 @@ export function handleTextureClick(event) {
         case 'FloorParametrsTab':
             elementNames = ['Floor'];
             setFloorTexture(textureId);
+            applyTextureToElement(
+                model,
+                elementNames,
+                color,
+                textureURL,
+                alphaURL,
+                bumpUrl,
+                aoURL,
+                displacementURL,
+                metalnessURL,
+                normalURL,
+                roughnessURL,
+                {
+                    tileSize: { x: tileSizeX, y: tileSizeY },
+                    bumpScale: bumpScale,
+                    metalness: metalness,
+                    roughness: roughness,
+                    emissive: new THREE.Color(0xffffee),
+                    emissiveIntensity: emissive,
+                }
+            );
+            return;
             break;
         case 'BoardParametrsTab':
             if (textureType === "panel") {
@@ -416,6 +389,7 @@ export function handleTextureClick(event) {
                 normalURL,
                 roughnessURL,
                 {
+                    tileSize: { x: tileSizeX, y: tileSizeY },
                     bumpScale: bumpScale,
                     metalness: metalness,
                     roughness: roughness,
@@ -446,6 +420,7 @@ export function handleTextureClick(event) {
         normalURL,
         roughnessURL,
         {
+            tileSize: { x: tileSizeX, y: tileSizeY },
             bumpScale: bumpScale,
             metalness: metalness,
             roughness: roughness,

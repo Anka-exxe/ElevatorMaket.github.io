@@ -45,8 +45,6 @@ function displayTemplates(templates) {
            
             // Добавляем изображение шаблона
             const img = document.createElement('img');
-            console.log(API_BASE_URL);
-            console.log( `${API_BASE_URL}${template.previewImageUrl}`);
             img.src =  `${API_BASE_URL}${template.previewImageUrl}`; // Предполагаем, что у шаблона есть поле previewImageUrl
             img.alt = template.name; // Альтернативный текст
             img.className = 'pattern-img'; // Класс изображения

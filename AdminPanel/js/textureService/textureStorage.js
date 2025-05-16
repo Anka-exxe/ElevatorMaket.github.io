@@ -187,7 +187,9 @@ async function fetchIcons() {
                 metalness: texture.properties.metalness,
                 roughness: texture.properties.roughness,
                 emissiveIntensity: texture.properties.emissiveIntensity,
-                color: texture.baseColor
+                color: texture.baseColor,
+                tileSizeY: texture.properties.tileSizeY,
+                tileSizeX: texture.properties.tileSizeX
             }
         }));
     } catch (error) {

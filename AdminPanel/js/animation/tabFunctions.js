@@ -151,6 +151,8 @@ export async function showImages(category, tabId) {
                 img.setAttribute('data-roughness', item.options.roughness || null);
                 img.setAttribute('data-emissive-intensity', item.options.emissiveIntensity || null);
                 img.setAttribute('data-color', item.options.color || "#ffffff");
+                img.setAttribute('data-tile-size-y', item.options.tileSizeY || null);
+                img.setAttribute('data-tile-size-x', item.options.tileSizeX || null);
                 let className = (tabId === 'BoardParametrsTab' && category == 'board') ? 'special-texture-image' : 'texture-image';
                 img.className = className;
 
