@@ -49,9 +49,9 @@ export async function showTab(tabId) {
 
     document.getElementById(tabId).classList.add('active');
 
-    const activeTab = Array.from(navigationTabs).find(tab => tab.innerText === document.getElementById(tabId).querySelector('.menu-container__options-menu-title').innerText);
-    if (activeTab) {
-        activeTab.classList.add('active');
+    const activeNavTab = document.querySelector(`.navigation__tab[data-tab="${tabId}"]`);
+    if (activeNavTab) {
+        activeNavTab.classList.add('active');
     }
 
     const iconId = tabImageMap.get(tabId);

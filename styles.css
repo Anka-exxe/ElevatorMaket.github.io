@@ -266,6 +266,7 @@ body {
     margin-left: 10px;
     display: grid;
     justify-items: center;
+    align-items: center;
     gap: 5px; /* Создание одинаковых отступов между ячейками */
     grid-template-columns: repeat(10, auto);
     grid-template-rows: minmax(50px, 1fr) minmax(50px, 1fr); /* Одно определение для строк */

@@ -1,5 +1,7 @@
 export const ceilingGroup = 'Ceiling';
 export const lampGroup = 'Lamp';
+export const lamp1 = "Lamp1";
+export const lamp2 = "Lamp2";
 export const frontGroup = 'AllFrontWallGroup';
 export const backGroup = 'AllBackWallGroup';
 export const leftGroup = 'AllLeftWallGroup';

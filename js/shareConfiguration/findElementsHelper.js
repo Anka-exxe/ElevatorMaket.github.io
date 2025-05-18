@@ -42,6 +42,29 @@ export function setActiveRadioByInputName(inputName, radioId) {
     });
 }
 
+export async function setActiveRadioByInputNameAsync(inputName, radioId) {
+    return new Promise((resolve) => {
+        const radios = document.querySelectorAll(`input[name="${inputName}"]`);
+
+        if(!radios || radios.length === 0) {
+            console.error('Radios not found.');
+            throw new Error('Radios not found.');
+        }
+
+        let found = false;
+        radios.forEach(radio => {
+            if (radio.id === radioId) {
+                radio.click(); 
+                radio.checked = true;
+                found = true;
+            }
+        });
+
+        // Добавляем небольшую задержку для гарантированного обновления UI
+        setTimeout(resolve, 50);
+    });
+}
+
 export function setActiveButtonByFormName(formName, buttonId) {
     const form = document.forms[formName];
     const activeButton = form.querySelector(`.form__form-element#${buttonId}`);

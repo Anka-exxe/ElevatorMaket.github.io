@@ -31,6 +31,7 @@ import {isHallSettingsSet,
 import {getOpeningTypeParam} from 
 "../shareConfiguration/mainParams.js";
 import {MODEL_BASE_PATH} from "../urlHelper/urls.js";
+import {GetLamp1Size, GetLamp2Size} from "./lightSizeManager.js";
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -43,6 +44,11 @@ let buttonDoorOpen;
 let buttonDoorClose;
 let isHallModelLoaded = false;
 let currentOpenType;
+let areaLightHall;
+let lamp1Size;
+let lamp2Size;
+let areaLight1Ceiling;
+let areaLight2Ceiling;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
@@ -64,11 +70,27 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
             object.position.set(0, 0, 0);
             scene.add(object);
             model = object;
-            window.model = model;
-
+     
             if (currentModel) {
                 scene.remove(currentModel);
+
+                window.model.traverse((child) => {
+                    if (child.isMesh) {
+                        if (child.geometry) child.geometry.dispose();
+                        if (child.material) {
+                            if (Array.isArray(child.material)) {
+                                child.material.forEach(m => m.dispose());
+                            } else {
+                                child.material.dispose();
+                            }
+                        }
+                    }
+                });
+
+                window.model = null;
             }
+            window.model = model;
+
             currentModel = object;
             getObjectNames(object);
             DefaultSettings()
@@ -93,12 +115,75 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
             document.getElementById('configurator-container').style.visibility = 'visible';
             //setupReflectors(camera, renderer);
             applyBasicTextures();
+
+            lamp1Size = GetLamp1Size();
+            lamp2Size = GetLamp2Size();
+
+            if (areaLight1Ceiling) {
+                scene.remove(areaLight1Ceiling);
+                areaLight1Ceiling.dispose();
+                areaLight1Ceiling = null; // Очищаем ссылку
+            }
+
+            if (areaLight2Ceiling) {
+                scene.remove(areaLight2Ceiling);
+                areaLight2Ceiling.dispose();
+                areaLight2Ceiling = null; // Очищаем ссылку
+            }
+
+            if(idToSizeElement === "wide") {
+                       // --- Создаём RectAreaLight — большой потолочный светильник ---
+            areaLight1Ceiling = new RectAreaLight(0xffffff, 2, lamp1Size.x, lamp1Size.y);
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight1Ceiling.position.set(GetExtremeXPoint() / 2 + 5, GetExtremeYPoint() + 0.3, 0);
+            // Направляем вниз:
+            areaLight1Ceiling.lookAt(GetExtremeXPoint() / 2 + 5, 0, 0);
+            scene.add(areaLight1Ceiling);
+
+            areaLight2Ceiling = new RectAreaLight(0xffffff, 2, lamp2Size.x, lamp2Size.y);
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight2Ceiling.position.set(- (GetExtremeXPoint() / 2), GetExtremeYPoint() + 0.3, 0);
+            // Направляем вниз:
+            areaLight2Ceiling.lookAt(- (GetExtremeXPoint() / 2), 0, 0);
+            scene.add(areaLight2Ceiling);
+            } else {
+                let yAddition;
+
+                if(idToSizeElement === "square") {
+                    yAddition = 0.3;
+                } else {
+                    yAddition = -1;
+                }
+                            // --- Создаём RectAreaLight — большой потолочный светильник ---
+            areaLight1Ceiling = new RectAreaLight(0xffffff, 2, lamp1Size.x, lamp1Size.y);
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight1Ceiling.position.set(0, GetExtremeYPoint() + yAddition, GetExtremeZPoint() / 2 - 3);
+            // Направляем вниз:
+            areaLight1Ceiling.lookAt(0, 0, GetExtremeZPoint() / 2 -3);
+            scene.add(areaLight1Ceiling);
+
+            areaLight2Ceiling = new RectAreaLight(0xffffff, 2, lamp2Size.x, lamp2Size.y);
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight2Ceiling.position.set(0, GetExtremeYPoint() + yAddition, - (GetExtremeZPoint() / 2 + 2));
+            // Направляем вниз:
+            areaLight2Ceiling.lookAt(0, 0, - (GetExtremeZPoint() / 2 + 2));
+            scene.add(areaLight2Ceiling);
+            }
+
+        
+           //const helper = new RectAreaLightHelper( areaLight1Ceiling );
+          // areaLight1Ceiling.add( helper );
+
+            //const helper2 = new RectAreaLightHelper( areaLight2Ceiling );
+           //areaLight2Ceiling.add( helper2 );
         },
         undefined,
         (error) => {
             console.error('Ошибка загрузки FBX модели:', error);
         }
     );
+
+   
 
     function GetDistanceToWall(groupWallName) {
         const group = window.model.getObjectByName(groupWallName);
@@ -348,13 +433,16 @@ function init() {
      let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
      scene.add(directionalLightHelper);*/
 
+     /*
+    let lamp1Size = GetLamp1Size();
+    let lamp2Size = GetLamp2Size();
     // --- Создаём RectAreaLight — большой потолочный светильник ---
-    const areaLightCeiling = new RectAreaLight(0xffffff, 2, 80, 80);
+    const areaLightCeiling = new RectAreaLight(0xffffff, 2, lamp1Size.x, lamp1Size.y);
     // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
     areaLightCeiling.position.set(0, 88, 0);
     // Направляем вниз:
     areaLightCeiling.lookAt(0, 0, 0);
-    scene.add(areaLightCeiling);
+    scene.add(areaLightCeiling);*/
 
     /*const areaLightLeft = new RectAreaLight(0xffffff, 0.5, 80, 50);
     areaLightLeft.position.set(-60, 50, 0);
@@ -613,6 +701,10 @@ export function SetSettingsBackFromHallToElevetor() {
     setDoorOpen(false);
 
     window.hallModel.visible = false;
+    if(areaLightHall) {
+        areaLightHall.visible = false;
+    }
+    
     camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2); 
     controls.enableDamping = true;
     controls.dampingFactor = 0.25;
@@ -692,10 +784,25 @@ if (buttonView3D) {
         },
     };
 
+    const hallLightSize = {
+        wide: {
+            length: 415,
+            width: 510
+        },
+        square: {
+            length: 415,
+            width: 510
+        },
+        deep: {
+            length: 380,
+            width: 510
+        },
+    };
+
     const openTypeToProp = {
         centralOpenType: 'central',
-        leftOpenType: 'right', // Проверьте, правильно ли это соответствие!
-        rightOpenType: 'left', // Проверьте, правильно ли это соответствие!
+        leftOpenType: 'right', 
+        rightOpenType: 'left',
     };
 
     // 2. Получаем параметры
@@ -707,6 +814,10 @@ if (buttonView3D) {
     // 3. Проверяем загружена ли модель
     if(isHallModelLoaded) {
         window.hallModel.visible = true;
+        if(areaLightHall) {
+            areaLightHall.visible = true;
+        }
+        
         await setActiveTextureByContainerNameHallVersion('wallHallTextures', doorTexture);
 
         // 4. Исправленное условие для изменения позиции
@@ -744,13 +855,38 @@ if (buttonView3D) {
                             throw new Error('Не найдена позиция для текущей конфигурации');
                         }
 
+                        console.log("I-m loading new hall");
                         object.position.copy(hallPositions[currentCabinSize][positionType]);
                         currentOpenType = openType;
 
                         if (window.hallModel) {
+                            // 1. Удаляем модель из сцены и чистим ресурсы
                             scene.remove(window.hallModel);
+                            
+                            // 2. Рекурсивно очищаем геометрию и материалы
+                            window.hallModel.traverse((child) => {
+                                if (child.isMesh) {
+                                    if (child.geometry) child.geometry.dispose();
+                                    if (child.material) {
+                                        if (Array.isArray(child.material)) {
+                                            child.material.forEach(m => m.dispose());
+                                        } else {
+                                            child.material.dispose();
+                                        }
+                                    }
+                                }
+                            });
+                        
+                            // 3. Удаляем свет (если он существует)
+                            if (areaLightHall) {
+                                scene.remove(areaLightHall);
+                                areaLightHall.dispose();
+                                areaLightHall = null; // Очищаем ссылку
+                            }
+                        
+                            window.hallModel = null; // Важно: убираем ссылку
                         }
-
+                    
                         scene.add(object);
                         window.hallModel = object;
 
@@ -760,16 +896,20 @@ if (buttonView3D) {
                             initIndicationBoardHandler(window.hallModel)
                         ]);
 
-                        if(isHallSettingsSet) {
-                            await setHallParamsActive();
-                        } else {
+                        if(!isHallSettingsSet) {
                             await setActiveFirstTextureByContainerName("portalTextures");
                             setHallSettings(true);
                         }
-                        
+                       
                         await setActiveTextureByContainerNameHallVersion('wallHallTextures', doorTexture);
-
+                        await new Promise(resolve => setTimeout(resolve, 100));
                         isHallModelLoaded = true;
+
+                        if(isHallSettingsSet) {
+                            console.log("set:HallParams");
+                            await setHallParamsActive();
+                        }
+
                         resolve();
                     } catch (error) {
                         reject(error);
@@ -784,10 +924,28 @@ if (buttonView3D) {
             );
         });
         
+       /* if(isHallSettingsSet) {
+            console.log("set:HallParams");
+            await setHallParamsActive();
+        }*/
         // Освещение
-        const pointLight = new THREE.PointLight(0xffffff, 1000, 1000);
+        /*const pointLight = new THREE.PointLight(0xffffff, 100000, 100000);
         pointLight.position.set(0, 80, 200);
-        scene.add(pointLight);
+        scene.add(pointLight);*/
+            // --- Создаём RectAreaLight — большой потолочный светильник ---
+            areaLightHall = new RectAreaLight(
+                0xffffff, 
+                1, 
+                hallLightSize[currentCabinSize].width,
+                 hallLightSize[currentCabinSize].length 
+                 );
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLightHall.position.set(-27, 120, 250);
+          // Направляем вниз:
+           areaLightHall.lookAt(-27, 0, 250);
+           scene.add(areaLightHall);
+           //const helper = new RectAreaLightHelper( areaLightCeiling );
+           //areaLightCeiling.add( helper );
     }
 
     // 6. Настройка камеры

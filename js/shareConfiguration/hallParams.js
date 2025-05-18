@@ -1,5 +1,5 @@
 import {setActiveTextureByContainerName, 
-    setActiveRadioByInputName,
+    setActiveRadioByInputNameAsync,
     getRadioParamByInputName} from "./findElementsHelper.js";
 
 export let isHallSettingsSet = false;
@@ -35,17 +35,16 @@ export function setFrameExistence(value) {
     HallState.frameExistence = value;
 }
 
-export function setCallPostTypeActive(radioId) {
-    setActiveRadioByInputName("call_post_type", radioId);
-
+export async function setCallPostTypeActive(radioId) {
+    await setActiveRadioByInputNameAsync("call_post_type", radioId);
 }
 
-export function setIndicationBoardTypeActive(radioId) {
-    setActiveRadioByInputName("ind_board_type", radioId);
+export async function setIndicationBoardTypeActive(radioId) {
+    await setActiveRadioByInputNameAsync("ind_board_type", radioId);
 }
 
-export function setFrameExistenceActive(radioId) {
-    setActiveRadioByInputName("availability_portal", radioId);
+export async function setFrameExistenceActive(radioId) {
+    await setActiveRadioByInputNameAsync("availability_portal", radioId);
 }
 
 export async function setFrameMaterialActive(textureId) {
@@ -55,18 +54,26 @@ export async function setFrameMaterialActive(textureId) {
 
 export async function setHallParamsActive() {
     console.log(HallState);
-    setCallPostTypeActive(HallState.callPostType);
-    setIndicationBoardTypeActive(HallState.indicationBoardType);
-    setFrameExistenceActive(HallState.frameExistence);
+    await setCallPostTypeActive(HallState.callPostType);
+    await setIndicationBoardTypeActive(HallState.indicationBoardType);
+    await setFrameExistenceActive(HallState.frameExistence);
     await setFrameMaterialActive(HallState.frameTexture);
 }
 
 export async function setHallParams(parameters) {
+    await setDefaultHallSettings();
     console.log(parameters);
     HallState.frameTexture = parameters.frameTexture;
     HallState.callPostType = parameters.callPostType;
     HallState.indicationBoardType = parameters.indicationBoardType;
     HallState.frameExistence  = parameters.frameExistence;
+}
+
+export async function setDefaultHallSettings() {
+    document.getElementById('have_portal').checked = true;
+    document.getElementById('call_post_case1').checked = true;
+    document.getElementById('ind_board_case1').checked = true;
+    document.getElementById('ind_board_display_1').checked = true;
 }
 
 /*document.addEventListener('DOMContentLoaded', () => {
