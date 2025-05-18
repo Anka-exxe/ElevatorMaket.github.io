@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Настройки света</title>
+    <style>
+        body { margin: 0; display: flex; height: 100vh; }
+        #preview { flex: 1; }
+        #controls {
+            width: 300px;
+            background: #f4f4f4;
+            padding: 1rem;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        label { font-weight: bold; margin-top: 0.5rem; }
+        input[type="color"], input[type="range"], input[type="number"] {
+            width: 100%;
+        }
+    </style>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "../node_modules/three/build/three.module.js",
+            "jsm/": "../node_modules/three/examples/jsm/"
+          }
+        }
+    </script>
+</head>
+<body>
+<div id="preview"></div>
+<div id="controls">
+    <label for="ambientColor">Ambient Color</label>
+    <input type="color" id="ambientColor" value="#ffffff">
+    <label for="ambientIntensity">Ambient Intensity</label>
+    <input type="range" id="ambientIntensity" min="0" max="5" step="0.1" value="1">
+    <input type="number" id="ambientIntensityNumber" min="0" max="5" step="0.1" value="1">
+
+    <label for="rectColor">Rect Light Color</label>
+    <input type="color" id="rectColor" value="#ffffff">
+    <label for="rectIntensity">Rect Light Intensity</label>
+    <input type="range" id="rectIntensity" min="0" max="10" step="0.1" value="2">
+    <input type="number" id="rectIntensityNumber" min="0" max="10" step="0.1" value="2">
+
+    <button id="saveBtn">💾 Сохранить</button>
+    <button id="backBtn">← Назад</button>
+</div>
+
+<script type="module" src="js/light-settings.js"></script>
+</body>
+</html>

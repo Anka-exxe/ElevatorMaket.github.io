@@ -144,6 +144,32 @@
                         </form>
                     </div>
 
+                    <hr class="menu-container_hr">
+
+                    <div class="light-settings">
+                        <h3>Настройки цвета и освещения:</h3>
+
+                        <div class="light-setting-row">
+                            <label for="ambientColor">Ambient Color</label>
+                            <input type="color" id="ambientColor" />
+                            <div class="light-setting-control">
+                                <input type="range" id="ambientIntensityRange" min="0" max="50" step="0.1" />
+                                <input type="number" id="ambientIntensityNumber" min="0" max="50" step="0.1" />
+                            </div>
+                        </div>
+
+                        <div class="light-setting-row">
+                            <label for="rectColor">Rect Light Color</label>
+                            <input type="color" id="rectColor" />
+                            <div class="light-setting-control">
+                                <input type="range" id="rectIntensityRange" min="0" max="50" step="0.1" />
+                                <input type="number" id="rectIntensityNumber" min="0" max="50" step="0.1" />
+                            </div>
+                        </div>
+
+                        <button id="saveLightSettingsBtn" class="save-light-button">💾 Сохранить настройки света</button>
+                    </div>
+
                 </div>
             </div>
 
@@ -457,10 +483,12 @@
     <script type="module" src="./js/shareConfiguration/allParams.js"></script>
     <script type="module" src="./js/patterns/animation/addPatternButton.js"></script>
     <script type="module" src="./js/animation/globalFunctions.js"></script>
+    <script type="module" src="./js/lightSettingsManager.js"></script>
 
     <script type="module">
         document.addEventListener('DOMContentLoaded', () => {
             showTab('MainParametersTab');
+            loadLightSettings();
         });
     </script>
 </body>
