@@ -85,10 +85,9 @@ const removeMapping = {
 };
 
 (function() {
-    // Создаем сцену предпросмотра через Three.js
     const previewContainer = document.getElementById('preview');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f0f0);
+    scene.background = new THREE.Color(0xe0e0e0);
 
     const camera = new THREE.PerspectiveCamera(
         75,
@@ -100,21 +99,24 @@ const removeMapping = {
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(previewContainer.clientWidth, previewContainer.clientHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
     previewContainer.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.enableZoom = true;
+    RectAreaLightUniformsLib.init();
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+    scene.add(new THREE.AmbientLight(0xffffff, 2));
     const areaLightCeiling = new RectAreaLight(0xffffff, 2, 20, 20);
-   areaLightCeiling.position.set(0, 20, 0);
+   areaLightCeiling.position.set(0, 30, 0);
    areaLightCeiling.lookAt(0, 0, 0);
    scene.add(areaLightCeiling);
 
     const areaLightCeiling1 = new RectAreaLight(0xffffff, 2, 20, 20);
-    areaLightCeiling1.position.set(-20, 0, 20);
+    areaLightCeiling1.position.set(-30, 0, 30);
     areaLightCeiling1.lookAt(0, 0, 0);
     scene.add(areaLightCeiling1);
 
