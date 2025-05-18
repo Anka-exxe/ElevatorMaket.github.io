@@ -11,7 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const has = radio.value === 'yes';
             setHandrailControlsEnabled(has);
             updateHandrailVisibility(has);
-            if (has) updateHandrailPosition();
+            if (has) {
+                const unifiedRadio = document.getElementById('unified');
+                if (unifiedRadio) {
+                    unifiedRadio.checked = true;
+                    updateHandrailType('unified');
+                }
+                updateHandrailPosition();
+            }
         });
     });
 
@@ -142,15 +149,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setHandrailControlsEnabled(enabled) {
     const posButtons = Array.from(document.querySelectorAll('button[name="railing_position"]'));
-    // общий on/off
     posButtons.forEach(b => {
         b.disabled = !enabled;
         b.classList.toggle('disabled', !enabled);
         if (!enabled) b.classList.remove('active');
     });
+
+    // Радиокнопки типа поручня
+    const typeRadios = document.querySelectorAll('input[name="railing_type"]');
+    typeRadios.forEach(radio => {
+        radio.disabled = !enabled;
+        if (!enabled) radio.checked = false;
+    });
+
+    // Материалы поручня
+    const handrailMaterialContainer = document.querySelector('[name="handrailTextureContainer"]');
+    if (handrailMaterialContainer) {
+        handrailMaterialContainer.style.pointerEvents = enabled ? 'auto' : 'none';
+        handrailMaterialContainer.style.opacity = enabled ? '1' : '0.5';
+    }
+
     if (!enabled) return;
 
-    // «утильная» функция для блокировки по тексту
+    // Сначала все кнопки разблокируем
+    posButtons.forEach(b => {
+        b.disabled = false;
+        b.classList.remove('disabled');
+    });
+
+    // Блокируем по типу открывания
+    const openingType = document.querySelector('input[name="opening_type"]:checked').value;
+    if (openingType === 'left') disable("слева");
+    else disable("справа");
+
+    // Если проходная кабина — блокируем «сзади»
+    const cabinType = document.querySelector('input[name="cabin_type"]:checked').value;
+    if (cabinType === 'walk_through_cabin') disable("сзади");
+
     function disable(text) {
         const btn = posButtons.find(b => b.textContent.trim().toLowerCase() === text);
         if (btn) {
@@ -159,21 +194,6 @@ function setHandrailControlsEnabled(enabled) {
             btn.classList.remove('active');
         }
     }
-
-    // сначала все кнопки разблокируем
-    posButtons.forEach(b => {
-        b.disabled = false;
-        b.classList.remove('disabled');
-    });
-
-    // блокируем по типу открытия
-    const openingType = document.querySelector('input[name="opening_type"]:checked').value;
-    if (openingType === 'left')      disable('слева');
-    else /* right или central */     disable('справа');
-
-    // если проходная кабина — всегда блокируем «сзади»
-    const cabinType = document.querySelector('input[name="cabin_type"]:checked').value;
-    if (cabinType === 'walk_through_cabin') disable('сзади');
 }
 
 

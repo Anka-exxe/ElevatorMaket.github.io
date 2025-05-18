@@ -133,17 +133,13 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
             if(idToSizeElement === "wide") {
                        // --- Создаём RectAreaLight — большой потолочный светильник ---
-            areaLight1Ceiling = new RectAreaLight(0xffffff, 2, lamp1Size.x, lamp1Size.y);
-            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight1Ceiling = new RectAreaLight(0xffffff, 3, lamp1Size.x, lamp1Size.y);
             areaLight1Ceiling.position.set(GetExtremeXPoint() / 2 + 5, GetExtremeYPoint() + 0.3, 0);
-            // Направляем вниз:
             areaLight1Ceiling.lookAt(GetExtremeXPoint() / 2 + 5, 0, 0);
             scene.add(areaLight1Ceiling);
 
-            areaLight2Ceiling = new RectAreaLight(0xffffff, 2, lamp2Size.x, lamp2Size.y);
-            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight2Ceiling = new RectAreaLight(0xffffff, 3, lamp2Size.x, lamp2Size.y);
             areaLight2Ceiling.position.set(- (GetExtremeXPoint() / 2), GetExtremeYPoint() + 0.3, 0);
-            // Направляем вниз:
             areaLight2Ceiling.lookAt(- (GetExtremeXPoint() / 2), 0, 0);
             scene.add(areaLight2Ceiling);
             } else {
