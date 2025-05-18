@@ -621,5 +621,7 @@ async function loadConfiguration() {
         if (preview) {
             preview.innerHTML = '';
         }
+
+        reloadParamsForNewModel();
     }
 }
