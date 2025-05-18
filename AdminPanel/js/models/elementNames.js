@@ -5,6 +5,8 @@ export const backGroup = 'AllBackWallGroup';
 export const leftGroup = 'AllLeftWallGroup';
 export const rightGroup = 'AllRightWallGroup';
 export const floorGroup = 'FloorGroup';
+export const lamp1 = "Lamp1";
+export const lamp2 = "Lamp2";
 
 export const groupNames = [
     ceilingGroup,

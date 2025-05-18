@@ -18,6 +18,7 @@ import {setAllParameters,
 import {fetchTemplateById} from "../designProjectService/designProjectStorage.js";
 import {isImagesShowed, loadImagesForAllTabs} from "../animation/tabFunctions.js";
 import {API_BASE_URL, MODEL_BASE_PATH} from "../urlHelper/urls.js";
+import {GetLamp1Size, GetLamp2Size} from "./lightSizeManager.js";
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -25,6 +26,10 @@ let buttonView3D;
 let buttonViewFront;
 let buttonViewUp;
 let buttonViewInside;
+let lamp1Size;
+let lamp2Size;
+let areaLight1Ceiling;
+let areaLight2Ceiling;
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
@@ -70,6 +75,70 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
             isReloaded ? reloadParamsForNewModel() : loadConfiguration();
 
+            lamp1Size = GetLamp1Size();
+            lamp2Size = GetLamp2Size();
+
+            if (areaLight1Ceiling) {
+                scene.remove(areaLight1Ceiling);
+                areaLight1Ceiling.dispose();
+                areaLight1Ceiling = null; // Очищаем ссылку
+            }
+
+            if (areaLight2Ceiling) {
+                scene.remove(areaLight2Ceiling);
+                areaLight2Ceiling.dispose();
+                areaLight2Ceiling = null; // Очищаем ссылку
+            }
+
+            lamp1Size = GetLamp1Size();
+            lamp2Size = GetLamp2Size();
+
+            if (areaLight1Ceiling) {
+                scene.remove(areaLight1Ceiling);
+                areaLight1Ceiling.dispose();
+                areaLight1Ceiling = null; // Очищаем ссылку
+            }
+
+            if (areaLight2Ceiling) {
+                scene.remove(areaLight2Ceiling);
+                areaLight2Ceiling.dispose();
+                areaLight2Ceiling = null; // Очищаем ссылку
+            }
+
+            if(idToSizeElement === "wide") {
+                       // --- Создаём RectAreaLight — большой потолочный светильник ---
+            areaLight1Ceiling = new RectAreaLight(0xffffff, 3, lamp1Size.x, lamp1Size.y);
+            areaLight1Ceiling.position.set(GetExtremeXPoint() / 2 + 5, GetExtremeYPoint() + 0.3, 0);
+            areaLight1Ceiling.lookAt(GetExtremeXPoint() / 2 + 5, 0, 0);
+            scene.add(areaLight1Ceiling);
+
+            areaLight2Ceiling = new RectAreaLight(0xffffff, 3, lamp2Size.x, lamp2Size.y);
+            areaLight2Ceiling.position.set(- (GetExtremeXPoint() / 2), GetExtremeYPoint() + 0.3, 0);
+            areaLight2Ceiling.lookAt(- (GetExtremeXPoint() / 2), 0, 0);
+            scene.add(areaLight2Ceiling);
+            } else {
+                let yAddition;
+
+                if(idToSizeElement === "square") {
+                    yAddition = 0.3;
+                } else {
+                    yAddition = -1;
+                }
+                            // --- Создаём RectAreaLight — большой потолочный светильник ---
+            areaLight1Ceiling = new RectAreaLight(0xffffff, 2, lamp1Size.x, lamp1Size.y);
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight1Ceiling.position.set(0, GetExtremeYPoint() + yAddition, GetExtremeZPoint() / 2 - 3);
+            // Направляем вниз:
+            areaLight1Ceiling.lookAt(0, 0, GetExtremeZPoint() / 2 -3);
+            scene.add(areaLight1Ceiling);
+
+            areaLight2Ceiling = new RectAreaLight(0xffffff, 2, lamp2Size.x, lamp2Size.y);
+            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+            areaLight2Ceiling.position.set(0, GetExtremeYPoint() + yAddition, - (GetExtremeZPoint() / 2 + 2));
+            // Направляем вниз:
+            areaLight2Ceiling.lookAt(0, 0, - (GetExtremeZPoint() / 2 + 2));
+            scene.add(areaLight2Ceiling);
+            }
 
             document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
             document.getElementById('configurator-container').style.visibility = 'visible';
@@ -225,7 +294,7 @@ function onWindowResize() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    const areaLightCeiling = new RectAreaLight(0xffffff, 3, 90, 80);
+    /*const areaLightCeiling = new RectAreaLight(0xffffff, 3, 90, 80);
     // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
     areaLightCeiling.position.set(0, 88, 0);
     // Направляем вниз:
@@ -245,7 +314,7 @@ function onWindowResize() {
     const helperCeil = new RectAreaLightHelper(areaLightCeiling);
     const helperLeft  = new RectAreaLightHelper(areaLightLeft);
     const helperRight = new RectAreaLightHelper(areaLightRight);
-
+*/
     /*let directionalLight4 = new THREE.AmbientLight(0xffffff, 100);
     directionalLight4.position.set(0, 80, 0);
     directionalLight4.target.position.set(0, 40, 0);
