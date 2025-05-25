@@ -686,3 +686,80 @@ body {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.light-settings {
+    background: #ffffff;
+    padding: 24px 32px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+    max-width: 600px;
+    font-family: 'Segoe UI', sans-serif;
+    margin-top: 20px;
+}
+
+.light-settings h3 {
+    font-size: 1.25rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.light-setting-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.light-setting-row label {
+    min-width: 140px;
+    font-weight: 500;
+    color: #333;
+}
+
+.light-setting-row input[type="color"] {
+    width: 48px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+    box-shadow: 0 0 3px rgba(0,0,0,0.1);
+}
+
+.light-setting-control {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex: 1;
+}
+
+.light-setting-control input[type="range"] {
+    flex: 1;
+    accent-color: #2563eb;
+}
+
+.light-setting-control input[type="number"] {
+    width: 64px;
+    padding: 6px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+.save-light-button {
+    margin-top: 10px;
+    background: #2563eb;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.save-light-button:hover {
+    background: #1e40af;
+}

@@ -11,12 +11,10 @@ import {setAllParameters, getCabinSize} from
     import {setDesignProject} from 
     "../shareConfiguration/mainParams.js";
 import { RectAreaLightUniformsLib } from 'jsm/lights/RectAreaLightUniformsLib.js';
-import { RectAreaLightHelper }      from 'jsm/helpers/RectAreaLightHelper.js';
 import { RectAreaLight }            from 'three';
 import {reloadParamsForNewModel} from "../shareConfiguration/allParams.js";
 import {applyColorToElements} from "./hallTextureManager.js";
 import {initCallPostsHandler, initIndicationBoardHandler} from "./hallCallPostsIndBoard.js";
-//import { Reflector } from 'jsm/objects/Reflector.js';
 import {setDoorOpen} from "./setVisibilityManager.js";
 import {getDoorState} from "../shareConfiguration/doorParams.js";
 import {setTextureClassActiveByContainerName,
@@ -32,6 +30,7 @@ import {getOpeningTypeParam} from
 "../shareConfiguration/mainParams.js";
 import {MODEL_BASE_PATH} from "../urlHelper/urls.js";
 import {GetLamp1Size, GetLamp2Size} from "./lightSizeManager.js";
+import { urlLightSettings} from '../urlHelper/urls.js';
 
 let currentModel = null;
 export let currentCabinSize = null;
@@ -49,6 +48,41 @@ let lamp1Size;
 let lamp2Size;
 let areaLight1Ceiling;
 let areaLight2Ceiling;
+
+async function applyLightSettingsFromServer() {
+    try {
+        const response = await fetch(urlLightSettings);
+        if (!response.ok) {
+            console.error('Ошибка при получении настроек света:', response.status);
+            return;
+        }
+
+        const settings = await response.json();
+
+        if (settings.ambientColor) {
+            ambientLight.color.set(settings.ambientColor);
+        }
+        if (typeof settings.ambientIntensity === 'number') {
+            ambientLight.intensity = settings.ambientIntensity;
+        }
+
+        if (areaLight1Ceiling && settings.reactColor) {
+            areaLight1Ceiling.color.set(settings.reactColor);
+        }
+        if (areaLight2Ceiling && settings.reactColor) {
+            areaLight2Ceiling.color.set(settings.reactColor);
+        }
+
+        if (areaLight1Ceiling && typeof settings.reactIntensity === 'number') {
+            areaLight1Ceiling.intensity = settings.reactIntensity;
+        }
+        if (areaLight2Ceiling && typeof settings.reactIntensity === 'number') {
+            areaLight2Ceiling.intensity = settings.reactIntensity;
+        }
+    } catch (err) {
+        console.error('Ошибка запроса к API настроек света:', err);
+    }
+}
 
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
@@ -113,7 +147,6 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
             document.getElementById('loading').style.display = 'none'; // Скрыть индикатор загрузки
             document.getElementById('configurator-container').style.visibility = 'visible';
-            //setupReflectors(camera, renderer);
             applyBasicTextures();
 
             lamp1Size = GetLamp1Size();
@@ -172,6 +205,7 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
             //const helper2 = new RectAreaLightHelper( areaLight2Ceiling );
            //areaLight2Ceiling.add( helper2 );
+            await applyLightSettingsFromServer();
         },
         undefined,
         (error) => {
@@ -336,6 +370,7 @@ export function applyBasicTextures() {
 
 let model;
 export let camera, renderer, controls;
+export let ambientLight;
 const maxDistance = 160;
 var strDownloadMime = "image/octet-stream";
 
@@ -365,7 +400,7 @@ function init() {
     camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
     camera.position.set(144, 84, 33);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+    ambientLight = new THREE.AmbientLight(0xffffff, 2);
     scene.add(ambientLight);
 
     const menuContainer = document.getElementById('menu-container');
