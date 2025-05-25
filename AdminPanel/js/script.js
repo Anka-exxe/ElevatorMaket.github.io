@@ -78,7 +78,7 @@ function showTextureModal(textureData, iconElement) {
         if (textureData.icon.isIndicationBoard) iconTypes.push('Indication Board');
         let iconTypesStr = iconTypes.join(', ') || 'Нет';
         html += `<p><strong>Тип:</strong> ${iconTypesStr}</p>`;
-        html += mapSection("Файл иконки", textureData.icon.icon);
+        html += mapSection("Файл иконки", textureData.icon.url);
     } else {
         html += `<p>Нет иконки</p>`;
     }

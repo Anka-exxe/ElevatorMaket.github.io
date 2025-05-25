@@ -208,7 +208,7 @@ const removeMapping = {
 
     // Массив файловых инпутов с типами и ключами (oldKey – ключ для хранения старого URL)
     const fileInputs = [
-        { id: 'icon.icon', type: 'icon', oldKey: 'icon' },
+        { id: 'icon.url', type: 'icon', oldKey: 'icon' },
         { id: 'baseTexture', type: 'baseTexture', oldKey: 'baseTexture' },
         { id: 'aoMap', type: 'aoMap', oldKey: 'aoMap' },
         { id: 'displacementMap', type: 'displacementMap', oldKey: 'displacementMap' },
@@ -287,7 +287,7 @@ const removeMapping = {
             fileInput.value = "";
             let mapKey = null;
             switch(targetId) {
-                case 'icon.icon':
+                case 'icon.url':
                     mapKey = 'icon';
                     break;
                 case 'baseTexture':
@@ -399,12 +399,31 @@ const removeMapping = {
                     roughnessMap: data.roughnessMapUrl,
                     alphaMap: data.alphaMapUrl,
                     bumpMap: data.bumpMapUrl,
-                    icon: data.icon ? data.icon.icon : null
+                    icon: data.icon ? data.icon.url : null
                 };
 
-                function loadTexture(url, assignFn) {
+                function loadTexture(url, assignFn, mapType) {
                     new THREE.TextureLoader().load(url, (tex) => {
-                        tex.needsUpdate = true;
+                        // Устанавливаем правильный colorSpace
+                        tex.colorSpace = (mapType === 'baseTexture')
+                            ? THREE.SRGBColorSpace
+                            : THREE.LinearSRGBColorSpace;
+
+                        tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+                        tex.generateMipmaps = true;
+                        tex.minFilter = THREE.LinearMipMapLinearFilter;
+                        tex.magFilter = THREE.LinearFilter;
+                        tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+                        // Применяем tile size, если указано
+                        const tx = parseFloat(document.getElementById('tileSizeX').value);
+                        const ty = parseFloat(document.getElementById('tileSizeY').value);
+                        const useTile = !isNaN(tx) && tx > 0 && !isNaN(ty) && ty > 0;
+                        tex.repeat.set(
+                            useTile ? 1 / tx : 1,
+                            useTile ? 1 / ty : 1
+                        );
+
                         assignFn(tex);
                         material.needsUpdate = true;
                     });
@@ -412,7 +431,6 @@ const removeMapping = {
 
                 if (oldMapValues.baseTexture) {
                     loadTexture(oldMapValues.baseTexture, (tex) => {
-                        tex.encoding = THREE.sRGBEncoding;
                         material.map = tex;
                     });
                     updateFilePreview('baseTexture', oldMapValues.baseTexture);
