@@ -986,13 +986,13 @@ if (buttonView3D) {
     }
 
     // 6. Настройка камеры
-    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 250);
-    controls.target.set(0, GetExtremeYPoint() / 2, 170);
+    camera.position.set(0, (GetExtremeYPoint() / 2) + 10, 190);
+    controls.target.set(0, GetExtremeYPoint() / 2, 110);
     controls.minPolarAngle = Math.PI / 4.5;
     controls.maxPolarAngle = Math.PI / 2;
     controls.minAzimuthAngle = -Math.PI / 2;
     controls.maxAzimuthAngle = Math.PI / 2.5;
-    controls.maxDistance = 95;
+    controls.maxDistance = 80;
     controls.update();
 
     document.getElementById('loading').style.display = 'none';
