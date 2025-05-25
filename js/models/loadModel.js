@@ -218,7 +218,11 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
                 if (element === Element.ceilingGroup) {
                     Visibility.setCeilingVisibility(false);
                 } else if (element === Element.floorGroup) {
-                    group.visible = false;
+                    if(camera.position.y < 0) {
+                        group.visible = false;
+                    } else {
+                        group.visible = true;
+                    }
                 } else {
                     Visibility.setWallVisibleByGroupName(element, false);
                 }
@@ -522,6 +526,7 @@ function init() {
     controls.target.set(0, 50, 0);
     camera.position.set(maxDistance - 2, 40, maxDistance - 2);
     controls.update(); 
+    controls.enablePan = false;
     renderer.render(scene, camera);
 
     buttonView3D = document.getElementById('view3d');
@@ -673,6 +678,7 @@ function checkFrontVisibilityAndSet() {
 export function InitialOrbitControls() {
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
+    controls.enablePan = false;
     controls.dampingFactor = 0.25;
     controls.enableZoom = true;
     controls.enableRotate = true;
@@ -1018,7 +1024,6 @@ export async function GetImage() {
         const blob = await response.blob();
 
         return blob; // Возвращаем Blob
-
     } catch (error) {
         console.error('Error while getting image:', error);
         return null; // Возвращаем null в случае ошибки

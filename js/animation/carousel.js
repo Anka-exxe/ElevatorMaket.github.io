@@ -15,6 +15,15 @@ export function displayProjects(projects) {
     projectsList.innerHTML = ''; // Очистка предыдущих проектов
     backButton.style.display = 'none';
 
+    const carouselTitle = document.getElementById('carouselTitle');
+
+    if (carouselTitle) {
+        carouselTitle.textContent = 'Выберите линейку лифтов:';
+    } else {
+        console.error('Элемент с id "carouselTitle" не найден');
+    }
+
+
     projects.forEach(project => {
         // Создаем карточку проекта
         const projectCard = document.createElement('div');
@@ -37,6 +46,14 @@ export function displayProjects(projects) {
 export function displayTemplates(templates) {
     const templatesList = document.getElementById('cards');
     templatesList.innerHTML = ''; // Очистка предыдущих шаблонов
+    const carouselTitle = document.getElementById('carouselTitle');
+
+    if (carouselTitle) {
+        carouselTitle.textContent = 'Выберите модель лифта:';
+    } else {
+        console.error('Элемент с id "carouselTitle" не найден');
+    }
+
 
     if (templates && templates.length > 0) {
         templates.forEach(template => {

@@ -98,23 +98,32 @@ button {
     background-image: url("./images/right_arrow_carousel.png"); /* Измените на ваше изображение */
     right: 10px;
 }
+
 .logo {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 150px;
+    width: 120px;
+    height: auto;
 }
 
+@media(max-width: 2000px) {
+    .logo {
+        width: 90px;
+        height: 90px;
+    }
+}
 
 @media(max-width: 1800px) {
     .logo {
-        width: 120px;
+        width: 82px;
+        height: 82px;
     }
 }
 
 @media(max-width: 1500px) {
     .logo {
-        width: 100px;
+        width: 75px;
     }
 }
 
