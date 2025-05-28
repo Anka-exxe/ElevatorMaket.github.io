@@ -153,7 +153,7 @@ const removeMapping = {
         // Считываем необязательные размеры плитки из формы
         const tx = parseFloat(document.getElementById('tileSizeX').value);
         const ty = parseFloat(document.getElementById('tileSizeY').value);
-        const useTile = !isNaN(tx) && tx > 0 && !isNaN(ty) && ty > 0;
+        //const useTile = !isNaN(tx) && tx > 0 && !isNaN(ty) && ty > 0;
 
         new THREE.TextureLoader().load(url, texture => {
             // Цветовая карта — sRGB, остальные — Linear
@@ -168,16 +168,17 @@ const removeMapping = {
             texture.magFilter = THREE.LinearFilter;
             texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-            if (useTile) {
+            /*if (useTile) {
                 // если заданы tileSizeX/Y — считаем 1м / размер_плитки
                 texture.repeat.set(1 / tx, 1 / ty);
             } else {
                 texture.repeat.set(1, 1);
-            }
+            }*/
 
             // Присваиваем нужному полю материала
             switch(mapType) {
                 case 'baseTexture':
+                    material.color.set(0xffffff);
                     material.map = texture; break;
                 case 'aoMap':
                     material.aoMap = texture; break;
@@ -384,7 +385,7 @@ const removeMapping = {
                     document.getElementById('icon.name').value = data.icon.name;
                 }
                 if (data.baseColor) {
-                    let baseColor = data.baseColor;
+                    let baseColor = data.baseColor.trim().toLowerCase();
                     if (!baseColor.startsWith("#")) baseColor = "#" + baseColor;
                     document.getElementById('baseColor').value = baseColor;
                     material.color = new THREE.Color(baseColor);
@@ -418,53 +419,83 @@ const removeMapping = {
                         // Применяем tile size, если указано
                         const tx = parseFloat(document.getElementById('tileSizeX').value);
                         const ty = parseFloat(document.getElementById('tileSizeY').value);
-                        const useTile = !isNaN(tx) && tx > 0 && !isNaN(ty) && ty > 0;
+                        /*const useTile = !isNaN(tx) && tx > 0 && !isNaN(ty) && ty > 0;
                         tex.repeat.set(
                             useTile ? 1 / tx : 1,
                             useTile ? 1 / ty : 1
-                        );
+                        );*/
 
                         assignFn(tex);
                         material.needsUpdate = true;
+                        renderer.compile(scene, camera);
                     });
                 }
 
                 if (oldMapValues.baseTexture) {
                     loadTexture(oldMapValues.baseTexture, (tex) => {
+                        material.color.set(0xffffff);
                         material.map = tex;
-                    });
+                        material.needsUpdate = true;
+                        renderer.compile(scene, camera);
+                    }, 'baseTexture');
                     updateFilePreview('baseTexture', oldMapValues.baseTexture);
                 }
+
                 if (oldMapValues.aoMap) {
-                    loadTexture(oldMapValues.aoMap, (tex) => { material.aoMap = tex; });
+                    loadTexture(oldMapValues.aoMap, (tex) => {
+                        material.aoMap = tex;
+                        material.needsUpdate = true;
+                    }, 'aoMap');
                     updateFilePreview('aoMap', oldMapValues.aoMap);
                 }
+
                 if (oldMapValues.displacementMap) {
-                    loadTexture(oldMapValues.displacementMap, (tex) => { material.displacementMap = tex; });
+                    loadTexture(oldMapValues.displacementMap, (tex) => {
+                        material.displacementMap = tex;
+                        material.needsUpdate = true;
+                    }, 'displacementMap');
                     updateFilePreview('displacementMap', oldMapValues.displacementMap);
                 }
+
                 if (oldMapValues.metalnessMap) {
-                    loadTexture(oldMapValues.metalnessMap, (tex) => { material.metalnessMap = tex; });
+                    loadTexture(oldMapValues.metalnessMap, (tex) => {
+                        material.metalnessMap = tex;
+                        material.needsUpdate = true;
+                    }, 'metalnessMap');
                     updateFilePreview('metalMap', oldMapValues.metalnessMap);
                 }
+
                 if (oldMapValues.normalMap) {
-                    loadTexture(oldMapValues.normalMap, (tex) => { material.normalMap = tex; });
+                    loadTexture(oldMapValues.normalMap, (tex) => {
+                        material.normalMap = tex;
+                        material.needsUpdate = true;
+                    }, 'normalMap');
                     updateFilePreview('normalMapDX', oldMapValues.normalMap);
                 }
+
                 if (oldMapValues.roughnessMap) {
-                    loadTexture(oldMapValues.roughnessMap, (tex) => { material.roughnessMap = tex; });
+                    loadTexture(oldMapValues.roughnessMap, (tex) => {
+                        material.roughnessMap = tex;
+                        material.needsUpdate = true;
+                    }, 'roughnessMap');
                     updateFilePreview('roughGlossMap', oldMapValues.roughnessMap);
                 }
+
                 if (oldMapValues.alphaMap) {
                     loadTexture(oldMapValues.alphaMap, (tex) => {
                         material.alphaMap = tex;
                         material.transparent = true;
                         material.alphaTest = 0.5;
-                    });
+                        material.needsUpdate = true;
+                    }, 'alphaMap');
                     updateFilePreview('alphaMap', oldMapValues.alphaMap);
                 }
+
                 if (oldMapValues.bumpMap) {
-                    loadTexture(oldMapValues.bumpMap, (tex) => { material.bumpMap = tex; });
+                    loadTexture(oldMapValues.bumpMap, (tex) => {
+                        material.bumpMap = tex;
+                        material.needsUpdate = true;
+                    }, 'bumpMap');
                     updateFilePreview('bumpMap', oldMapValues.bumpMap);
                 }
                 if (oldMapValues.icon) {
