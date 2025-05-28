@@ -972,7 +972,7 @@ if (buttonView3D) {
             // --- Создаём RectAreaLight — большой потолочный светильник ---
             areaLightHall = new RectAreaLight(
                 0xffffff, 
-                1, 
+                0.8, 
                 hallLightSize[currentCabinSize].width,
                  hallLightSize[currentCabinSize].length 
                  );
