@@ -36,8 +36,8 @@ export function setActiveRadioByInputName(inputName, radioId) {
 
     radios.forEach(radio => {
         if (radio.id === radioId) {
-            radio.click(); 
             radio.checked = true;
+radio.dispatchEvent(new Event('change', { bubbles: true }));
         }
     });
 }
@@ -54,8 +54,8 @@ export async function setActiveRadioByInputNameAsync(inputName, radioId) {
         let found = false;
         radios.forEach(radio => {
             if (radio.id === radioId) {
-                radio.click(); 
                 radio.checked = true;
+                radio.dispatchEvent(new Event('change', { bubbles: true }));
                 found = true;
             }
         });
