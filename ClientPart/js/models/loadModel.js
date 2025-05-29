@@ -149,15 +149,14 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
         async (object) => {
             object.position.set(0, 0, 0);
             scene.add(object);
-     console.log("I-m loading new model");
+            
             if (window.model) {
                 scene.remove(window.model);
                 disposeModel(window.model);
-    window.model = null;
+            window.model = null;
             }
             window.model = object;
 
-            //currentModel = object;
             getObjectNames(object);
             DefaultSettings()
         
@@ -231,22 +230,7 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
             scene.add(areaLight2Ceiling);
             }
 
-        
-           //const helper = new RectAreaLightHelper( areaLight1Ceiling );
-          // areaLight1Ceiling.add( helper );
-
-            //const helper2 = new RectAreaLightHelper( areaLight2Ceiling );
-           //areaLight2Ceiling.add( helper2 );
             await applyLightSettingsFromServer();
-
-           // Полная статистика по памяти
-console.log('Three.js memory info:', {
-    geometries: renderer.info.memory.geometries,
-    textures: renderer.info.memory.textures,
-    programs: renderer.info.programs?.length || 0,
-    renderLists: renderer.info.render.lists,
-    triangles: renderer.info.render.triangles
-});
 
             animate();
         },
@@ -512,75 +496,13 @@ function init() {
     document.addEventListener('mozfullscreenchange', onWindowResize); // Для Firefox
     document.addEventListener('MSFullscreenChange', onWindowResize); // Для IE/Edge
 
-    /*let directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-    directionalLight.position.set(0, 80, 0);
-    directionalLight.target.position.set(0, 0, 0);
-    scene.add(directionalLight);
-
-     let directionalLightHelper = new THREE.DirectionalLightHelper(directionalLight, 10);
-     scene.add(directionalLightHelper);*/
-
-     /*
-    let lamp1Size = GetLamp1Size();
-    let lamp2Size = GetLamp2Size();
-    // --- Создаём RectAreaLight — большой потолочный светильник ---
-    const areaLightCeiling = new RectAreaLight(0xffffff, 2, lamp1Size.x, lamp1Size.y);
-    // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
-    areaLightCeiling.position.set(0, 88, 0);
-    // Направляем вниз:
-    areaLightCeiling.lookAt(0, 0, 0);
-    scene.add(areaLightCeiling);*/
-
-    /*const areaLightLeft = new RectAreaLight(0xffffff, 0.5, 80, 50);
-    areaLightLeft.position.set(-60, 50, 0);
-    areaLightLeft.lookAt(0, 50, 0);
-    scene.add(areaLightLeft);
-
-    const areaLightRight = new RectAreaLight(0xffffff, 0.5, 80, 50);
-    areaLightRight.position.set(60, 50, 0);
-    areaLightRight.lookAt(0, 50, 0);
-    scene.add(areaLightRight);*/
-
-    //const helperCeil = new RectAreaLightHelper(areaLightCeiling);
-    /*const helperLeft  = new RectAreaLightHelper(areaLightLeft);
-    const helperRight = new RectAreaLightHelper(areaLightRight);*/
-    //scene.add(helperCeil);
-
-
-
-    /*let directionalLight1 = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight1.position.set(100, 60, 0);
-    directionalLight1.target.position.set(0, 30, 0);
-    scene.add(directionalLight1);
-
-     let directionalLightHelper1 = new THREE.DirectionalLightHelper(directionalLight1, 3);
-     scene.add(directionalLightHelper1);
-
-    let directionalLight2 = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight2.position.set(-100, 60, 0);
-    directionalLight2.target.position.set(0, 30, 0);
-    scene.add(directionalLight2);
-
-     let directionalLightHelper2 = new THREE.DirectionalLightHelper(directionalLight2, 3);
-     scene.add(directionalLightHelper2);
-
-    let directionalLight3 = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight3.position.set(0, 60, -100);
-    directionalLight3.target.position.set(0, 30, 0);
-    scene.add(directionalLight3);
-
-     let directionalLightHelper3 = new THREE.DirectionalLightHelper(directionalLight3, 3);
-     scene.add(directionalLightHelper3);*/
-
-
-
     InitialOrbitControls();
 
     function GetDistanceToWall(groupWallName) {
         const group = window.model.getObjectByName(groupWallName);
         if (!group) {
             console.warn(`Group "${groupWallName}" not found.`);
-            return Infinity; // or some default value
+            return Infinity;
         }
         const box = new THREE.Box3().setFromObject(group);
         const center = box.getCenter(new THREE.Vector3());
@@ -780,15 +702,6 @@ export function InitialOrbitControls() {
     controls.update(); 
 }
 
-// Логика для разных ракурсов для кнопок
-// const buttonView3D = document.getElementById('view3d');
-// const buttonViewFront = document.getElementById('viewFront');
-// const buttonViewUp = document.getElementById('viewUp');
-// const buttonViewInside = document.getElementById('viewInside');
-// const buttonHallViewInside = document.getElementById('hallViewInside');
-// const buttonDoorOpen = document.getElementById('doorsOpen');
-// const buttonDoorClose = document.getElementById('doorsClose');
-
 
 export function SetSettingsBackFromHallToElevetor() {
     const checkbox = document.getElementById('toggleSwitch');
@@ -847,13 +760,6 @@ if (buttonView3D) {
  export async function loadHall() {
     document.getElementById('loading').style.display = 'flex';
     document.getElementById('configurator-container').style.visibility = 'hidden';
-
-    // 1. Переносим константы в начало функции (чтобы были видны во всей функции)
-   /*const hallModelPaths = {
-        wide: './hallModels/wideHallModel.fbx',
-        square: './hallModels/кт10.fbx',
-        deep: './hallModels/гт13.fbx',
-    };*/
 
     const hallModelPaths = {
         wide: `${MODEL_BASE_PATH}wideHallModel.fbx`,
@@ -1000,7 +906,7 @@ if (buttonView3D) {
                             });
 
                             // 2. Рекурсивно очищаем геометрию и материалы
-                            disposeModel(window.model);
+                            disposeModel(window.hallModel);
 
                             scene.remove(window.hallModel);
                             window.hallModel = null;
@@ -1052,28 +958,17 @@ if (buttonView3D) {
             );
         });
         
-       /* if(isHallSettingsSet) {
-            console.log("set:HallParams");
-            await setHallParamsActive();
-        }*/
-        // Освещение
-        /*const pointLight = new THREE.PointLight(0xffffff, 100000, 100000);
-        pointLight.position.set(0, 80, 200);
-        scene.add(pointLight);*/
-            // --- Создаём RectAreaLight — большой потолочный светильник ---
             areaLightHall = new RectAreaLight(
                 0xffffff, 
                 0.7, 
                 hallLightSize[currentCabinSize].width,
                  hallLightSize[currentCabinSize].length 
                  );
-            // 0xffffff — цвет, 5 — интенсивность (можно редактировать), 100×100 — ширина и высота
+  
             areaLightHall.position.set(-27, 120, 250);
-          // Направляем вниз:
+
            areaLightHall.lookAt(-27, 0, 250);
            scene.add(areaLightHall);
-           //const helper = new RectAreaLightHelper( areaLightCeiling );
-           //areaLightCeiling.add( helper );
     }
 
     // 6. Настройка камеры
@@ -1089,12 +984,6 @@ if (buttonView3D) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('configurator-container').style.visibility = 'visible';
 }
-
-/*function animate() {
-    requestAnimationFrame(animate); // Запрашиваем следующий кадр анимации
-
-    renderer.render(scene, camera); // Рендерим сцену
-}*/
 
 export async function GetImage() {
     try {
