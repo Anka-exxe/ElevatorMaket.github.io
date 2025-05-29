@@ -48,6 +48,7 @@ let lamp1Size;
 let lamp2Size;
 let areaLight1Ceiling;
 let areaLight2Ceiling;
+export let renderer
 
 async function applyLightSettingsFromServer() {
     try {
@@ -84,6 +85,8 @@ async function applyLightSettingsFromServer() {
     }
 }
 
+let animationId = null;
+
 export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     const loader = new FBXLoader();
     const modelPaths = {
@@ -98,37 +101,66 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
     document.getElementById('loading').style.display = 'flex';
 
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+
+    function disposeModel(model) {
+        if (!model) return;
+    
+        model.traverse(child => {
+            if (child.isMesh) {
+                // Очищаем геометрию
+                if (child.geometry) {
+                    child.geometry.dispose();
+                }
+    
+                // Очищаем материалы и текстуры
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(material => {
+                            disposeMaterial(material);
+                        });
+                    } else {
+                        disposeMaterial(child.material);
+                    }
+                }
+            }
+        });
+    
+        scene.remove(model);
+    }
+    
+    function disposeMaterial(material) {
+        material.dispose();
+        
+        // Очищаем текстуры
+        for (const key of Object.keys(material)) {
+            const value = material[key];
+            if (value && value.isTexture) {
+                value.dispose();
+            }
+        }
+    }
+
     loader.load(
         path,
         async (object) => {
             object.position.set(0, 0, 0);
             scene.add(object);
-            model = object;
-     
-            if (currentModel) {
-                scene.remove(currentModel);
-
-                window.model.traverse((child) => {
-                    if (child.isMesh) {
-                        if (child.geometry) child.geometry.dispose();
-                        if (child.material) {
-                            if (Array.isArray(child.material)) {
-                                child.material.forEach(m => m.dispose());
-                            } else {
-                                child.material.dispose();
-                            }
-                        }
-                    }
-                });
-
-                window.model = null;
+     console.log("I-m loading new model");
+            if (window.model) {
+                scene.remove(window.model);
+                disposeModel(window.model);
+    window.model = null;
             }
-            window.model = model;
+            window.model = object;
 
-            currentModel = object;
+            //currentModel = object;
             getObjectNames(object);
             DefaultSettings()
-            animate();
+        
 
             function getObjectNames(obj) {
                 const names = [];
@@ -206,6 +238,17 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
             //const helper2 = new RectAreaLightHelper( areaLight2Ceiling );
            //areaLight2Ceiling.add( helper2 );
             await applyLightSettingsFromServer();
+
+           // Полная статистика по памяти
+console.log('Three.js memory info:', {
+    geometries: renderer.info.memory.geometries,
+    textures: renderer.info.memory.textures,
+    programs: renderer.info.programs?.length || 0,
+    renderLists: renderer.info.render.lists,
+    triangles: renderer.info.render.triangles
+});
+
+            animate();
         },
         undefined,
         (error) => {
@@ -227,16 +270,20 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
         return camera.position.distanceTo(center);
     }
 
+
     function animate() {
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
+
         renderer.render(scene, camera);
+
+        let unvisibleDistanceDependOnSize;
 
         for (let element of Element.groupNames) {
             let distance = GetDistanceToWall(element);
 
             let  group = window.model.getObjectByName(element);
             let unvisibleDistance =  camera.position.distanceTo(controls.target) - 0.5;
-
+            
             if(camera.position.x >= -GetExtremeXPoint() &&  camera.position.x <= GetExtremeXPoint()  &&
                 camera.position.z <= GetExtremeZPoint() &&  camera.position.z >= -GetExtremeZPoint() &&
                 camera.position.y < 0) {
@@ -248,7 +295,13 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
                 continue;
             }
 
-            if(distance < unvisibleDistance) {
+            if(currentCabinSize === "wide") {
+                unvisibleDistanceDependOnSize =  unvisibleDistance;
+            } else {
+                unvisibleDistanceDependOnSize =  unvisibleDistance + 2;
+            }
+
+            if(distance < unvisibleDistanceDependOnSize) {
                 if (element === Element.ceilingGroup) {
                     Visibility.setCeilingVisibility(false);
                 } else if (element === Element.floorGroup) {
@@ -260,7 +313,6 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
                 } else {
                     Visibility.setWallVisibleByGroupName(element, false);
                 }
-
             } else {
                 if (element === Element.ceilingGroup) {
                     Visibility.setCeilingVisibility(true);
@@ -352,7 +404,7 @@ export function applyBasicTextures() {
     ];
 
     mirrorNames.forEach(name => {
-        const obj = model.getObjectByName(name);
+        const obj = window.model.getObjectByName(name);
         if (!obj) {
             console.warn(`⛔ Объект ${name} не найден`);
             return;
@@ -368,8 +420,8 @@ export function applyBasicTextures() {
 
 //import {isHallClicked} from "../animation/tabFunctions.js";
 
-let model;
-export let camera, renderer, controls;
+//let model;
+export let camera, controls;
 export let ambientLight;
 const maxDistance = 160;
 var strDownloadMime = "image/octet-stream";
@@ -588,8 +640,14 @@ function init() {
         buttonViewUp.onclick = function () {
             animateButton(buttonViewUp);
             controls.maxDistance = maxDistance;
-            camera.position.set(0, maxDistance, 0);
-            controls.target.set(0, GetExtremeYPoint() / 2, 0);
+            if(currentCabinSize === "wide") {
+                camera.position.set(0, maxDistance, 0);
+                controls.target.set(0, GetExtremeYPoint() / 2 + 15, 0);
+            } else {
+                camera.position.set(0, maxDistance, 0);
+                controls.target.set(0, GetExtremeYPoint() / 2, 0);
+            }
+
             controls.update();
             Visibility.setCeilingVisibility(false);
             checkFrontVisibilityAndSet();
@@ -810,9 +868,9 @@ if (buttonView3D) {
             left: new THREE.Vector3(-7.2, 0, -14),
         },
         square: {
-            central: new THREE.Vector3(-1.7, 0, -14.5),
-            right: new THREE.Vector3(8.15, 0, -14.5),
-            left: new THREE.Vector3(-11.55, 0, -14.5),
+            central: new THREE.Vector3(-1.7, 2, -4.5),
+            right: new THREE.Vector3(8.15, 2, -4.5),
+            left: new THREE.Vector3(-11.55, 2, -4.5),
         },
         deep: {
             central: new THREE.Vector3(-2, 0, -5.6),
@@ -882,6 +940,44 @@ if (buttonView3D) {
         const path = hallModelPaths[currentCabinSize];
         if (!path) return;
 
+        function disposeModel(model) {
+            if (!model) return;
+        
+            model.traverse(child => {
+                if (child.isMesh) {
+                    // Очищаем геометрию
+                    if (child.geometry) {
+                        child.geometry.dispose();
+                    }
+        
+                    // Очищаем материалы и текстуры
+                    if (child.material) {
+                        if (Array.isArray(child.material)) {
+                            child.material.forEach(material => {
+                                disposeMaterial(material);
+                            });
+                        } else {
+                            disposeMaterial(child.material);
+                        }
+                    }
+                }
+            });
+        
+            scene.remove(model);
+        }
+        
+        function disposeMaterial(material) {
+            material.dispose();
+            
+            // Очищаем текстуры
+            for (const key of Object.keys(material)) {
+                const value = material[key];
+                if (value && value.isTexture) {
+                    value.dispose();
+                }
+            }
+        }
+
         const fbxLoader = new FBXLoader();
         await new Promise((resolve, reject) => {
             fbxLoader.load(
@@ -898,21 +994,16 @@ if (buttonView3D) {
 
                         if (window.hallModel) {
                             // 1. Удаляем модель из сцены и чистим ресурсы
-                            scene.remove(window.hallModel);
-                            
-                            // 2. Рекурсивно очищаем геометрию и материалы
-                            window.hallModel.traverse((child) => {
-                                if (child.isMesh) {
-                                    if (child.geometry) child.geometry.dispose();
-                                    if (child.material) {
-                                        if (Array.isArray(child.material)) {
-                                            child.material.forEach(m => m.dispose());
-                                        } else {
-                                            child.material.dispose();
-                                        }
-                                    }
-                                }
+                            window.hallModel.children.forEach(child => {
+                                if (child.dispose) child.dispose();
+                                window.hallModel.remove(child);
                             });
+
+                            // 2. Рекурсивно очищаем геометрию и материалы
+                            disposeModel(window.model);
+
+                            scene.remove(window.hallModel);
+                            window.hallModel = null;
                         
                             // 3. Удаляем свет (если он существует)
                             if (areaLightHall) {
@@ -972,7 +1063,7 @@ if (buttonView3D) {
             // --- Создаём RectAreaLight — большой потолочный светильник ---
             areaLightHall = new RectAreaLight(
                 0xffffff, 
-                0.8, 
+                0.7, 
                 hallLightSize[currentCabinSize].width,
                  hallLightSize[currentCabinSize].length 
                  );
@@ -999,11 +1090,11 @@ if (buttonView3D) {
     document.getElementById('configurator-container').style.visibility = 'visible';
 }
 
-function animate() {
+/*function animate() {
     requestAnimationFrame(animate); // Запрашиваем следующий кадр анимации
 
     renderer.render(scene, camera); // Рендерим сцену
-}
+}*/
 
 export async function GetImage() {
     try {

@@ -30,8 +30,11 @@ let buttonViewUp;
 let buttonViewInside;
 let lamp1Size;
 let lamp2Size;
+export let renderer;
 export let areaLight1Ceiling;
 export let areaLight2Ceiling;
+
+let animationId = null;
 
 export async function applyLightSettingsFromServer() {
     try {
@@ -83,20 +86,63 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
 
     document.getElementById('loading').style.display = 'flex';
 
+    if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+    }
+
+    function disposeModel(model) {
+        if (!model) return;
+    
+        model.traverse(child => {
+            if (child.isMesh) {
+                // Очищаем геометрию
+                if (child.geometry) {
+                    child.geometry.dispose();
+                }
+    
+                // Очищаем материалы и текстуры
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach(material => {
+                            disposeMaterial(material);
+                        });
+                    } else {
+                        disposeMaterial(child.material);
+                    }
+                }
+            }
+        });
+    
+        scene.remove(model);
+    }
+    
+    function disposeMaterial(material) {
+        material.dispose();
+        
+        // Очищаем текстуры
+        for (const key of Object.keys(material)) {
+            const value = material[key];
+            if (value && value.isTexture) {
+                value.dispose();
+            }
+        }
+    }
+
     loader.load(
         path,
         async (object) => {
             object.position.set(0, 0, 0);
             scene.add(object);
-            model = object;
-            window.model = model;
 
-            if (currentModel) {
-                scene.remove(currentModel);
+            if (window.model) {
+                scene.remove(window.model);
+                disposeModel(window.model);
+    window.model = null;
             }
-            currentModel = object;
+            window.model = object;
             getObjectNames(object);
-            DefaultSettings()
+            DefaultSettings();
             animate();
 
             function getObjectNames(obj) {
@@ -240,8 +286,7 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
     }
 }
 
-let model;
-export let camera, renderer, controls;
+export let camera, controls;
 export let ambientLight;
 const maxDistance = 160;
 export let scene;

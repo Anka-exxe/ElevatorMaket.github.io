@@ -31,9 +31,8 @@ export function setActiveRadioByInputName(inputName, radioId) {
 
     radios.forEach(radio => {
         if (radio.id === radioId) {
-            radio.click(); 
             radio.checked = true;
-            
+            radio.dispatchEvent(new Event('change', { bubbles: true }));
         }
     });
 }
