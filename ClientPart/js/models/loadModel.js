@@ -280,9 +280,9 @@ export async function loadModelBySize(idToSizeElement, isReloaded = false) {
             }
 
             if(currentCabinSize === "wide") {
-                unvisibleDistanceDependOnSize =  unvisibleDistance;
-            } else {
                 unvisibleDistanceDependOnSize =  unvisibleDistance + 2;
+            } else {
+                unvisibleDistanceDependOnSize =  unvisibleDistance;
             }
 
             if(distance < unvisibleDistanceDependOnSize) {
