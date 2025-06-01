@@ -899,11 +899,11 @@ if (buttonView3D) {
                         currentOpenType = openType;
 
                         if (window.hallModel) {
-                            // 1. Удаляем модель из сцены и чистим ресурсы
+                            /*// 1. Удаляем модель из сцены и чистим ресурсы
                             window.hallModel.children.forEach(child => {
                                 if (child.dispose) child.dispose();
                                 window.hallModel.remove(child);
-                            });
+                            });*/
 
                             // 2. Рекурсивно очищаем геометрию и материалы
                             disposeModel(window.hallModel);
@@ -918,7 +918,7 @@ if (buttonView3D) {
                                 areaLightHall = null; // Очищаем ссылку
                             }
                         
-                            window.hallModel = null; // Важно: убираем ссылку
+                            //window.hallModel = null; // Важно: убираем ссылку
                         }
                     
                         scene.add(object);
