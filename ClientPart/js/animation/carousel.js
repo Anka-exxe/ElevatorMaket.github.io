@@ -82,7 +82,6 @@ export function displayTemplates(templates) {
                 try {
                     localStorage.setItem('templateConfiguration', JSON.stringify(template.configuration));
                     localStorage.setItem('templateId', JSON.stringify(template.id));
-                    console.log(template.configuration);
                     window.location.href = 'configurator.html';
                 } catch (error) {
                     console.error('Ошибка при парсинге JSON:', error);
