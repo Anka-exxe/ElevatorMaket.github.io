@@ -769,19 +769,19 @@ if (buttonView3D) {
 
     const hallPositions = {
         wide: {
-            central: new THREE.Vector3(1.4, 0, -14),
-            right: new THREE.Vector3(10.6, 0, -14),
-            left: new THREE.Vector3(-7.2, 0, -14),
+            central: new THREE.Vector3(1.4, 1.5, -10),
+            right: new THREE.Vector3(10.6, 1.5, -10),
+            left: new THREE.Vector3(-7.2, 1.5, -10),
         },
         square: {
-            central: new THREE.Vector3(-1.7, 2, -4.5),
+            central: new THREE.Vector3(-1.8, 2, -4.5),
             right: new THREE.Vector3(8.15, 2, -4.5),
             left: new THREE.Vector3(-11.55, 2, -4.5),
         },
         deep: {
-            central: new THREE.Vector3(-2, 0, -5.6),
-            left: new THREE.Vector3(-5.65, 0, -5.6),
-            right: new THREE.Vector3(1.25, 0, -5.6),
+            central: new THREE.Vector3(-2.5, 0.1, -0.9),
+            left: new THREE.Vector3(-5.75, 0.1, -0.8),
+            right: new THREE.Vector3(1.05, 0.1, -0.8),
         },
     };
 
