@@ -298,15 +298,6 @@ function updateCabinView(cabinType) {
         }
     });
 
-    const handrailUnifiedBack = model.getObjectByName('HandrailUnifiedBack');
-    const handrailCompositeBack = model.getObjectByName('HandrailCompositeBack');
-    if (handrailUnifiedBack) {
-        handrailUnifiedBack.visible = (cabinType === "not_walk_through_cabin");
-    }
-    if (handrailCompositeBack) {
-        handrailCompositeBack.visible = (cabinType === "not_walk_through_cabin");
-    }
-
     const threshold1 = model.getObjectByName('Threshold1');
     if (threshold1) {
         threshold1.visible = (cabinType === "walk_through_cabin");
@@ -321,23 +312,13 @@ function updateCabinView(cabinType) {
         console.warn("BackBumper не найдена");
     }
 
-    const backHandrailButton = document.getElementById("backHandrailButton");
-    if (backHandrailButton) {
-        if (cabinType === "walk_through_cabin") {
-            backHandrailButton.disabled = true;
-            backHandrailButton.classList.remove('active');
-        } else {
-            backHandrailButton.disabled = false;
-            updateHandrailPosition();
-        }
-    }
-
     updateControlPanelPlacement();
     const selectedRadio = document.querySelector('input[name="opening_type"]:checked');
     if (selectedRadio) {
         const openingType = selectedRadio.value;
         updateOpenType(openingType);
     }
+    updateHandrailPosition()
 }
 
 function updateOpenType(openingType) {
@@ -399,17 +380,6 @@ function updateOpenType(openingType) {
             setVisibility("Door1Central", true);
             setVisibility("Threshold1Central", true);
         }
-    }
-
-    // Поворот только для телескопического правого открывания
-    const doorGroup = model.getObjectByName("Door");
-    if (doorGroup) {
-        doorGroup.rotation.y = (openingType === "right") ? Math.PI : 0;
-    }
-
-    const door1Group = model.getObjectByName("Door1");
-    if (door1Group) {
-        door1Group.rotation.y = (openingType === "right") ? Math.PI : 0;
     }
 
     updateControlPanelPlacement();
