@@ -118,6 +118,9 @@ export function ChangeFloorColor(colorProp) {
 }
 
 export function applyColorToElements() {
+    document.getElementById("ind1").src = `${HALLTEXTURES_BASE_PATH}ind_board1.jpg`;
+    document.getElementById("ind2").src = `${HALLTEXTURES_BASE_PATH}ind_board2.jpg`;
+
     const processGroup = (group, defaultColor, albedoTextureUrl = null,
          normalTextureUrl = null, roughnessTexture = null, rough = null, metal = null) => 
     group.map(name => ({
