@@ -1003,7 +1003,7 @@ export async function GetImage() {
 
         // Устанавливаем maxDistance и позицию камеры
         controls.maxDistance = maxDistance; // Устанавливаем maxDistance для скриншота
-        camera.position.set(maxDistance - 2, GetExtremeYPoint() / 2, maxDistance - 2);
+        camera.position.set(- maxDistance + 2, GetExtremeYPoint() / 2, -maxDistance + 2);
         controls.target.set(0, 45, 0);
         controls.update(); // Обновляем управление
 
